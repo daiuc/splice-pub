@@ -1,7 +1,7 @@
 execute:
   freeze: auto # re-render only when source changes
 
-title-block-banner: true
+title-block-banner: false
 code-fold: true
 
 format:

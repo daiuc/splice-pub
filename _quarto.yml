@@ -9,7 +9,6 @@ project:
     - "!code/"
     - "!data/"
     - "!output"
-    
 
 website:
   title: "mysite"
