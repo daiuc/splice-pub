@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/analysis/2024-06-17-unprod-splicing-ratio-GTEx.html",
       "/analysis/2024-06-15-GWAS-list.html",
       "/analysis/2024-06-10-tally-sQTLs.html"
     ]

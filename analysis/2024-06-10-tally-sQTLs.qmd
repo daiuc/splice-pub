@@ -159,6 +159,13 @@ saveRDS(gtex.sqls, "2024-06-10-gtex-sQTLs.rds")
 gtex.sqls <- readRDS("2024-06-10-gtex-sQTLs.rds")
 ```
 
+
+```{r}
+tissue.labels <- fread("/project/yangili1/cdai/splice-pub/analysis/gtex-tissue-code.csv",
+                      col.names = c("tissue", "label"), header = F)
+```
+
+
 Number of introns that satisfy FDR < `r params$fdr` and from clusters of `PR` or `PR,UP`
 ```{r}
 #| label: data_for_gtex_sqtl_by_intron_plot
@@ -168,24 +175,26 @@ gtex.plot1.dt <- imap_dfr(gtex.sqls, \(x, y) {x[q < FDR & ctype %in% c("PR", "PR
 
 ```
 
-:::{.column-page}
+
+
+
 ```{r}
 #| label: fig-gtex_sqtl_by_intron
-#| fig-width: 23
-#| fig-height: 10
+#| fig-width: 8
+#| fig-height: 4
 #| out-width: 100%
 #| cache: true
 
 gtex.plot1.dt %>% 
-  ggplot() + geom_col(aes(x = forcats::fct_reorder(tissue, -N), y = N, fill = itype)) +
-    scale_x_discrete(labels = function(x) str_wrap(str_replace_all(str_sub(x, 1, 40), "[\\-\\_]", " "), width = 20)) +
+  left_join(y = tissue.labels, by = "tissue") %>% 
+  ggplot() + geom_col(aes(x = forcats::fct_reorder(label, -N), y = N, fill = itype)) +
+    scale_fill_brewer(palette = "Blues", direction = 1) +
     labs(x = NULL, y = "Num. of sQTL introns", fill = NULL) + 
     theme_cowplot() +
     theme(axis.text.x = element_text(angle = 90, hjust = 1),
           legend.position = "top"
          )
 ```
-:::
 
 
 ```{r}
@@ -204,24 +213,24 @@ gtex.plot2.dt <- imap_dfr(gtex.sqls, \(x, y) {
 
 
 
-:::{.column-page}
 ```{r}
 #| label: fig-gtex_sqtl_by_cluster
-#| fig-width: 23
-#| fig-height: 10
+#| fig-width: 8
+#| fig-height: 4
 #| out-width: 100%
 #| cache: true
 
 gtex.plot2.dt %>% 
-  ggplot() + geom_col(aes(x = forcats::fct_reorder(tissue, -N), y = N, fill = ctype)) +
-    scale_x_discrete(labels = function(x) str_wrap(str_replace_all(str_sub(x, 1, 40), "[\\-\\_]", " "), width = 20)) +
+  left_join(y = tissue.labels, by = "tissue") %>% 
+  ggplot() + geom_col(aes(x = forcats::fct_reorder(label, -N), y = N, fill = ctype)) +
+    scale_fill_brewer(palette = "Blues", direction = 1) +
     labs(x = NULL, y = "Num. of sQTL (cluster)", fill = NULL) + 
     theme_cowplot() +
     theme(axis.text.x = element_text(angle = 90, hjust = 1),
           legend.position = "top"
          )
 ```
-:::
+
 
 
 ```{r}
@@ -238,7 +247,13 @@ gtex.plot2.dt %>% DT::datatable()
 #| include: false
 #| eval: false
 
-httpgd::hgd()
+httpgd::hgd(host = "10.50.250.151", port = 9002, token = FALSE)
 
 
+```
+
+```{r}
+#| include: false
+#| eval: false
+httpgd::hgd_close(all = TRUE)
 ```
