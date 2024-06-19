@@ -1,6 +1,9 @@
 execute:
   freeze: auto # re-render only when source changes
 
+title-block-banner: true
+code-fold: true
+
 format:
   html:
     toc: true

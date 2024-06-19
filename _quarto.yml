@@ -3,7 +3,9 @@ project:
   title: "mysite"
   output-dir: docs
   render:
-    - "*.qmd"
+    - "index.qmd"
+    - "about.qmd"
+    - "analysis/*.qmd"
     - "!code/"
     - "!data/"
     - "!output"
@@ -15,11 +17,10 @@ website:
     left: 
       - href: index.qmd
         text: Home
-      - href: analysis/index.qmd
-        text: Analysis
-      - about.qmd
-    logo: assets/logo.png
-    background: "dark"
+      - href: about.qmd
+        text: About
+    # logo: assets/logo.png
+    background: "light"
     search: true
       # - menu:
       #   - href: analysis/analysis1.qmd
@@ -34,5 +35,5 @@ website:
   #     openSidebar: false
 format:
   html:
-    theme: sandstone
+    theme: yeti
     css: styles.css

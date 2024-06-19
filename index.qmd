@@ -1,15 +1,16 @@
 ---
-title: "Home"
+title: "Unproductive Splicing"
 execute:
   freeze: auto # re-render only when source changes
+listing:
+  contents:
+    - "analysis/*.qmd"
+  sort: "date desc"
+  type: table # default, grid
+  page-size: 40
+  categories: true
+  sort-ui: true
+  filter-ui: true
+page-layout: full
+title-block-banner: false
 ---
-
-### Publish to github page
-
-- source `qmd` files in `analysis`
-- `render` will transfer html files automatically to `docs`
-- use `*.qmd`, not html files when linking pages to ensure automatic conversion to both html and pdf
-
-### Snakemake
-
-- all snakemake related pipeline scripts and data/results are under `code`

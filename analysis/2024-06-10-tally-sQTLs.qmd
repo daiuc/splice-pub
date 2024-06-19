@@ -1,0 +1,244 @@
+---
+title: "QTL tally"
+date: 2024-6-10
+params: 
+  fdr: 0.1
+categories: ['qtl']
+code-fold: true
+execute:
+  include: true
+  cache: false
+---
+
+```{r}
+#| label: setup
+#| include: false
+#| cache: false
+library(tidyverse)
+library(data.table)
+library(glue)
+
+
+library(cowplot)
+```
+
+# Tally sQTLs from GTEx 49 tissues and Geuvadis EUR
+
+
+## Geuvaids EUR
+
+
+```{r}
+base.geu <- "../code/results/qtl/noisy/Geuvadis/EUR/separateNoise/cis_100000/perm"
+geu.sql.f <- glue("{base}/chr{chroms}.addQval.txt.gz", base = base.geu, chroms = 1:22)
+names(geu.sql.f) <- glue("chr{1:22}")
+```
+
+```{r}
+#| include: true
+#| cache: true
+geu.sql <- map_dfr(geu.sql.f, fread)
+```
+
+
+```{r}
+addLabels <- function(dt) {
+  pid_split <- str_split(dt$phenotype_id, ":")
+  dt$itype <- map_chr(pid_split, ~ .x[5])
+  dt$clu <- map_chr(pid_split, ~ .x[4])
+  dt$clu <- str_extract(dt$clu, "clu_[0-9]+")
+
+  dt <- dt[, ctype := paste(sort(unique(itype)), collapse = ","), by = clu][]
+  return(dt)
+}
+```
+
+
+```{r}
+geu.sql <- addLabels(geu.sql)
+```
+
+
+```{r}
+geu.sql[1:2, ] %>% DT::datatable()
+```
+
+### All phenotypes/introns
+Number of introns
+
+```{r}
+geu.sql[, .N, by = itype
+  ][, .(itype, N, P = N/sum(N)  )
+  ][order(-N)]
+```
+
+Number of clusters
+```{r}
+geu.sql[, .(N = uniqueN(clu)), by = .(ctype)][, .(ctype, N, P = N/sum(N))][order(-N)]
+```
+
+
+### Use FDR `r params$fdr` to filter sQTLs
+
+Number of introns with FDR < `r params$fdr`
+
+```{r}
+FDR = params$fdr
+```
+
+```{r}
+geu.sql[q < FDR, .N, by = .(itype)][, .(itype, N, P = N/sum(N))][order(-N)]
+```
+
+
+Number of clusters with FDR < `r params$fdr`
+
+```{r}
+geu.sql[q < FDR, .(N = uniqueN(clu)), by = .(ctype)][, .(ctype, N, P = N/sum(N))][order(-N)]
+```
+
+
+
+### Use FDR `r params$fdr` to filter sQTLs, and only keep introns from clusters of `PR` or `PR,UP`
+
+Number of introns satisfying FDR < `r params$fdr` and from clusters of `PR` or `PR,UP`
+
+```{r}
+geu.sql[q < FDR & ctype %in% c("PR", "PR,UP"), .N, by = .(itype)][, .(itype, N, P = N/sum(N))][order(-N)]
+```
+
+Number of clusters satisfying FDR < `r params$fdr` and from clusters of `PR` or `PR,UP`
+
+```{r}
+geu.sql[q < FDR & ctype %in% c("PR", "PR,UP"), .(N = uniqueN(clu)), by = .(ctype)][, .(ctype, N, P = N/sum(N))][order(-N)]
+```
+ 
+
+## GTEx
+
+For GTEx, use sQTLs from 49 tissues. We use FDR < `r params$fdr` and cluster type `PR` or `PR,UP` to filter sQTLs.
+
+
+```{r}
+Tissues <- dir("../code/results/qtl/noisy/GTEx/")
+Tissues <- Tissues[!Tissues %in% c("Bladder")]
+names(Tissues) <- Tissues 
+base1.gtex <- "../code/results/qtl/noisy/GTEx"
+base2.gtex <- "/cis_100000/perm"
+suffix <- "addQval.txt.gz"
+# "../code/results/qtl/noisy/GTEx/Liver/separateNoise/cis_100000/perm/chr1.addQval.txt.gz"
+```
+
+
+```{r}
+readGTExSQTL <- function(tissue) {
+  base1.gtex <- "../code/results/qtl/noisy/GTEx/"
+  base2.gtex <- "/cis_100000/perm"
+  suffix <- "addQval.txt.gz"
+  folder <- glue("{base1.gtex}/{tissue}/separateNoise{base2.gtex}")
+  files <- glue("{folder}/chr{1:22}.{suffix}")
+  dt <- map_dfr(files, fread)
+}
+```
+
+```{r}
+#| include: false
+#| eval: false
+gtex.sqls <- map(Tissues, ~ readGTExSQTL(.x) %>% addLabels)
+```
+
+```{r}
+#| include: false
+#| eval: false
+# save RDS, do not rerun
+saveRDS(gtex.sqls, "2024-06-10-gtex-sQTLs.rds")
+```
+
+
+```{r}
+gtex.sqls <- readRDS("2024-06-10-gtex-sQTLs.rds")
+```
+
+Number of introns that satisfy FDR < `r params$fdr` and from clusters of `PR` or `PR,UP`
+```{r}
+#| label: data_for_gtex_sqtl_by_intron_plot
+#| cache: true
+
+gtex.plot1.dt <- imap_dfr(gtex.sqls, \(x, y) {x[q < FDR & ctype %in% c("PR", "PR,UP"), .N, by = .(itype)][, .(tissue = y, itype, N, P = N/sum(N))][order(-N)]})
+
+```
+
+:::{.column-page}
+```{r}
+#| label: fig-gtex_sqtl_by_intron
+#| fig-width: 23
+#| fig-height: 10
+#| out-width: 100%
+#| cache: true
+
+gtex.plot1.dt %>% 
+  ggplot() + geom_col(aes(x = forcats::fct_reorder(tissue, -N), y = N, fill = itype)) +
+    scale_x_discrete(labels = function(x) str_wrap(str_replace_all(str_sub(x, 1, 40), "[\\-\\_]", " "), width = 20)) +
+    labs(x = NULL, y = "Num. of sQTL introns", fill = NULL) + 
+    theme_cowplot() +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1),
+          legend.position = "top"
+         )
+```
+:::
+
+
+```{r}
+#| label: tbl-gtex-sqtl-by-intron
+gtex.plot1.dt %>% DT::datatable()
+```
+
+Number of clusters that satisfy FDR < `r params$fdr` and from clusters of `PR` or `PR,UP`
+```{r}
+#| cache: true
+gtex.plot2.dt <- imap_dfr(gtex.sqls, \(x, y) {
+  x[q < FDR & ctype %in% c("PR", "PR,UP"), .(N = uniqueN(clu)), by = .(ctype)][, .(tissue = y, ctype, N, P = N/sum(N))][order(-N)]
+}
+)
+```
+
+
+
+:::{.column-page}
+```{r}
+#| label: fig-gtex_sqtl_by_cluster
+#| fig-width: 23
+#| fig-height: 10
+#| out-width: 100%
+#| cache: true
+
+gtex.plot2.dt %>% 
+  ggplot() + geom_col(aes(x = forcats::fct_reorder(tissue, -N), y = N, fill = ctype)) +
+    scale_x_discrete(labels = function(x) str_wrap(str_replace_all(str_sub(x, 1, 40), "[\\-\\_]", " "), width = 20)) +
+    labs(x = NULL, y = "Num. of sQTL (cluster)", fill = NULL) + 
+    theme_cowplot() +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1),
+          legend.position = "top"
+         )
+```
+:::
+
+
+```{r}
+#| label: tbl-gtex-sqtl-by-cluster
+
+gtex.plot2.dt %>% DT::datatable()
+```
+
+
+
+
+
+```{r}
+#| include: false
+#| eval: false
+
+httpgd::hgd()
+
+
+```

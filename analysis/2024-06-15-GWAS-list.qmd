@@ -1,0 +1,49 @@
+---
+title: "GWAS list"
+date: "2024-6-15"
+params: 
+  fdr: 0.1
+categories: 
+  - GWAS
+  - coloc
+code-fold: true
+execute:
+  include: true
+  cache: false
+---
+
+```{r}
+#| label: setup
+#| include: false
+#| cache: false
+library(tidyverse)
+library(data.table)
+library(glue)
+```
+
+
+## GWAS from Phenoix
+
+
+
+
+```{r}
+#| cache: true
+gwas_path1 <- "/project/yangili1/zpmu/GWAS_loci/trait_summary.txt"
+gwas_summ1 <- fread(gwas_path1)
+```
+
+Used `{r} nrow(gwas_summ1)` from the following path: 
+```
+"/project/yangili1/zpmu/GWAS_loci"
+```
+
+
+```{r}
+#| label: GWAS-List
+
+gwas_summ1 %>% gt::gt()
+
+
+```
+
