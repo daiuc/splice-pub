@@ -32,12 +32,11 @@ head(qqs)
 head(scatter)
 ```
 
-# qqplots
+# Enrichment of sQTL in eQTL pvalues
 
 ```{r}
 #| column: page
 #| label: fig-qqplot
-#| fig-cap: pvalue enrichment of sQTLs in eQTL
 #| layout-ncol: 4
 #| out-width: 100%
 
@@ -45,7 +44,7 @@ knitr::include_graphics(qqs)
 ```
 
 
-
+# Comparison of sQTL (top SNP beta) and eQTL effect size (nominal beta of same top sQTL SNP)
 
 ```{r}
 #| column: page
