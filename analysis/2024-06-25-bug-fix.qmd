@@ -1,0 +1,43 @@
+---
+title: "off by 1 bug"
+date: "2024-6-28"
+code-fold: false
+format: html
+execute:
+  include: true
+  cache: false
+  eval: false
+---
+
+
+
+
+All leafcutter2's other functions are BED like coordinates like [0, 100). However, the solve_NMD function uses 3rd party packages that actually use GTF like 1 based coordinates like [1, 100].
+
+For example, fetching of fasta sequence [github permlink](https://github.com/daiuc/leafcutter2/blob/953aa42f038a86378045aee429101b5939a5fd94/scripts/leafcutter2_regtools.py#L1134C1-L1134C92) is using 1 based, even though the coordinates supplied is going to be 0 based due to input data being 0 based.
+
+```{python}
+                        seq = Seq(fa.fetch(chrom, (exon_coord[0],exon_coord[1])))+leftover 
+```
+
+
+Other relevant lines of codes will also need to change, like [here](https://github.com/daiuc/leafcutter2/blob/953aa42f038a86378045aee429101b5939a5fd94/scripts/leafcutter2_regtools.py#L1091C1-L1095C32), due to difference of [ ] vs [ ).
+
+```{python}
+    for c in stop_codons:
+        if strand == "+":
+            seed.append([c[1]])
+        else:
+            seed.append([c[0]])
+```
+
+
+[also here](https://github.com/daiuc/leafcutter2/blob/953aa42f038a86378045aee429101b5939a5fd94/scripts/leafcutter2_regtools.py#L1134)
+
+[here](https://github.com/daiuc/leafcutter2/blob/953aa42f038a86378045aee429101b5939a5fd94/scripts/leafcutter2_regtools.py#L1139)
+
+## Solution
+
+The solution is either change within the function, so all operations of solve_NMD are using 0-based index; or first convert all input (juncs, start, stop codons) to 1 based [], then revert back to 0 based [) for the returned juncs.
+
+
