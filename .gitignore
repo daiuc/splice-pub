@@ -23,12 +23,11 @@ analysis/*gz
 analysis/*_cache/
 analysis/*_files/
 analysis/*html
+**/*rds
 data
 plots
 code
 code/
-smk-plots/
-smk-plots
 .snakemake/*
 backup*/
 *.pdf
