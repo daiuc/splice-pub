@@ -1,0 +1,33 @@
+---
+title: "Genome Tracks"
+date: "2024-6-10"
+params: 
+  fdr: 1e-5
+categories:
+  - GTEx
+  - pygenometracks
+code-fold: true
+execute:
+  include: true
+  cache: true
+---
+
+```{r}
+#| label: setup
+#| include: false
+#| cache: false
+
+library(tidyverse)
+library(data.table)
+library(glue)
+library(magrittr)
+
+theme_set(cowplot::theme_cowplot())
+
+
+```
+
+
+
+# Intro
+

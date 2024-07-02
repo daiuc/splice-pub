@@ -1,0 +1,59 @@
+---
+title: "GTEx sQTL enrichment"
+date: 2024-6-15
+params: 
+  fdr: 0.1
+categories: ['qtl']
+code-fold: true
+execute:
+  include: true
+  eval: true
+  cache: false
+  echo: false
+---
+
+
+
+```{r}
+#| include: false
+library(tidyverse)
+```
+```{r}
+base_path= "../smk-plots/gtex-sqtl-enrichment"
+
+```
+
+```{r}
+#| include: false
+#| echo: false
+qqs <- list.files(base_path, pattern = "qqplot*", full.names = TRUE)
+scatter <- list.files(base_path, pattern = "scatter", full.names = TRUE)
+head(qqs)
+head(scatter)
+```
+
+# qqplots
+
+```{r}
+#| column: page
+#| label: fig-qqplot
+#| fig-cap: pvalue enrichment of sQTLs in eQTL
+#| layout-ncol: 4
+#| out-width: 100%
+
+knitr::include_graphics(qqs)
+```
+
+
+
+
+```{r}
+#| column: page
+#| label: fig-scatterplots
+#| fig-cap: comparison of sQTL and eQTL effect size
+#| layout-ncol: 4
+#| out-width: 100%
+
+knitr::include_graphics(scatter)
+```
+

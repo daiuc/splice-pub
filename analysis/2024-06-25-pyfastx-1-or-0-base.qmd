@@ -1,0 +1,66 @@
+---
+title: "Should leafcutter 2 be using 1 or 0 based coordinates?"
+date: 2024-6-25
+categories: ['qtl']
+code-fold: true
+execute:
+  include: true
+  cache: false
+---
+
+
+# Does `pyfastx` use 0 or 1 based coordinates?
+
+
+answer: pyfastx does use 1 based coordiantes for the fa.fetch() method. In addition, how stop codon and and transcripts were constructed needs scrutiny in because of how base is handled. 
+
+
+```{python}
+import os
+import pyfastx
+```
+
+
+```{python}
+print(os.getcwd())
+```
+
+
+```{python}
+fa_file = './test.fa'
+
+```
+
+```{python}
+with open(fa_file) as f:
+  fa_text = f.readlines()
+```
+
+```{python}
+  fa_text
+```
+
+
+```{python}
+fa = pyfastx.Fasta(fa_file)
+```
+
+
+
+```{python}
+for seq in fa:
+  print(seq.name)
+  print(seq.seq)
+  print(seq.description)
+  print('\n\n')
+```
+
+
+```{python}
+fa.fetch('JZ822577.1', (1,6))
+```
+
+```{python}
+fa.fetch('JZ822577.1', (1,6), strand = '-')
+```
+

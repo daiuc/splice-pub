@@ -4,7 +4,7 @@ execute:
   freeze: auto # re-render only when source changes
 listing:
   contents:
-    - "analysis/2024*.qmd"
+    - "/analysis/20*.qmd"
   sort: "date desc"
   type: table # default, grid
   page-size: 40

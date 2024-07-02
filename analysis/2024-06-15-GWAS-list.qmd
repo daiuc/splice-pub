@@ -43,7 +43,5 @@ Used `{r} nrow(gwas_summ1)` from the following path:
 #| label: GWAS-List
 
 gwas_summ1 %>% gt::gt()
-
-
 ```
 

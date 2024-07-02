@@ -1,0 +1,260 @@
+---
+title: "Differential splicing vs differential gene expression in Selected Tissue pairs"
+date: "2024-6-20"
+params: 
+  fdr: 1e-5
+  psi: 0.1 # minimum deltaPSI
+categories:
+  - GTEx
+code-fold: true
+execute:
+  include: true
+  cache: true
+---
+
+```{r}
+#| label: setup
+#| include: false
+#| cache: false
+
+library(tidyverse)
+library(data.table)
+library(glue)
+library(ggpointdensity)
+library(magrittr)
+
+theme_set(cowplot::theme_cowplot())
+
+library(patchwork)
+library(ggrepel)
+
+```
+
+
+
+# Intro
+
+This notebook produces the comparison of differential splicing and differential gene expression.
+Pre-processed data are under `../../SpliFi/data/ds_v_dge/{tissue2}_v_{tissue1}_data.rds`
+
+
+
+## Unproductive splicing vs. expression for all GTEx tissue pairs
+
+
+Here, I try to compare the correlation between unproductive splicing and gene expression across all GTEx tissue pairs.
+
+
+### Prepare data
+
+
+```{r}
+#| label: useful functions
+#| cache: false
+
+read_contrast <- function(rds, contrast, PSI = 0.1, FDR = 1e-5, selection = 'all') {
+  #' @params rds: path to rds file'
+  #' @params contrast: contrast name'
+  #' @params FDR: FDR threshold'
+  #' @params selection: 'all', 'maxClu', 'maxGene'.
+  #'                    Select all introns, max deltaPSI per cluster, or max deltaPSI per gene'
+
+
+
+  data <- readRDS(rds)
+  ds <- data$ds
+  dge <- data$dge
+  dge_dsc <- data$dge_dsc
+
+  joined_dt <- inner_join(
+    x = ds[abs(deltapsi) > PSI & `p.adjust` < FDR & ctype %in% c('PR', 'PR,UP'), 
+          .(gene_id, gene_name, intron, cluster, itype, ctype, deltapsi)],
+    y = dge[, .(gene_id, g_l2fc = log2FoldChange, g_z = stat, g_l2fcSE = lfcSE)],
+    by = 'gene_id'
+  )
+
+  if (selection == 'maxClu') {
+    # select the max deltaPSI per cluster, stratified by UP and PR.
+    joined_dt  <- joined_dt[
+      , .(intron, 
+          deltapsi, 
+          g_l2fc,
+          g_z,
+          g_l2fcSE,
+          rk = rank(-abs(deltapsi), ties.method = "first")
+         ), 
+      by = .(gene_id, gene_name, cluster, ctype, itype)
+    ][rk == 1, -c('rk')]
+  } else if (selection == 'maxGene') {
+    # select the max deltaPSI per gene, stratified by UP and PR.
+    joined_dt <- joined_dt[
+      , .(intron,
+          deltapsi,
+          g_l2fc,
+          g_z,
+          g_l2fcSE,
+          rk = rank(-abs(deltapsi), ties.method = "first")
+         ), 
+      by = .(gene_id, gene_name, itype)
+    ][rk == 1, -c('rk')]
+  }
+
+  # run cor.test
+  cor_res <- joined_dt %>% 
+    split(by = 'itype') %>% 
+    map(~cor.test(x = .x$g_z, y = .x$deltapsi, method = 'pearson')) %>% 
+    imap_dfr(
+      \(x, y) {
+        data.table(
+          cor = x$estimate,
+          p = x$`p.value`,
+          itype = y,
+          contrast = contrast)
+      }
+    )
+
+    # plot scatter plot
+    p  <- joined_dt %>% 
+      ggplot() + 
+        geom_pointdensity(aes(g_z, deltapsi), size = .5, alpha = .5) +
+        scale_color_viridis_c() + 
+        geom_smooth(aes(g_z, deltapsi), method = "lm", formula = y~x, se = FALSE, color = 'blue', lwd = 1) +
+        geom_text(aes(x = 0,
+                      y = 0.1, 
+                      label = paste("cor: ", round(cor, 3), ", ",
+                                    "p. val: ", format(p, digits = 3, scientific = T), 
+                                    sep = "")
+                      ),
+                  data = cor_res, color = 'blue', size = 4, vjust = 1) +
+        labs(x = "DGE: Z-score",
+             y = "DS: deltaPSI",
+             color = "Num. points", 
+             title = str_wrap(str_replace_all(contrast, '_', ' '), width = 40),
+             caption = glue("N: {nrow(joined_dt)}, ",
+                             "FDR: {FDR}, ",
+                             "min |PSI|: {PSI}, ")
+            ) +
+        facet_wrap(~itype)
+
+    return(list(cor_res = cor_res, gg = p, joineddf = joined_dt))
+
+}
+
+```
+
+
+Load contrast ds, dge data.
+
+rds file and contrast name example:
+```{r}
+#| label: input-data-for-selected-tissue-pairs
+#| cache: false
+
+rds_list <- dir('/project/yangili1/cdai/SpliFi/data/ds_v_dge', full.names = T, pattern = '*.rds')
+rds_list <- rds_list[str_detect(rds_list, ".+ds_v_dge.+_v_.+data.rds")]
+contrast_list <- str_split(rds_list, "/") %>% map(., last) %>% unlist %>% str_remove_all('_data\\.rds')
+
+selected_tissue_pairs <- c(
+  "Brain-Cortex_v_Muscle-Skeletal",
+  "Brain-Cortex_v_Liver",
+  "Brain-Cortex_v_WholeBlood"
+)
+
+contrast_list <- map_chr(selected_tissue_pairs,
+    ~contrast_list[str_detect(contrast_list, .x)])
+rds_list <- map_chr(selected_tissue_pairs,
+    ~rds_list[str_detect(rds_list, .x)])
+
+contrast_list
+rds_list
+
+```
+
+```{r}
+#| cache: false
+FDR <- params$fdr
+minPSI <- params$psi
+```
+
+
+Process all the contrast data using *FDR=`{r} FDR`*:
+
+```{r}
+#| label: process contrast data selecting all 1 max deltaPSI intron
+
+res1 <- map2(rds_list, contrast_list, read_contrast, PSI = minPSI, FDR = FDR, selection = 'maxClu')
+df1 <- map_dfr(res1, ~.x$cor_res)
+
+```
+
+
+```{r}
+#| label: process contrast data selecting all 1 max deltaPSI gene
+
+res2 <- map2(rds_list, contrast_list, read_contrast, PSI = minPSI, FDR = FDR, selection = 'maxGene')
+df2 <- map_dfr(res2, ~.x$cor_res)
+```
+
+```{r}
+#| label: process contrast data selecting all intron
+
+res3 <- map2(rds_list, contrast_list, read_contrast, PSI = minPSI, FDR = FDR, selection = 'all')
+df3 <- map_dfr(res3, ~.x$cor_res)
+```
+
+```{r}
+#| column: screen
+#| out-width: 100%
+#| fig-width: 20
+#| label: fig-select-1-best-intron-per-cluster
+#| fig-cap: "Select 1 best intron per cluster"
+ggs1 <- map(res1, ~.x$gg)
+
+ggs1[[1]] + ggs1[[2]] + ggs1[[3]] + plot_layout(ncol = 3, guides = 'collect')
+
+
+
+```
+
+
+```{r}
+#| column: screen
+#| out-width: 100%
+#| fig-width: 20
+#| label: fig-select-1-best-intron-per-gene
+#| fig-cap: "Select 1 best intron per gene"
+ggs2 <- map(res2, ~.x$gg)
+
+ggs2[[1]] + ggs2[[2]] + ggs2[[3]] + plot_layout(ncol = 3, guides = 'collect')
+
+
+
+```
+
+
+
+```{r}
+#| column: screen
+#| out-width: 100%
+#| fig-width: 20
+#| label: fig-select-all-intron
+#| fig-cap: "Select all introns in cluster"
+ggs3 <- map(res3, ~.x$gg)
+
+ggs3[[1]] + ggs3[[2]] + ggs3[[3]] + plot_layout(ncol = 3, guides = 'collect')
+
+
+
+```
+
+
+
+```{r}
+#| column: screen
+#| label: tbl-select-1-best-intron-per-cluster
+#| tbl-cap: joined data for selecting 1 best intron per cluster
+res3[[1]]$joineddf %>% DT::datatable()
+```
+
+
+

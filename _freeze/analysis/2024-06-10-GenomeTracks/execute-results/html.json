@@ -1,0 +1,15 @@
+{
+  "hash": "c13bea95713f1d4d75474e2989568a2c",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Genome Tracks\"\ndate: \"2024-6-10\"\nparams: \n  fdr: 1e-5\ncategories:\n  - GTEx\n  - pygenometracks\ncode-fold: true\nexecute:\n  include: true\n  cache: true\n---\n\n\n\n\n\n\n# Intro\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

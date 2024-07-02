@@ -1,0 +1,2609 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.550">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2024-06-18">
+
+<title>mysite - Differential splicing vs differential gene expression in GTEx</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">mysite</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#intro" id="toc-intro" class="nav-link active" data-scroll-target="#intro">Intro</a>
+  <ul class="collapse">
+  <li><a href="#brain-cortex_v_muscle-skeletal" id="toc-brain-cortex_v_muscle-skeletal" class="nav-link" data-scroll-target="#brain-cortex_v_muscle-skeletal"><code>Brain-Cortex_v_Muscle-Skeletal</code></a>
+  <ul class="collapse">
+  <li><a href="#load-data" id="toc-load-data" class="nav-link" data-scroll-target="#load-data">Load data</a></li>
+  <li><a href="#prep-data" id="toc-prep-data" class="nav-link" data-scroll-target="#prep-data">Prep data</a></li>
+  <li><a href="#compute-correlation" id="toc-compute-correlation" class="nav-link" data-scroll-target="#compute-correlation">Compute correlation</a></li>
+  <li><a href="#plot-correlation" id="toc-plot-correlation" class="nav-link" data-scroll-target="#plot-correlation">Plot correlation</a></li>
+  </ul></li>
+  <li><a href="#unproductive-splicing-vs.-expression-for-all-gtex-tissue-pairs" id="toc-unproductive-splicing-vs.-expression-for-all-gtex-tissue-pairs" class="nav-link" data-scroll-target="#unproductive-splicing-vs.-expression-for-all-gtex-tissue-pairs">Unproductive splicing vs.&nbsp;expression for all GTEx tissue pairs</a>
+  <ul class="collapse">
+  <li><a href="#prepare-data" id="toc-prepare-data" class="nav-link" data-scroll-target="#prepare-data">Prepare data</a></li>
+  <li><a href="#plot-all-tissue-pairs---ds-vs.-dge" id="toc-plot-all-tissue-pairs---ds-vs.-dge" class="nav-link" data-scroll-target="#plot-all-tissue-pairs---ds-vs.-dge">Plot all tissue pairs - DS vs.&nbsp;DGE</a></li>
+  <li><a href="#plot-brain-cortex-vs.-muscle-skeletal---ds-vs.-dge" id="toc-plot-brain-cortex-vs.-muscle-skeletal---ds-vs.-dge" class="nav-link" data-scroll-target="#plot-brain-cortex-vs.-muscle-skeletal---ds-vs.-dge">Plot Brain-Cortex vs.&nbsp;Muscle-Skeletal - DS vs.&nbsp;DGE</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Differential splicing vs differential gene expression in GTEx</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">GTEx</div>
+    <div class="quarto-category">DGE</div>
+    <div class="quarto-category">DS</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 18, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="intro" class="level1">
+<h1>Intro</h1>
+<p>This notebook produces the comparison of differential splicing and differential gene expression. Pre-processed data are under <code>../../SpliFi/data/ds_v_dge/{tissue2}_v_{tissue1}_data.rds</code></p>
+<section id="brain-cortex_v_muscle-skeletal" class="level2">
+<h2 class="anchored" data-anchor-id="brain-cortex_v_muscle-skeletal"><code>Brain-Cortex_v_Muscle-Skeletal</code></h2>
+<section id="load-data" class="level3">
+<h3 class="anchored" data-anchor-id="load-data">Load data</h3>
+<p>Saved RDS file is a list of 3 objects: - <code>ds</code> : differential splicing results - <code>dge</code> : differential gene expression results - <code>dge_dsc</code> : metadata for dge results</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>contrast <span class="ot">&lt;-</span> <span class="st">"Brain-Cortex_v_Muscle-Skeletal"</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">glue</span>(<span class="st">'/project/yangili1/cdai/SpliFi/data/ds_v_dge/{contrast}_data.rds'</span>))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>ds <span class="ot">&lt;-</span> data<span class="sc">$</span>ds</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>dge <span class="ot">&lt;-</span> data<span class="sc">$</span>dge</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><strong>ds:</strong></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ds) <span class="sc">%&gt;%</span> gt<span class="sc">::</span><span class="fu">gt</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<div id="nckalgkisl" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#nckalgkisl table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#nckalgkisl thead, #nckalgkisl tbody, #nckalgkisl tfoot, #nckalgkisl tr, #nckalgkisl td, #nckalgkisl th {
+  border-style: none;
+}
+
+#nckalgkisl p {
+  margin: 0;
+  padding: 0;
+}
+
+#nckalgkisl .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#nckalgkisl .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#nckalgkisl .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#nckalgkisl .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#nckalgkisl .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#nckalgkisl .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nckalgkisl .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#nckalgkisl .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#nckalgkisl .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#nckalgkisl .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#nckalgkisl .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#nckalgkisl .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#nckalgkisl .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#nckalgkisl .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#nckalgkisl .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#nckalgkisl .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#nckalgkisl .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#nckalgkisl .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#nckalgkisl .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nckalgkisl .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#nckalgkisl .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#nckalgkisl .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#nckalgkisl .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nckalgkisl .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#nckalgkisl .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#nckalgkisl .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nckalgkisl .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nckalgkisl .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#nckalgkisl .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nckalgkisl .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#nckalgkisl .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nckalgkisl .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#nckalgkisl .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nckalgkisl .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#nckalgkisl .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nckalgkisl .gt_left {
+  text-align: left;
+}
+
+#nckalgkisl .gt_center {
+  text-align: center;
+}
+
+#nckalgkisl .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#nckalgkisl .gt_font_normal {
+  font-weight: normal;
+}
+
+#nckalgkisl .gt_font_bold {
+  font-weight: bold;
+}
+
+#nckalgkisl .gt_font_italic {
+  font-style: italic;
+}
+
+#nckalgkisl .gt_super {
+  font-size: 65%;
+}
+
+#nckalgkisl .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#nckalgkisl .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#nckalgkisl .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#nckalgkisl .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#nckalgkisl .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#nckalgkisl .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#nckalgkisl .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+
+<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="intron" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">intron</th>
+<th id="cluster" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">cluster</th>
+<th id="itype" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">itype</th>
+<th id="ctype" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">ctype</th>
+<th id="gene_name" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">gene_name</th>
+<th id="gene_id" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">gene_id</th>
+<th id="logef" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">logef</th>
+<th id="Muscle-Skeletal" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Muscle-Skeletal</th>
+<th id="Brain-Cortex" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Cortex</th>
+<th id="deltapsi" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">deltapsi</th>
+<th id="status" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">status</th>
+<th id="loglr" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">loglr</th>
+<th id="df" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">df</th>
+<th id="p" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">p</th>
+<th id="p.adjust" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">p.adjust</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="intron">chr1:930336:931038:clu_11_+</td>
+<td class="gt_row gt_left" headers="cluster">chr1:clu_11_+</td>
+<td class="gt_row gt_left" headers="itype">PR</td>
+<td class="gt_row gt_left" headers="ctype">PR</td>
+<td class="gt_row gt_left" headers="gene_name">SAMD11</td>
+<td class="gt_row gt_left" headers="gene_id">ENSG00000187634.11</td>
+<td class="gt_row gt_right" headers="logef">0.001370763</td>
+<td class="gt_row gt_right" headers="Muscle-Skeletal">0.5276685</td>
+<td class="gt_row gt_right" headers="Brain-Cortex">0.5283518</td>
+<td class="gt_row gt_right" headers="deltapsi">0.0006832305</td>
+<td class="gt_row gt_left" headers="status">Success</td>
+<td class="gt_row gt_right" headers="loglr">0.0001028596</td>
+<td class="gt_row gt_right" headers="df">1</td>
+<td class="gt_row gt_right" headers="p">0.9885564</td>
+<td class="gt_row gt_right" headers="p.adjust">0.9923067</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="intron">chr1:931089:935771:clu_11_+</td>
+<td class="gt_row gt_left" headers="cluster">chr1:clu_11_+</td>
+<td class="gt_row gt_left" headers="itype">PR</td>
+<td class="gt_row gt_left" headers="ctype">PR</td>
+<td class="gt_row gt_left" headers="gene_name">SAMD11</td>
+<td class="gt_row gt_left" headers="gene_id">ENSG00000187634.11</td>
+<td class="gt_row gt_right" headers="logef">-0.001370763</td>
+<td class="gt_row gt_right" headers="Muscle-Skeletal">0.4723315</td>
+<td class="gt_row gt_right" headers="Brain-Cortex">0.4716482</td>
+<td class="gt_row gt_right" headers="deltapsi">-0.0006832305</td>
+<td class="gt_row gt_left" headers="status">Success</td>
+<td class="gt_row gt_right" headers="loglr">0.0001028596</td>
+<td class="gt_row gt_right" headers="df">1</td>
+<td class="gt_row gt_right" headers="p">0.9885564</td>
+<td class="gt_row gt_right" headers="p.adjust">0.9923067</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="intron">chr1:939129:939271:clu_12_+</td>
+<td class="gt_row gt_left" headers="cluster">chr1:clu_12_+</td>
+<td class="gt_row gt_left" headers="itype">PR</td>
+<td class="gt_row gt_left" headers="ctype">PR</td>
+<td class="gt_row gt_left" headers="gene_name">SAMD11</td>
+<td class="gt_row gt_left" headers="gene_id">ENSG00000187634.11</td>
+<td class="gt_row gt_right" headers="logef">0.033612392</td>
+<td class="gt_row gt_right" headers="Muscle-Skeletal">0.3507898</td>
+<td class="gt_row gt_right" headers="Brain-Cortex">0.3662486</td>
+<td class="gt_row gt_right" headers="deltapsi">0.0154587644</td>
+<td class="gt_row gt_left" headers="status">Success</td>
+<td class="gt_row gt_right" headers="loglr">0.0288890045</td>
+<td class="gt_row gt_right" headers="df">1</td>
+<td class="gt_row gt_right" headers="p">0.8100430</td>
+<td class="gt_row gt_right" headers="p.adjust">0.8467780</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="intron">chr1:939129:939274:clu_12_+</td>
+<td class="gt_row gt_left" headers="cluster">chr1:clu_12_+</td>
+<td class="gt_row gt_left" headers="itype">PR</td>
+<td class="gt_row gt_left" headers="ctype">PR</td>
+<td class="gt_row gt_left" headers="gene_name">SAMD11</td>
+<td class="gt_row gt_left" headers="gene_id">ENSG00000187634.11</td>
+<td class="gt_row gt_right" headers="logef">-0.033612392</td>
+<td class="gt_row gt_right" headers="Muscle-Skeletal">0.6492102</td>
+<td class="gt_row gt_right" headers="Brain-Cortex">0.6337514</td>
+<td class="gt_row gt_right" headers="deltapsi">-0.0154587644</td>
+<td class="gt_row gt_left" headers="status">Success</td>
+<td class="gt_row gt_right" headers="loglr">0.0288890045</td>
+<td class="gt_row gt_right" headers="df">1</td>
+<td class="gt_row gt_right" headers="p">0.8100430</td>
+<td class="gt_row gt_right" headers="p.adjust">0.8467780</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="intron">chr1:939412:941143:clu_13_+</td>
+<td class="gt_row gt_left" headers="cluster">chr1:clu_13_+</td>
+<td class="gt_row gt_left" headers="itype">PR</td>
+<td class="gt_row gt_left" headers="ctype">PR</td>
+<td class="gt_row gt_left" headers="gene_name">SAMD11</td>
+<td class="gt_row gt_left" headers="gene_id">ENSG00000187634.11</td>
+<td class="gt_row gt_right" headers="logef">-0.022419411</td>
+<td class="gt_row gt_right" headers="Muscle-Skeletal">0.2376936</td>
+<td class="gt_row gt_right" headers="Brain-Cortex">0.2324409</td>
+<td class="gt_row gt_right" headers="deltapsi">-0.0052526823</td>
+<td class="gt_row gt_left" headers="status">Success</td>
+<td class="gt_row gt_right" headers="loglr">1.3652655309</td>
+<td class="gt_row gt_right" headers="df">2</td>
+<td class="gt_row gt_right" headers="p">0.2553129</td>
+<td class="gt_row gt_right" headers="p.adjust">0.3191507</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="intron">chr1:941306:942135:clu_13_+</td>
+<td class="gt_row gt_left" headers="cluster">chr1:clu_13_+</td>
+<td class="gt_row gt_left" headers="itype">PR</td>
+<td class="gt_row gt_left" headers="ctype">PR</td>
+<td class="gt_row gt_left" headers="gene_name">SAMD11</td>
+<td class="gt_row gt_left" headers="gene_id">ENSG00000187634.11</td>
+<td class="gt_row gt_right" headers="logef">-0.165432662</td>
+<td class="gt_row gt_right" headers="Muscle-Skeletal">0.4241880</td>
+<td class="gt_row gt_right" headers="Brain-Cortex">0.3595370</td>
+<td class="gt_row gt_right" headers="deltapsi">-0.0646509809</td>
+<td class="gt_row gt_left" headers="status">Success</td>
+<td class="gt_row gt_right" headers="loglr">1.3652655309</td>
+<td class="gt_row gt_right" headers="df">2</td>
+<td class="gt_row gt_right" headers="p">0.2553129</td>
+<td class="gt_row gt_right" headers="p.adjust">0.3191507</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p><strong>dge:</strong></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dge) <span class="sc">%&gt;%</span> gt<span class="sc">::</span><span class="fu">gt</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<div id="zsqpmmsbog" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#zsqpmmsbog table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#zsqpmmsbog thead, #zsqpmmsbog tbody, #zsqpmmsbog tfoot, #zsqpmmsbog tr, #zsqpmmsbog td, #zsqpmmsbog th {
+  border-style: none;
+}
+
+#zsqpmmsbog p {
+  margin: 0;
+  padding: 0;
+}
+
+#zsqpmmsbog .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#zsqpmmsbog .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#zsqpmmsbog .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#zsqpmmsbog .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#zsqpmmsbog .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#zsqpmmsbog .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zsqpmmsbog .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#zsqpmmsbog .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#zsqpmmsbog .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#zsqpmmsbog .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#zsqpmmsbog .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#zsqpmmsbog .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#zsqpmmsbog .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#zsqpmmsbog .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#zsqpmmsbog .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#zsqpmmsbog .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#zsqpmmsbog .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#zsqpmmsbog .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#zsqpmmsbog .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zsqpmmsbog .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#zsqpmmsbog .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#zsqpmmsbog .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#zsqpmmsbog .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zsqpmmsbog .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#zsqpmmsbog .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#zsqpmmsbog .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zsqpmmsbog .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zsqpmmsbog .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#zsqpmmsbog .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zsqpmmsbog .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#zsqpmmsbog .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zsqpmmsbog .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#zsqpmmsbog .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zsqpmmsbog .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#zsqpmmsbog .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zsqpmmsbog .gt_left {
+  text-align: left;
+}
+
+#zsqpmmsbog .gt_center {
+  text-align: center;
+}
+
+#zsqpmmsbog .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#zsqpmmsbog .gt_font_normal {
+  font-weight: normal;
+}
+
+#zsqpmmsbog .gt_font_bold {
+  font-weight: bold;
+}
+
+#zsqpmmsbog .gt_font_italic {
+  font-style: italic;
+}
+
+#zsqpmmsbog .gt_super {
+  font-size: 65%;
+}
+
+#zsqpmmsbog .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#zsqpmmsbog .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#zsqpmmsbog .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#zsqpmmsbog .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#zsqpmmsbog .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#zsqpmmsbog .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#zsqpmmsbog .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+
+<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="gene_id" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">gene_id</th>
+<th id="baseMean" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">baseMean</th>
+<th id="log2FoldChange" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">log2FoldChange</th>
+<th id="lfcSE" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">lfcSE</th>
+<th id="stat" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">stat</th>
+<th id="pvalue" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">pvalue</th>
+<th id="padj" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">padj</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="gene_id">ENSG00000109061.9</td>
+<td class="gt_row gt_right" headers="baseMean">264709.904</td>
+<td class="gt_row gt_right" headers="log2FoldChange">-13.54712</td>
+<td class="gt_row gt_right" headers="lfcSE">0.2173014</td>
+<td class="gt_row gt_right" headers="stat">-62.34253</td>
+<td class="gt_row gt_right" headers="pvalue">0</td>
+<td class="gt_row gt_right" headers="padj">0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="gene_id">ENSG00000168530.15</td>
+<td class="gt_row gt_right" headers="baseMean">109266.143</td>
+<td class="gt_row gt_right" headers="log2FoldChange">-13.36231</td>
+<td class="gt_row gt_right" headers="lfcSE">0.1923248</td>
+<td class="gt_row gt_right" headers="stat">-69.47785</td>
+<td class="gt_row gt_right" headers="pvalue">0</td>
+<td class="gt_row gt_right" headers="padj">0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="gene_id">ENSG00000125414.18</td>
+<td class="gt_row gt_right" headers="baseMean">209656.455</td>
+<td class="gt_row gt_right" headers="log2FoldChange">-13.35553</td>
+<td class="gt_row gt_right" headers="lfcSE">0.2288908</td>
+<td class="gt_row gt_right" headers="stat">-58.34893</td>
+<td class="gt_row gt_right" headers="pvalue">0</td>
+<td class="gt_row gt_right" headers="padj">0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="gene_id">ENSG00000250978.5</td>
+<td class="gt_row gt_right" headers="baseMean">1478.281</td>
+<td class="gt_row gt_right" headers="log2FoldChange">-13.28802</td>
+<td class="gt_row gt_right" headers="lfcSE">0.3241620</td>
+<td class="gt_row gt_right" headers="stat">-40.99192</td>
+<td class="gt_row gt_right" headers="pvalue">0</td>
+<td class="gt_row gt_right" headers="padj">0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="gene_id">ENSG00000116748.21</td>
+<td class="gt_row gt_right" headers="baseMean">14974.113</td>
+<td class="gt_row gt_right" headers="log2FoldChange">-13.21024</td>
+<td class="gt_row gt_right" headers="lfcSE">0.2008433</td>
+<td class="gt_row gt_right" headers="stat">-65.77385</td>
+<td class="gt_row gt_right" headers="pvalue">0</td>
+<td class="gt_row gt_right" headers="padj">0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="gene_id">ENSG00000159173.18</td>
+<td class="gt_row gt_right" headers="baseMean">145207.909</td>
+<td class="gt_row gt_right" headers="log2FoldChange">-13.10009</td>
+<td class="gt_row gt_right" headers="lfcSE">0.2499607</td>
+<td class="gt_row gt_right" headers="stat">-52.40861</td>
+<td class="gt_row gt_right" headers="pvalue">0</td>
+<td class="gt_row gt_right" headers="padj">0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(data<span class="sc">$</span>dge_dsc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "mean of normalized counts for all samples"                     
+[2] "log2 fold change (MLE): tissue Brain.Cortex vs Muscle.Skeletal"
+[3] "standard error: tissue Brain.Cortex vs Muscle.Skeletal"        
+[4] "Wald statistic: tissue Brain.Cortex vs Muscle.Skeletal"        
+[5] "Wald test p-value: tissue Brain.Cortex vs Muscle.Skeletal"     
+[6] "BH adjusted p-values"                                          </code></pre>
+</div>
+</div>
+</section>
+<section id="prep-data" class="level3">
+<h3 class="anchored" data-anchor-id="prep-data">Prep data</h3>
+<p>Mainly to join ds and dge dataset on <code>gene_id</code>.</p>
+<p>Introns from ds tables are selected using: - <code>abs(deltapsi) &gt; .1</code> : to filter out introns with small deltaPSI - <code>p.adjust &lt; FDR</code> : to filter out introns with high FDR - <code>ctype %in% c('PR', 'PR,UP')</code> : introns are either productive or unproductive</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>tissues <span class="ot">&lt;-</span> <span class="fu">str_split</span>(contrast, <span class="st">"_v_"</span>) <span class="sc">%&gt;%</span> unlist <span class="co"># follow tissue2_v_tissue1</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># confirm ds contrast</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>confirm_level_ds <span class="ot">&lt;-</span> <span class="fu">all</span>(<span class="fu">names</span>(data<span class="sc">$</span>ds)[<span class="fu">c</span>(<span class="dv">9</span>, <span class="dv">8</span>)] <span class="sc">==</span> tissues)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># confirm dge contrast</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>confirm_level_dge <span class="ot">&lt;-</span> <span class="fu">str_detect</span>(<span class="fu">str_split</span>(data<span class="sc">$</span>dge_dsc[<span class="dv">2</span>], <span class="st">"tissue "</span>)[[<span class="dv">1</span>]][[<span class="dv">2</span>]] <span class="sc">%&gt;%</span> <span class="fu">str_replace_all</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">."</span>, <span class="st">"-"</span>),</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">glue</span>(<span class="st">"{tissues[1]} vs {tissues[2]}"</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                                )</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (confirm_level_dge <span class="sc">&amp;</span> confirm_level_ds) {</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">"Confirmed tissue order"</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">"Tissue order not confirmed"</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Confirmed tissue order</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>FDR <span class="ot">&lt;-</span> params<span class="sc">$</span>fdr</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>ds[<span class="st">`</span><span class="at">p.adjust</span><span class="st">`</span> <span class="sc">&lt;</span> FDR <span class="sc">&amp;</span> ctype <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'PR'</span>, <span class="st">'PR,UP'</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  ][,.(intron, deltapsi, itype)] <span class="sc">%&gt;%</span> unique <span class="sc">%&gt;%</span> </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">stat_ecdf</span>(<span class="fu">aes</span>(<span class="at">x=</span><span class="fu">abs</span>(deltapsi), <span class="at">color=</span>itype)) <span class="sc">+</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_brewer</span>(<span class="at">type =</span> <span class="st">"qual"</span>, <span class="at">palette =</span> <span class="dv">2</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">label =</span> <span class="fu">c</span>(<span class="at">PR=</span><span class="st">"Productive"</span>, <span class="at">UP=</span><span class="st">"Unproductive"</span>), <span class="at">name =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">glue</span>(<span class="st">"{contrast}"</span>)) <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_sqrt</span>(<span class="at">name =</span> <span class="st">"abs(deltaPSI)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-distribution-of-dPSI-BRNCTX-MUSCSKLT" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-distribution-of-dPSI-BRNCTX-MUSCSKLT-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2024-06-18-GTEx-DGE-vs-DS_files/figure-html/fig-distribution-of-dPSI-BRNCTX-MUSCSKLT-1.png" class="img-fluid figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-distribution-of-dPSI-BRNCTX-MUSCSKLT-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Distribution of deltaPSI in Brain-Cortex vs Muscle-Skeletal
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Joined ds and dge tables on <code>gene_id</code>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>joined_dt <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> ds[<span class="fu">abs</span>(deltapsi) <span class="sc">&gt;</span> .<span class="dv">1</span> <span class="sc">&amp;</span> <span class="st">`</span><span class="at">p.adjust</span><span class="st">`</span> <span class="sc">&lt;</span> FDR <span class="sc">&amp;</span> ctype <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'PR'</span>, <span class="st">'PR,UP'</span>), </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        .(gene_id, gene_name, intron, cluster, itype, ctype, deltapsi)],</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> dge[, .(gene_id, <span class="at">g_l2fc =</span> log2FoldChange, <span class="at">g_z =</span> stat, <span class="at">g_l2fcSE =</span> lfcSE)],</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="st">'gene_id'</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Quick look of the joined table</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>joined_dt <span class="sc">%&gt;%</span> head <span class="sc">%&gt;%</span> gt<span class="sc">::</span><span class="fu">gt</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<div id="osesucktrt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#osesucktrt table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#osesucktrt thead, #osesucktrt tbody, #osesucktrt tfoot, #osesucktrt tr, #osesucktrt td, #osesucktrt th {
+  border-style: none;
+}
+
+#osesucktrt p {
+  margin: 0;
+  padding: 0;
+}
+
+#osesucktrt .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#osesucktrt .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#osesucktrt .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#osesucktrt .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#osesucktrt .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#osesucktrt .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#osesucktrt .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#osesucktrt .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#osesucktrt .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#osesucktrt .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#osesucktrt .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#osesucktrt .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#osesucktrt .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#osesucktrt .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#osesucktrt .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#osesucktrt .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#osesucktrt .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#osesucktrt .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#osesucktrt .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#osesucktrt .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#osesucktrt .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#osesucktrt .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#osesucktrt .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#osesucktrt .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#osesucktrt .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#osesucktrt .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#osesucktrt .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#osesucktrt .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#osesucktrt .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#osesucktrt .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#osesucktrt .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#osesucktrt .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#osesucktrt .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#osesucktrt .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#osesucktrt .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#osesucktrt .gt_left {
+  text-align: left;
+}
+
+#osesucktrt .gt_center {
+  text-align: center;
+}
+
+#osesucktrt .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#osesucktrt .gt_font_normal {
+  font-weight: normal;
+}
+
+#osesucktrt .gt_font_bold {
+  font-weight: bold;
+}
+
+#osesucktrt .gt_font_italic {
+  font-style: italic;
+}
+
+#osesucktrt .gt_super {
+  font-size: 65%;
+}
+
+#osesucktrt .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#osesucktrt .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#osesucktrt .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#osesucktrt .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#osesucktrt .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#osesucktrt .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#osesucktrt .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+
+<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="gene_id" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">gene_id</th>
+<th id="gene_name" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">gene_name</th>
+<th id="intron" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">intron</th>
+<th id="cluster" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">cluster</th>
+<th id="itype" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">itype</th>
+<th id="ctype" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">ctype</th>
+<th id="deltapsi" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">deltapsi</th>
+<th id="g_l2fc" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">g_l2fc</th>
+<th id="g_z" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">g_z</th>
+<th id="g_l2fcSE" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">g_l2fcSE</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="gene_id">ENSG00000188157.14</td>
+<td class="gt_row gt_left" headers="gene_name">AGRN</td>
+<td class="gt_row gt_left" headers="intron">chr1:1051815:1051992:clu_22_+</td>
+<td class="gt_row gt_left" headers="cluster">chr1:clu_22_+</td>
+<td class="gt_row gt_left" headers="itype">PR</td>
+<td class="gt_row gt_left" headers="ctype">PR</td>
+<td class="gt_row gt_right" headers="deltapsi">0.4048714</td>
+<td class="gt_row gt_right" headers="g_l2fc">3.570754</td>
+<td class="gt_row gt_right" headers="g_z">45.75627</td>
+<td class="gt_row gt_right" headers="g_l2fcSE">0.07803857</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="gene_id">ENSG00000188157.14</td>
+<td class="gt_row gt_left" headers="gene_name">AGRN</td>
+<td class="gt_row gt_left" headers="intron">chr1:1051815:1053752:clu_22_+</td>
+<td class="gt_row gt_left" headers="cluster">chr1:clu_22_+</td>
+<td class="gt_row gt_left" headers="itype">PR</td>
+<td class="gt_row gt_left" headers="ctype">PR</td>
+<td class="gt_row gt_right" headers="deltapsi">-0.3365948</td>
+<td class="gt_row gt_right" headers="g_l2fc">3.570754</td>
+<td class="gt_row gt_right" headers="g_z">45.75627</td>
+<td class="gt_row gt_right" headers="g_l2fcSE">0.07803857</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="gene_id">ENSG00000158286.12</td>
+<td class="gt_row gt_left" headers="gene_name">RNF207</td>
+<td class="gt_row gt_left" headers="intron">chr1:6212733:6213065:clu_111_+</td>
+<td class="gt_row gt_left" headers="cluster">chr1:clu_111_+</td>
+<td class="gt_row gt_left" headers="itype">PR</td>
+<td class="gt_row gt_left" headers="ctype">PR,UP</td>
+<td class="gt_row gt_right" headers="deltapsi">-0.7185528</td>
+<td class="gt_row gt_right" headers="g_l2fc">1.907734</td>
+<td class="gt_row gt_right" headers="g_z">16.39761</td>
+<td class="gt_row gt_right" headers="g_l2fcSE">0.11634224</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="gene_id">ENSG00000158286.12</td>
+<td class="gt_row gt_left" headers="gene_name">RNF207</td>
+<td class="gt_row gt_left" headers="intron">chr1:6212903:6213065:clu_111_+</td>
+<td class="gt_row gt_left" headers="cluster">chr1:clu_111_+</td>
+<td class="gt_row gt_left" headers="itype">UP</td>
+<td class="gt_row gt_left" headers="ctype">PR,UP</td>
+<td class="gt_row gt_right" headers="deltapsi">0.7185528</td>
+<td class="gt_row gt_right" headers="g_l2fc">1.907734</td>
+<td class="gt_row gt_right" headers="g_z">16.39761</td>
+<td class="gt_row gt_right" headers="g_l2fcSE">0.11634224</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="gene_id">ENSG00000171735.18</td>
+<td class="gt_row gt_left" headers="gene_name">CAMTA1</td>
+<td class="gt_row gt_left" headers="intron">chr1:7747781:7749770:clu_131_+</td>
+<td class="gt_row gt_left" headers="cluster">chr1:clu_131_+</td>
+<td class="gt_row gt_left" headers="itype">PR</td>
+<td class="gt_row gt_left" headers="ctype">PR</td>
+<td class="gt_row gt_right" headers="deltapsi">0.3256170</td>
+<td class="gt_row gt_right" headers="g_l2fc">1.330244</td>
+<td class="gt_row gt_right" headers="g_z">21.12208</td>
+<td class="gt_row gt_right" headers="g_l2fcSE">0.06297885</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="gene_id">ENSG00000171735.18</td>
+<td class="gt_row gt_left" headers="gene_name">CAMTA1</td>
+<td class="gt_row gt_left" headers="intron">chr1:7747781:7751198:clu_131_+</td>
+<td class="gt_row gt_left" headers="cluster">chr1:clu_131_+</td>
+<td class="gt_row gt_left" headers="itype">PR</td>
+<td class="gt_row gt_left" headers="ctype">PR</td>
+<td class="gt_row gt_right" headers="deltapsi">-0.6950003</td>
+<td class="gt_row gt_right" headers="g_l2fc">1.330244</td>
+<td class="gt_row gt_right" headers="g_z">21.12208</td>
+<td class="gt_row gt_right" headers="g_l2fcSE">0.06297885</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(joined_dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3603   10</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>joined_dt[, .(<span class="at">Ngene =</span> <span class="fu">uniqueN</span>(gene_id), <span class="at">Nintron =</span> <span class="fu">uniqueN</span>(intron))]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Ngene Nintron
+1:  1650    3603</code></pre>
+</div>
+</div>
+</section>
+<section id="compute-correlation" class="level3">
+<h3 class="anchored" data-anchor-id="compute-correlation">Compute correlation</h3>
+<p>Compute correlation between intron’s deltaPSI and gene’s log2FC</p>
+<p><em>Note for some reason quarto does not refresh the output of this cell, result is not correct!</em></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>cor_res <span class="ot">&lt;-</span> joined_dt <span class="sc">%&gt;%</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split</span>(<span class="at">by =</span> <span class="st">'itype'</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="sc">~</span><span class="fu">cor.test</span>(<span class="at">x =</span> .x<span class="sc">$</span>g_z, <span class="at">y =</span> .x<span class="sc">$</span>deltapsi, <span class="at">method =</span> <span class="st">'p'</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">imap_dfr</span>(</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    \(x, y) {</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">data.table</span>(</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">cor =</span> x<span class="sc">$</span>estimate,</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">p =</span> x<span class="sc">$</span><span class="st">`</span><span class="at">p.value</span><span class="st">`</span>,</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">itype =</span> y)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>cor_res </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>           cor          p itype
+1:  0.02569642 0.14315331    PR
+2: -0.13544088 0.01062843    UP</code></pre>
+</div>
+</div>
+</section>
+<section id="plot-correlation" class="level3">
+<h3 class="anchored" data-anchor-id="plot-correlation">Plot correlation</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>joined_dt <span class="sc">%&gt;%</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_pointdensity</span>(<span class="fu">aes</span>(g_z, deltapsi), <span class="at">size =</span> .<span class="dv">5</span>, ) <span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_viridis_c</span>() <span class="sc">+</span> </span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(g_z, deltapsi), <span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">formula =</span> y<span class="sc">~</span>x, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">glue</span>(<span class="st">"{title}"</span>, <span class="at">title =</span> <span class="fu">str_replace</span>(contrast, <span class="st">"_v_"</span>, <span class="st">" vs "</span>)), </span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"DGE: Log2FC (z)"</span>,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"deltaPSI"</span>) <span class="sc">+</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>itype, <span class="at">scales =</span> <span class="st">"free"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-correlation-BRNCTX-MUSCSKLT" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-correlation-BRNCTX-MUSCSKLT-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2024-06-18-GTEx-DGE-vs-DS_files/figure-html/fig-correlation-BRNCTX-MUSCSKLT-1.png" class="img-fluid figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-correlation-BRNCTX-MUSCSKLT-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Correlation between deltaPSI and log2FC in Brain-Cortex vs Muscle-Skeletal
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="unproductive-splicing-vs.-expression-for-all-gtex-tissue-pairs" class="level2">
+<h2 class="anchored" data-anchor-id="unproductive-splicing-vs.-expression-for-all-gtex-tissue-pairs">Unproductive splicing vs.&nbsp;expression for all GTEx tissue pairs</h2>
+<p>Here, I try to compare the correlation between unproductive splicing and gene expression across all GTEx tissue pairs.</p>
+<section id="prepare-data" class="level3">
+<h3 class="anchored" data-anchor-id="prepare-data">Prepare data</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>read_contrast <span class="ot">&lt;-</span> <span class="cf">function</span>(rds, contrast, <span class="at">FDR =</span> <span class="fl">1e-5</span>, <span class="at">selection =</span> <span class="st">'all'</span>) {</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#' @params rds: path to rds file'</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#' @params contrast: contrast name'</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#' @params FDR: FDR threshold'</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">#' @params selection: 'all', 'maxClu', 'maxGene'.</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">#'                    Select all introns, max deltaPSI per cluster, or max deltaPSI per gene'</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(rds)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  ds <span class="ot">&lt;-</span> data<span class="sc">$</span>ds</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  dge <span class="ot">&lt;-</span> data<span class="sc">$</span>dge</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  dge_dsc <span class="ot">&lt;-</span> data<span class="sc">$</span>dge_dsc</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  joined_dt <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> ds[<span class="fu">abs</span>(deltapsi) <span class="sc">&gt;</span> .<span class="dv">1</span> <span class="sc">&amp;</span> <span class="st">`</span><span class="at">p.adjust</span><span class="st">`</span> <span class="sc">&lt;</span> FDR <span class="sc">&amp;</span> ctype <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'PR'</span>, <span class="st">'PR,UP'</span>), </span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>          .(gene_id, gene_name, intron, cluster, itype, ctype, deltapsi)],</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> dge[, .(gene_id, <span class="at">g_l2fc =</span> log2FoldChange, <span class="at">g_z =</span> stat, <span class="at">g_l2fcSE =</span> lfcSE)],</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">'gene_id'</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (selection <span class="sc">==</span> <span class="st">'maxClu'</span>) {</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>    joined_dt  <span class="ot">&lt;-</span> joined_dt[</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>      , .(intron, deltapsi, g_l2fc, g_z, g_l2fcSE, <span class="at">rk =</span> <span class="fu">rank</span>(<span class="sc">-</span><span class="fu">abs</span>(deltapsi), <span class="at">ties.method =</span> <span class="st">"random"</span>)), </span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>      by <span class="ot">=</span> .(gene_id, gene_name, cluster, itype, ctype)</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>      ][rk <span class="sc">==</span> <span class="dv">1</span>, <span class="sc">-</span><span class="fu">c</span>(<span class="st">'rk'</span>)]</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (selection <span class="sc">==</span> <span class="st">'maxGene'</span>) {</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>    joined_dt <span class="ot">&lt;-</span> joined_dt[</span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>      , .(intron, deltapsi, g_l2fc, g_z, g_l2fcSE, <span class="at">rk =</span> <span class="fu">rank</span>(<span class="sc">-</span><span class="fu">abs</span>(deltapsi), <span class="at">ties.method =</span> <span class="st">"random"</span>)), </span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>      by <span class="ot">=</span> .(gene_id, gene_name, itype)</span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>      ][rk <span class="sc">==</span> <span class="dv">1</span>, <span class="sc">-</span><span class="fu">c</span>(<span class="st">'rk'</span>)]</span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>  <span class="co"># run cor.test</span></span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>  cor_res <span class="ot">&lt;-</span> joined_dt <span class="sc">%&gt;%</span> </span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split</span>(<span class="at">by =</span> <span class="st">'itype'</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map</span>(<span class="sc">~</span><span class="fu">cor.test</span>(<span class="at">x =</span> .x<span class="sc">$</span>g_z, <span class="at">y =</span> .x<span class="sc">$</span>deltapsi, <span class="at">method =</span> <span class="st">'pearson'</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">imap_dfr</span>(</span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a>      \(x, y) {</span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>        <span class="fu">data.table</span>(</span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a>          <span class="at">cor =</span> x<span class="sc">$</span>estimate,</span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a>          <span class="at">p =</span> x<span class="sc">$</span><span class="st">`</span><span class="at">p.value</span><span class="st">`</span>,</span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a>          <span class="at">itype =</span> y,</span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a>          <span class="at">contrast =</span> contrast)</span>
+<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># plot scatter plot</span></span>
+<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a>    p  <span class="ot">&lt;-</span> joined_dt <span class="sc">%&gt;%</span> </span>
+<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_pointdensity</span>(<span class="fu">aes</span>(g_z, deltapsi), <span class="at">size =</span> .<span class="dv">5</span>, <span class="at">alpha =</span> .<span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_color_viridis_c</span>() <span class="sc">+</span> </span>
+<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(g_z, deltapsi), <span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">formula =</span> y<span class="sc">~</span>x, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">color =</span> <span class="st">'blue'</span>, <span class="at">lwd =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">0</span>,</span>
+<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a>                      <span class="at">y =</span> <span class="fl">0.1</span>, </span>
+<span id="cb18-56"><a href="#cb18-56" aria-hidden="true" tabindex="-1"></a>                      <span class="at">label =</span> <span class="fu">paste</span>(<span class="st">"cor: "</span>, <span class="fu">round</span>(cor, <span class="dv">3</span>), <span class="st">", "</span>,</span>
+<span id="cb18-57"><a href="#cb18-57" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">"p. val: "</span>, <span class="fu">format</span>(p, <span class="at">digits =</span> <span class="dv">3</span>, <span class="at">scientific =</span> T), </span>
+<span id="cb18-58"><a href="#cb18-58" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">sep =</span> <span class="st">""</span>)</span>
+<span id="cb18-59"><a href="#cb18-59" aria-hidden="true" tabindex="-1"></a>                      ),</span>
+<span id="cb18-60"><a href="#cb18-60" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> cor_res, <span class="at">color =</span> <span class="st">'blue'</span>, <span class="at">size =</span> <span class="dv">4</span>, <span class="at">vjust =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb18-61"><a href="#cb18-61" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"DGE: Z-score"</span>, <span class="at">y =</span> <span class="st">"DS: deltaPSI"</span>, <span class="at">color =</span> <span class="st">"Num. points"</span>, </span>
+<span id="cb18-62"><a href="#cb18-62" aria-hidden="true" tabindex="-1"></a>             <span class="at">title =</span> <span class="fu">str_wrap</span>(<span class="fu">str_replace_all</span>(contrast, <span class="st">'_'</span>, <span class="st">' '</span>), <span class="at">width =</span> <span class="dv">40</span>)) <span class="sc">+</span></span>
+<span id="cb18-63"><a href="#cb18-63" aria-hidden="true" tabindex="-1"></a>        <span class="fu">facet_wrap</span>(<span class="sc">~</span>itype)</span>
+<span id="cb18-64"><a href="#cb18-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-65"><a href="#cb18-65" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">cor_res =</span> cor_res, <span class="at">gg =</span> p, <span class="at">joineddf =</span> joined_dt))</span>
+<span id="cb18-66"><a href="#cb18-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-67"><a href="#cb18-67" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Load contrast ds, dge data.</p>
+<p>rds file and contrast name example:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>rds_list <span class="ot">&lt;-</span> <span class="fu">dir</span>(<span class="st">'/project/yangili1/cdai/SpliFi/data/ds_v_dge'</span>, <span class="at">full.names =</span> T, <span class="at">pattern =</span> <span class="st">'*.rds'</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>rds_list <span class="ot">&lt;-</span> rds_list[<span class="fu">str_detect</span>(rds_list, <span class="st">".+ds_v_dge.+_v_.+data.rds"</span>)]</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>contrast_list <span class="ot">&lt;-</span> <span class="fu">str_split</span>(rds_list, <span class="st">"/"</span>) <span class="sc">%&gt;%</span> <span class="fu">map</span>(., last) <span class="sc">%&gt;%</span> unlist <span class="sc">%&gt;%</span> <span class="fu">str_remove_all</span>(<span class="st">'_data</span><span class="sc">\\</span><span class="st">.rds'</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(rds_list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "/project/yangili1/cdai/SpliFi/data/ds_v_dge/Adipose-Visceral_Omentum__v_AdrenalGland_data.rds"                       
+[2] "/project/yangili1/cdai/SpliFi/data/ds_v_dge/Adipose-Visceral_Omentum__v_Artery-Coronary_data.rds"                    
+[3] "/project/yangili1/cdai/SpliFi/data/ds_v_dge/Adipose-Visceral_Omentum__v_Brain-Amygdala_data.rds"                     
+[4] "/project/yangili1/cdai/SpliFi/data/ds_v_dge/Adipose-Visceral_Omentum__v_Brain-Anteriorcingulatecortex_BA24__data.rds"
+[5] "/project/yangili1/cdai/SpliFi/data/ds_v_dge/Adipose-Visceral_Omentum__v_Brain-Caudate_basalganglia__data.rds"        
+[6] "/project/yangili1/cdai/SpliFi/data/ds_v_dge/Adipose-Visceral_Omentum__v_Brain-CerebellarHemisphere_data.rds"         </code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(contrast_list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Adipose-Visceral_Omentum__v_AdrenalGland"                       
+[2] "Adipose-Visceral_Omentum__v_Artery-Coronary"                    
+[3] "Adipose-Visceral_Omentum__v_Brain-Amygdala"                     
+[4] "Adipose-Visceral_Omentum__v_Brain-Anteriorcingulatecortex_BA24_"
+[5] "Adipose-Visceral_Omentum__v_Brain-Caudate_basalganglia_"        
+[6] "Adipose-Visceral_Omentum__v_Brain-CerebellarHemisphere"         </code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>FDR <span class="ot">&lt;-</span> params<span class="sc">$</span>fdr</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Process all the contrast data using <em>FDR=1e-5</em>:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">map2</span>(rds_list, contrast_list, read_contrast, <span class="at">FDR =</span> <span class="fl">1e-5</span>, <span class="at">selection =</span> <span class="st">'maxClu'</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(res, <span class="sc">~</span>.x<span class="sc">$</span>cor_res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>res3 <span class="ot">&lt;-</span> <span class="fu">map2</span>(rds_list, contrast_list, read_contrast, <span class="at">FDR =</span> <span class="fl">1e-5</span>, <span class="at">selection =</span> <span class="st">'all'</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>df3 <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(res3, <span class="sc">~</span>.x[[<span class="st">'cor_res'</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="plot-all-tissue-pairs---ds-vs.-dge" class="level3">
+<h3 class="anchored" data-anchor-id="plot-all-tissue-pairs---ds-vs.-dge">Plot all tissue pairs - DS vs.&nbsp;DGE</h3>
+<div class="cell" data-outwidth="80%">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>gg3 <span class="ot">&lt;-</span> df3 <span class="sc">%&gt;%</span> </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_pointdensity</span>(<span class="fu">aes</span>(cor, <span class="sc">-</span><span class="fu">log10</span>(p), <span class="at">color =</span> itype), <span class="at">size =</span> .<span class="dv">5</span>, <span class="at">alpha =</span> .<span class="dv">9</span>) <span class="sc">+</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">type =</span> <span class="st">"qual"</span>, </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">palette =</span> <span class="dv">1</span>,</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">direction =</span> <span class="dv">1</span>,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">label =</span> <span class="fu">c</span>(<span class="at">PR=</span><span class="st">"Productive"</span>, <span class="at">UP=</span><span class="st">"Unproductive"</span>),</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">name =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lims</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="sc">-</span>.<span class="dv">5</span>, .<span class="dv">2</span>), <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">30</span>)) <span class="sc">+</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="sc">-</span><span class="fu">log10</span>(<span class="fl">0.001</span>), <span class="at">linetype =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'Correlation between differential gene</span><span class="sc">\n</span><span class="st">expression and diffferential splicing'</span>,</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">'Correlation'</span>,</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">'-log10(p-value)'</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>         )</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>gg3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 3 rows containing non-finite values (`stat_pointdensity()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-ds-dge-corr-all-tissue-pairs-allintrons" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ds-dge-corr-all-tissue-pairs-allintrons-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2024-06-18-GTEx-DGE-vs-DS_files/figure-html/fig-ds-dge-corr-all-tissue-pairs-allintrons-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ds-dge-corr-all-tissue-pairs-allintrons-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Correlation between deltaPSI and expression log2FC for all GTEx tissue pairs
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="plot-brain-cortex-vs.-muscle-skeletal---ds-vs.-dge" class="level3">
+<h3 class="anchored" data-anchor-id="plot-brain-cortex-vs.-muscle-skeletal---ds-vs.-dge">Plot Brain-Cortex vs.&nbsp;Muscle-Skeletal - DS vs.&nbsp;DGE</h3>
+<div class="cell" data-outwidth="80%">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>id_to_plot <span class="ot">&lt;-</span> <span class="fu">map_chr</span>(res, <span class="sc">~</span>.x<span class="sc">$</span>cor_res[, contrast] <span class="sc">%&gt;%</span> unique) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_detect</span>(., <span class="st">"Brain-Cortex_v_Muscle-Skeletal"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  which</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>gg <span class="ot">&lt;-</span> <span class="fu">pluck</span>(res, id_to_plot) <span class="sc">%&gt;%</span> <span class="fu">pluck</span>(<span class="st">'gg'</span>)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>gg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-ds-dge-corr-brain-cortex-muscle-skeletal-maxClu" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ds-dge-corr-brain-cortex-muscle-skeletal-maxClu-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2024-06-18-GTEx-DGE-vs-DS_files/figure-html/fig-ds-dge-corr-brain-cortex-muscle-skeletal-maxClu-1.png" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ds-dge-corr-brain-cortex-muscle-skeletal-maxClu-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Correlation between deltaPSI and expression log2FC in Brain-Cortex vs Muscle-Skeletal
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

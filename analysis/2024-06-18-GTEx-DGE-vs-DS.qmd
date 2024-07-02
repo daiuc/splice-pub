@@ -1,0 +1,418 @@
+---
+title: "Differential splicing vs differential gene expression in GTEx"
+date: "2024-6-18"
+params: 
+  fdr: 1e-5
+categories:
+  - GTEx
+  - DGE
+  - DS
+code-fold: true
+execute:
+  include: true
+  cache: true
+---
+
+```{r}
+#| label: setup
+#| include: false
+#| cache: false
+
+library(tidyverse)
+library(data.table)
+library(glue)
+library(ggpointdensity)
+library(magrittr)
+
+theme_set(cowplot::theme_cowplot())
+
+library(patchwork)
+library(ggrepel)
+
+```
+
+
+
+# Intro
+
+This notebook produces the comparison of differential splicing and differential gene expression.
+Pre-processed data are under `../../SpliFi/data/ds_v_dge/{tissue2}_v_{tissue1}_data.rds`
+
+
+
+## `Brain-Cortex_v_Muscle-Skeletal`
+
+### Load data
+
+Saved RDS file is a list of 3 objects: 
+  - `ds` : differential splicing results
+  - `dge` : differential gene expression results
+  - `dge_dsc` : metadata for dge results
+```{r}
+contrast <- "Brain-Cortex_v_Muscle-Skeletal"
+data <- readRDS(glue('/project/yangili1/cdai/SpliFi/data/ds_v_dge/{contrast}_data.rds'))
+
+ds <- data$ds
+dge <- data$dge
+```
+
+
+**ds:**
+```{r}
+head(ds) %>% gt::gt()
+```
+
+**dge:**
+
+```{r}
+head(dge) %>% gt::gt()
+print(data$dge_dsc)
+
+
+```
+
+
+
+### Prep data
+
+
+Mainly to join ds and dge dataset on `gene_id`. 
+
+Introns from ds tables are selected using: 
+  - `abs(deltapsi) > .1` : to filter out introns with small deltaPSI
+  - `p.adjust < FDR` : to filter out introns with high FDR
+  - `ctype %in% c('PR', 'PR,UP')` : introns are either productive or unproductive
+
+
+```{r}
+#| label: confirm correct contrast order
+
+tissues <- str_split(contrast, "_v_") %>% unlist # follow tissue2_v_tissue1
+
+# confirm ds contrast
+confirm_level_ds <- all(names(data$ds)[c(9, 8)] == tissues)
+
+# confirm dge contrast
+confirm_level_dge <- str_detect(str_split(data$dge_dsc[2], "tissue ")[[1]][[2]] %>% str_replace_all("\\.", "-"),
+                                glue("{tissues[1]} vs {tissues[2]}")
+                                )
+
+if (confirm_level_dge & confirm_level_ds) {
+  message("Confirmed tissue order")
+} else {
+  stop("Tissue order not confirmed")
+}
+
+```
+
+
+```{r}
+#| label: fig-distribution-of-dPSI-BRNCTX-MUSCSKLT
+#| fig-cap: "Distribution of deltaPSI in Brain-Cortex vs Muscle-Skeletal"
+#| fig-width: 6
+#| fig-height: 4
+#| out-width: 80%
+
+FDR <- params$fdr
+
+ds[`p.adjust` < FDR & ctype %in% c('PR', 'PR,UP')
+  ][,.(intron, deltapsi, itype)] %>% unique %>% 
+  ggplot() + stat_ecdf(aes(x=abs(deltapsi), color=itype)) +
+    scale_color_brewer(type = "qual", palette = 2, direction = -1, label = c(PR="Productive", UP="Unproductive"), name = NULL) +
+    labs(title = glue("{contrast}")) +
+    scale_x_sqrt(name = "abs(deltaPSI)")
+```
+
+
+Joined ds and dge tables on `gene_id`.
+
+```{r}
+#| label: join-ds-dge-data-tables
+
+joined_dt <- inner_join(
+  x = ds[abs(deltapsi) > .1 & `p.adjust` < FDR & ctype %in% c('PR', 'PR,UP'), 
+        .(gene_id, gene_name, intron, cluster, itype, ctype, deltapsi)],
+  y = dge[, .(gene_id, g_l2fc = log2FoldChange, g_z = stat, g_l2fcSE = lfcSE)],
+  by = 'gene_id'
+  )
+
+
+```
+
+
+Quick look of the joined table
+
+```{r}
+joined_dt %>% head %>% gt::gt()
+dim(joined_dt)
+joined_dt[, .(Ngene = uniqueN(gene_id), Nintron = uniqueN(intron))]
+
+```
+
+
+
+### Compute correlation
+
+Compute correlation between intron's deltaPSI and gene's log2FC
+
+*Note for some reason quarto does not refresh the output of this cell, result is not correct!*
+
+```{r}
+#| label: compute-correlation-BRNCTX-MUSCSKLT
+#| cache: false
+
+cor_res <- joined_dt %>% 
+  split(by = 'itype') %>% 
+  map(~cor.test(x = .x$g_z, y = .x$deltapsi, method = 'p')) %>% 
+  imap_dfr(
+    \(x, y) {
+      data.table(
+        cor = x$estimate,
+        p = x$`p.value`,
+        itype = y)
+    }
+  )
+
+cor_res 
+
+```
+
+
+### Plot correlation
+
+```{r}
+#| label: fig-correlation-BRNCTX-MUSCSKLT
+#| fig-cap: "Correlation between deltaPSI and log2FC in Brain-Cortex vs Muscle-Skeletal"
+#| fig-width: 6
+#| fig-height: 4
+#| out-width: 80%
+
+joined_dt %>% 
+  ggplot() +
+    geom_pointdensity(aes(g_z, deltapsi), size = .5, ) +
+    scale_color_viridis_c() + 
+    geom_smooth(aes(g_z, deltapsi), method = "lm", formula = y~x, se = FALSE) +
+    labs(title = glue("{title}", title = str_replace(contrast, "_v_", " vs ")), 
+         x = "DGE: Log2FC (z)",
+         y = "deltaPSI") +
+    facet_wrap(~itype, scales = "free")
+
+```
+
+
+## Unproductive splicing vs. expression for all GTEx tissue pairs
+
+
+Here, I try to compare the correlation between unproductive splicing and gene expression across all GTEx tissue pairs.
+
+
+### Prepare data
+
+
+```{r}
+#| label: useful functions
+#| cache: false
+
+read_contrast <- function(rds, contrast, FDR = 1e-5, selection = 'all') {
+  #' @params rds: path to rds file'
+  #' @params contrast: contrast name'
+  #' @params FDR: FDR threshold'
+  #' @params selection: 'all', 'maxClu', 'maxGene'.
+  #'                    Select all introns, max deltaPSI per cluster, or max deltaPSI per gene'
+
+
+
+  data <- readRDS(rds)
+  ds <- data$ds
+  dge <- data$dge
+  dge_dsc <- data$dge_dsc
+
+  joined_dt <- inner_join(
+    x = ds[abs(deltapsi) > .1 & `p.adjust` < FDR & ctype %in% c('PR', 'PR,UP'), 
+          .(gene_id, gene_name, intron, cluster, itype, ctype, deltapsi)],
+    y = dge[, .(gene_id, g_l2fc = log2FoldChange, g_z = stat, g_l2fcSE = lfcSE)],
+    by = 'gene_id'
+  )
+
+  if (selection == 'maxClu') {
+    joined_dt  <- joined_dt[
+      , .(intron, deltapsi, g_l2fc, g_z, g_l2fcSE, rk = rank(-abs(deltapsi), ties.method = "random")), 
+      by = .(gene_id, gene_name, cluster, itype, ctype)
+      ][rk == 1, -c('rk')]
+  } else if (selection == 'maxGene') {
+    joined_dt <- joined_dt[
+      , .(intron, deltapsi, g_l2fc, g_z, g_l2fcSE, rk = rank(-abs(deltapsi), ties.method = "random")), 
+      by = .(gene_id, gene_name, itype)
+      ][rk == 1, -c('rk')]
+  }
+
+  # run cor.test
+  cor_res <- joined_dt %>% 
+    split(by = 'itype') %>% 
+    map(~cor.test(x = .x$g_z, y = .x$deltapsi, method = 'pearson')) %>% 
+    imap_dfr(
+      \(x, y) {
+        data.table(
+          cor = x$estimate,
+          p = x$`p.value`,
+          itype = y,
+          contrast = contrast)
+      }
+    )
+
+    # plot scatter plot
+    p  <- joined_dt %>% 
+      ggplot() + 
+        geom_pointdensity(aes(g_z, deltapsi), size = .5, alpha = .5) +
+        scale_color_viridis_c() + 
+        geom_smooth(aes(g_z, deltapsi), method = "lm", formula = y~x, se = FALSE, color = 'blue', lwd = 1) +
+        geom_text(aes(x = 0,
+                      y = 0.1, 
+                      label = paste("cor: ", round(cor, 3), ", ",
+                                    "p. val: ", format(p, digits = 3, scientific = T), 
+                                    sep = "")
+                      ),
+                  data = cor_res, color = 'blue', size = 4, vjust = 1) +
+        labs(x = "DGE: Z-score", y = "DS: deltaPSI", color = "Num. points", 
+             title = str_wrap(str_replace_all(contrast, '_', ' '), width = 40)) +
+        facet_wrap(~itype)
+
+    return(list(cor_res = cor_res, gg = p, joineddf = joined_dt))
+
+}
+
+```
+
+
+Load contrast ds, dge data.
+
+rds file and contrast name example:
+```{r}
+#| label: input-data-for-all-tissue-pairs
+#| cache: false
+
+rds_list <- dir('/project/yangili1/cdai/SpliFi/data/ds_v_dge', full.names = T, pattern = '*.rds')
+rds_list <- rds_list[str_detect(rds_list, ".+ds_v_dge.+_v_.+data.rds")]
+contrast_list <- str_split(rds_list, "/") %>% map(., last) %>% unlist %>% str_remove_all('_data\\.rds')
+
+
+head(rds_list)
+head(contrast_list)
+
+```
+
+```{r}
+#| cache: false
+FDR <- params$fdr
+```
+
+
+Process all the contrast data using *FDR=`{r} FDR`*:
+
+```{r}
+#| label: process contrast data selecting all 1 max deltaPSI intron
+
+res <- map2(rds_list, contrast_list, read_contrast, FDR = 1e-5, selection = 'maxClu')
+df <- map_dfr(res, ~.x$cor_res)
+
+```
+
+
+
+```{r}
+#| label: process contrast data selecting all introns
+
+res3 <- map2(rds_list, contrast_list, read_contrast, FDR = 1e-5, selection = 'all')
+df3 <- map_dfr(res3, ~.x[['cor_res']])
+```
+
+### Plot all tissue pairs - DS vs. DGE
+
+```{r}
+#| label: fig-ds-dge-corr-all-tissue-pairs-allintrons
+#| fig-cap: "Correlation between deltaPSI and expression log2FC for all GTEx tissue pairs"
+#| fig-width: 7
+#| fig-height: 5
+#| outwidth: 80%
+
+gg3 <- df3 %>% 
+  ggplot() + geom_pointdensity(aes(cor, -log10(p), color = itype), size = .5, alpha = .9) +
+  scale_color_brewer(type = "qual", 
+                     palette = 1,
+                     direction = 1,
+                     label = c(PR="Productive", UP="Unproductive"),
+                     name = NULL) +
+  lims(x = c(-.5, .2), y = c(0, 30)) +
+  geom_hline(yintercept = -log10(0.001), linetype = 2) +
+    labs(title = 'Correlation between differential gene\nexpression and diffferential splicing',
+         x = 'Correlation',
+         y = '-log10(p-value)'
+         )
+gg3
+```
+
+
+
+### Plot Brain-Cortex vs. Muscle-Skeletal - DS vs. DGE
+
+
+```{r}
+#| label: fig-ds-dge-corr-brain-cortex-muscle-skeletal-maxClu
+#| fig-cap: "Correlation between deltaPSI and expression log2FC in Brain-Cortex vs Muscle-Skeletal"
+#| cache: false
+#| fig-width: 8
+#| fig-height: 5
+#| outwidth: 80%
+
+id_to_plot <- map_chr(res, ~.x$cor_res[, contrast] %>% unique) %>% 
+  str_detect(., "Brain-Cortex_v_Muscle-Skeletal") %>% 
+  which
+gg <- pluck(res, id_to_plot) %>% pluck('gg')
+gg
+```
+
+
+
+
+
+
+
+
+
+```{r}
+#| include: false
+#| eval: false
+# zzz
+
+id_to_plot <- map_chr(res, ~.x$cor_res[, contrast] %>% unique) %>% 
+  str_detect(., "Brain-Cortex_v_Muscle-Skeletal") %>% 
+  which
+pluck(res, id_to_plot) %>% pluck('gg')
+
+```
+
+
+```{r}
+#| include: false
+#| eval: false
+
+httpgd::hgd(host = "10.50.250.13", port = 9002, token = F)
+```
+
+```{r}
+#| include: false
+#| eval: false
+
+httpgd::hgd_url()
+```
+
+```{r}
+#| include: false
+#| eval: false
+
+httpgd::hgd_close()
+```
+
+
+
+

@@ -1,0 +1,338 @@
+---
+title: "GTEx PSI heatmap"
+date: "2024-6-19"
+params: 
+  fdr_ds: 1e-5
+  fdr_dge: 0.8
+  psi: 0.2
+categories:
+  - GTEx
+  - DGE
+  - heatmap
+code-fold: true
+execute:
+  include: true
+  cache: true
+---
+
+
+```{r}
+#| label: setup
+#| include: false
+#| cache: false
+
+library(tidyverse)
+library(data.table)
+library(glue)
+library(magrittr)
+
+theme_set(cowplot::theme_cowplot())
+
+library(ComplexHeatmap)
+library(viridis)
+```
+
+
+```{r}
+#| label: setup2
+#| include: false
+#| cache: false
+
+library(furrr)
+plan(multisession, workers = 6)
+
+```
+
+```{r}
+#| label: useful funcs
+#| cache: false
+
+GetTopUpIntrons <- function(data, FDR_ds, FDR_dge, dPSI) {
+  dge <- pluck(data, "dge")
+  ds <- pluck(data, "ds")
+
+  # if a cluster has multiple UP introns, only select the best 1
+  ds <- ds[itype == 'UP' & ctype == 'PR,UP'
+    ][, rk := rank(-abs(deltapsi), ties.method = "first"), by = cluster
+    ][rk ==1
+    ][, rk := NULL][]
+  ds <- ds[`p.adjust` < FDR_ds & abs(deltapsi) > dPSI,]
+
+  dge <- dge[padj < FDR_dge,]
+  
+  ds_excl_cols <- c('itype', 'ctype', 'df', 'p', 'p.adjust','logef', 'loglr', 'status')
+  dge_excl_cols <- c('baseMean', 'lfcSE', 'stat', 'pvalue', 'padj')
+  chosen <- inner_join(
+      x = ds[, -ds_excl_cols, with = FALSE],
+      y = dge[, -dge_excl_cols, with = FALSE],
+      by = "gene_id",
+      suffix = c("_ds", "_dge")
+    ) %>%
+    .[deltapsi * log2FoldChange < 0, ]
+
+  return(chosen)
+}
+
+
+GetHeatmapMatrix <- function(dt, clusters, contrast) {
+  # dt$intron2 <- str_replace_all(dt$intron, ":clu_\\d+_", "")
+  tissues <- str_split(contrast, "_v_") %>% unlist()
+  keep1 <- c("intron", "cluster", tissues[1], "itype", "ctype")
+  keep2 <- c("intron", "cluster", tissues[2], "itype", "ctype")
+  out <- list(
+    dt[cluster %in% clusters, keep1, with = FALSE],
+    dt[cluster %in% clusters, keep2, with = FALSE]
+  )
+  names(out) <- tissues
+
+  return(out)
+}
+
+
+sumPSI <- function(dt, cn) {
+  dt <- rename(dt, psi = {{ cn }}) %>% as.data.table
+  dt <- dt[itype == "UP"][, .(psi = sum(psi)), by = cluster] # sum unprod PSI by cluster
+  names(dt) <- c("cluster", cn)
+  return(as.data.table(dt))
+}
+
+```
+
+
+```{r}
+#| label: setup3 - set params
+
+FDR = c(ds = params$fdr_ds, dge = params$fdr_dge)
+dPSI = params$psi
+
+print(glue("ds FDR: {FDR['ds']} ", "dge FDR: {FDR['dge']} ", "dPSI: {dPSI}"))
+print(glue("Dir: {getwd()}"))
+
+```
+
+
+# Intro
+
+
+Plot heat map of unproductive splicing across tissues in GTEx. Each value represent a total sum of PSI for unproductive splicing. Each column is a tissue.
+
+Clusters are selected like so:
+
+For each pair of comparison between tissue A and tissue B, do the following:
+
+1. Select the most significant DS introns with *FDR < `{r} params$fdr_ds`* and *|deltaPSI| > `{r} params$psi`*. If there are more than 1 intron passing this criteria within a cluster, select the best one (larger delta PSI)
+2. Select significant DGE genes with *FDR < `{r} params$fdr_dge`*
+3. join ds and dge data using gene IDs. Each gene may have multiple introns.
+4. Only select introns where direction of change in PSI and gene expression are opposite.
+5. select cluster IDs
+
+The final set of clusters is the union of all clusters selected in each comparison.
+
+
+
+> *Note cluster ids must be the same across all contrasts. I had confirmed this is true by randomly select 500 tissue pairs where cluster ids are the same. Also, when I run leafcutter2 diffferential splicing analysis, I first generated intron cluster across all GTEx tissues (49), then run leafcutter against this set of intron cluster.*
+
+
+```{r}
+data_f <- dir('../../SpliFi/data/ds_v_dge', "*.rds", full.names = T)
+data_f <- data_f[str_detect(data_f, ".+_v_.+_data.rds")]
+names(data_f) <- data_f %>% str_split('\\/') %>% map_chr(6) %>% str_replace_all("\\_data.rds", "")
+```
+
+
+```{r}
+#| label: filter UP intron clusters for plotting heatmap
+#| eval: true
+clus <- future_map(
+  data_f, 
+  \(rds_f) {
+    data <- readRDS(rds_f)
+    unfiltered_clu <- pluck(data, "ds", "cluster")
+    dt <- GetTopUpIntrons(data, FDR_ds = FDR['ds'], FDR_dge = FDR['dge'], dPSI = dPSI)
+    filtered_clu <- dt$cluster
+    return(list(unfiltered_clu = unfiltered_clu, filtered_clu = filtered_clu))
+  }
+)
+
+
+filtered_clus <- reduce(map(clus, pluck, "filtered_clu"), union)
+common_clus <- reduce(map(clus, pluck, "unfiltered_clu"), intersect)
+plot_clus <- intersect(common_clus, filtered_clus)
+
+print(glue("Plotting {length(plot_clus)} clusters."))
+```
+
+
+
+```{r}
+#| label: prepare PSI data for each tissue
+
+plotdata <- imap(
+  data_f,
+  \(rds_f, contrast) {
+    data <- readRDS(rds_f)
+    dt <- GetHeatmapMatrix(pluck(data, "ds"), plot_clus, contrast)
+  }
+) %>% list_flatten(name_spec = "{outer}.{inner}")
+
+
+# get the names of stored plot datatable without duplicating dataste
+plotdata.names <- names(plotdata) %>%
+  str_split("\\.", simplify = T) %>%
+  as.data.table() %>%
+  .[, .(V1, rk = rank(V1)), by = V2] %>% # after split, V1=contrast, V2=tissue
+  .[rk == 1] %>% # since a tissue can be used in multiple contrasts, only keep 1
+  .[, .(V1, nm = paste(V1, ".", V2, sep = ""))] %>%
+  .[, nm]
+
+# reduce dataset to only the selected tissues
+plotdata <- plotdata[plotdata.names]
+
+names(plotdata) <- str_split(names(plotdata), "\\.") %>% map_chr(~.[2])
+
+```
+
+
+```{r}
+# number of clusters that are common across all contrasts
+map(plotdata, ~.x[, cluster]) %>% reduce(intersect) %>% length
+```
+ 
+
+```{r}
+#| label: summarize PSI per cluster
+plotdata <- imap(plotdata, ~sumPSI(.x, .y))
+```
+
+
+```{r}
+mx_clusters <- intersect(reduce(map(plotdata, ~.x[, cluster]), intersect), plot_clus)
+length(mx_clusters)
+
+
+plotdata <- map(plotdata, ~.x[cluster %in% mx_clusters])
+
+# combine all data into a single matrix
+mx <- cbind(plotdata[[1]][, 1], map_dfc(plotdata, ~.x[, 2]))
+```
+
+
+
+
+
+```{r}
+#| include: false
+#| eval: false
+
+
+
+# test that all datatable in plotdata has the same order and number of rows, print 1 for passing test
+s = 0
+N = 50
+M = 3
+for (i in 1:N) {
+  same = all(plotdata[[sample(1:M,1)]][, cluster] == plotdata[[sample(1:M,1)]][, cluster])
+  s = s + same
+}
+print(s/N)
+```
+
+
+## Plot Heatmap
+
+
+```{r}
+#| label: load GTEX tissue labels
+
+tissue_labels <- fread("../analysis/gtex-tissue-code.csv",
+  col.names = c("tissue", "label"),
+  header = F) %>% deframe
+  
+```
+
+ 
+```{r}
+# organize the matrix, mainly labels
+mx <- mx %>% column_to_rownames("cluster")
+colnames(mx) <- tissue_labels[colnames(mx)]
+```
+
+```{r}
+legendBreaks <- seq(-4, 4, 2)
+# colors <- rev(RColorBrewer::brewer.pal(length(legendBreaks), "RdBu"))
+colors <- c("#053061", "#2166AC", "#F7F7F7", "#B2182B", "#67001F")
+colfunc <- circlize::colorRamp2(
+  breaks = legendBreaks, 
+  colors = colors
+  )
+```
+ 
+
+```{r}
+#| column: screen
+#| label: fig-heatmap
+#| fig-width: 10
+#| fig-height: 10
+#| out-width: 100%
+
+set.seed(123)
+cluster_method <- "ward.D"
+ht <- mx %>%
+  as.matrix %>% t %>% scale %>% t %>%
+  Heatmap(
+    col = colfunc,
+    row_km = 12, row_gap = unit(0.2, "mm"), 
+    column_km = 3, column_gap = unit(0.2, "mm"),
+    show_parent_dend_line = F,
+    show_row_names = FALSE, clustering_method_rows = cluster_method, show_row_dend = F,
+    clustering_method_columns = cluster_method, 
+    column_dend_height = unit(1.5, "in"), show_column_dend = T,
+    heatmap_legend_param = list(title = "PSI (z-score)"),
+    use_raster = T
+    )
+```
+
+
+```{r}
+#| messages: false
+ht
+```
+## Select a union set of unprod. intron clusters
+
+criteria:
+
+  1. ds FDR < 1e-5
+  2. abs(deltaPSI) > 0.1 
+  3. dge FDR < 1e-5
+  4. select the best UP intron for each cluster, then collect cluster ID
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
