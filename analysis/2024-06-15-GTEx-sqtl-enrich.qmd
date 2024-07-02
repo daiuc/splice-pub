@@ -1,8 +1,6 @@
 ---
 title: "GTEx sQTL enrichment"
 date: 2024-6-15
-params: 
-  fdr: 0.1
 categories: ['qtl']
 code-fold: true
 execute:
@@ -13,10 +11,26 @@ execute:
 ---
 
 
+The underlying data for both the qqplot and the scatter plot are the from this procedure:
+
+1. Map sQTLs using permutation pass with QTLtools against leafcutter2 output. Each phenotype is an intron.
+2. Permpass result report a top SNP for each intron. Use the collection of these top SNPs to subset genotype VCF file. 
+3. Run nominal pass for eQTL with expression data and the subsetted genotype VCF file. This effectively run regression analysis of each top sQTL SNP against gene expression.
+
+Then for the qqplot, I plotted the pvalue of expression regression for each productive vs. unproductive sQTLs top SNP.
+
+For the scatter plot, each top SNP is the top SNP of a productive or unprodutive sQTL. X axis is SNP's regression slope for gene expression, and Y axis is the regression slope of splicing.
+
+Note each sQTL is either a productive or unproductive sQTLs, and represent a intron cluster. A productive sQTL is a cluster that only have productive introns. The strongest intron is chosen to represent the cluster (instead of aggregated of all the introns). 
+
+An unproductive sQTL is a cluster that has both productive intron and unproductive introns with permutation pass q value < 0.1. The best intron (largest top SNP slope) is chosen to represent the cluster as unproductive sQTL. Note even though the cluster is labeld as unproductive sQTL, either a productive or an unproductive intron is chosen to represent the cluster. For this reason, it may be a bit confliciting in the correlation plot.
+
+
 
 ```{r}
 #| include: false
 library(tidyverse)
+
 ```
 ```{r}
 base_path= "../smk-plots/gtex-sqtl-enrichment"
@@ -32,7 +46,6 @@ head(qqs)
 head(scatter)
 ```
 
-All the underlying data is produced by running nominal eQTLs against each sQTL's top SNP. qq Plots are plotted using eQTL, nominal pvalues. Scatter plots are plotted using sQTL's top SNP nominal beta against the same SNP's eQTL nominal beta.
 
 # Enrichment of sQTL in eQTL pvalues
 
