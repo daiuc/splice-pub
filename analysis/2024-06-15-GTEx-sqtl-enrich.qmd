@@ -32,7 +32,11 @@ head(qqs)
 head(scatter)
 ```
 
+All the underlying data is produced by running nominal eQTLs against each sQTL's top SNP. qq Plots are plotted using eQTL, nominal pvalues. Scatter plots are plotted using sQTL's top SNP nominal beta against the same SNP's eQTL nominal beta.
+
 # Enrichment of sQTL in eQTL pvalues
+
+some brain tissues produce NA results, which is why the plots look strange. I'll update with the reason tehre are lots of NAs. 
 
 ```{r}
 #| column: screen
