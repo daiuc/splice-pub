@@ -32,7 +32,8 @@ print(glue("tissue: {tissue}, basepath: {basepath}, out_prefix: {out_prefix}"))
 
 #------ functions   ------
 
-multiqq <- function(pvalues) {
+multiqq <- function(pvalues, flipY = FALSE) {
+  # flipgY: if TRUE, flip the y-axis
   library(foreach)
   if (is.null(names(pvalues))) {
     names(pvalues) <- seq_along(pvalues)
@@ -50,6 +51,10 @@ multiqq <- function(pvalues) {
     df
   })
 
+  if (flipY) {
+    df$y <- -df$y
+  }
+
   df$group <- factor(df$group, names(pvalues))
   ggplot(df, aes(x, y, col = group)) +
     geom_point() +
@@ -60,7 +65,6 @@ multiqq <- function(pvalues) {
     xlab("Expected -log10(p)") +
     ylab("Observed -log10(p)")
 }
-
 
 addLabels <- function(dt) {
   pid_split <- str_split(dt$phenotype_id, ":")
@@ -112,7 +116,13 @@ print(dim(nomDF))
 sqtl <- permDF[q < FDR & itype %in% c("PR", "UP") & ctype %in% c("PR", "PR,UP")]
 
 # select the best intron per cluster based on the largest effect size
-sqtl <- sqtl[, rk := frank(-abs(slope), ties.method = "first"), by = .(clu)][rk == 1]
+# note u-sQTLs are selected based on teh largest unproductive effect size
+sqtl <- sqtl[, rk := frank(-abs(slope), ties.method = "first"), by = .(clu, itype)]
+sqtl <- rbind(
+  sqtl[ctype == "PR"][itype == 'PR' & rk == 1][order(clu)], # best intron for PR cluster
+  sqtl[ctype == "PR,UP"][itype == "UP" & rk == 1][order(clu)] # best intron for PR,UP cluster
+) %>%
+  .[naturalsort::naturalorder(phenotype_id)]
 
 # give key for joining with eqtl nominal pass
 sqtl.v <- sqtl[, best_genotype_id] %>% unique()
@@ -154,17 +164,33 @@ plotDF <- mergeDF[, .(
 print("dim of plot data:")
 print(dim(plotDF))
 
+# first plot sQTL_slope > 0
 qqplot <- list(
-  Productive = plotDF[ctype == "PR", pval_eqtl],
-  Unproductive = plotDF[ctype == "PR,UP", pval_eqtl]
+  Productive = plotDF[ctype == "PR" & slope_sqtl > 0, pval_eqtl],
+  Unproductive = plotDF[ctype == "PR,UP" & slope_sqtl > 0, pval_eqtl]
 ) %>%
   multiqq()
 
-Title <- glue("{tissue}")
+# then plot sQTL_slope < 0
+qqplotNeg <- list(
+  Productive = plotDF[ctype == "PR" & slope_sqtl < 0, pval_eqtl],
+  Unproductive = plotDF[ctype == "PR,UP" & slope_sqtl < 0, pval_eqtl]
+) %>%
+  multiqq(flipY = TRUE)
 
-qqplot <- qqplot + theme_cowplot() +
-  labs(title = Title) +
-  theme(legend.title = element_blank())
+Title <- glue("{tissue}")
+COLORS <- RColorBrewer::brewer.pal(9, "Blues")[c(4, 6)]
+names(COLORS) <- c("Productive", "Unproductive")
+
+
+qqplot <- rbind(qqplot$data, qqplotNeg$data) %>%
+  ggplot(aes(x, y, col = group)) + geom_point() +
+    geom_abline(intercept = 0, slope = 1) +
+    labs(x = "Expected -log10(p)", y = "Observed -log10(p)", title = Title) +
+    scale_color_manual(values = COLORS) +
+    theme_cowplot() +
+    theme(legend.title = element_blank())
+
 
 # save file
 
@@ -178,7 +204,7 @@ ggsave(glue("{out_prefix}/{tissue}-qqplot.png"), qqplot, width = 7, height = 5, 
 #---- plot enrichment ----
 
 corr <- plotDF[, .(slope_sqtl, slope_eqtl, ctype = if_else(ctype == "PR", "PR", "UP"))]  %>% 
-  split( by = "ctype")  %>% 
+  split(by = "ctype") %>% 
   map(~cor.test(x = .x$slope_eqtl, y = .x$slope_sqtl, method = "p"))
 
 corr.pvals <- map(corr, ~.x$p.value) %>% unlist
@@ -191,7 +217,7 @@ if (all(names(corr.pvals) == names(corr.estimates))) {
     estimate = corr.estimates
   )
   corr.df <- corr.df %>% 
-  mutate(xpos = c(0,0), ypos = c(0,0))
+  mutate(xpos = c(0, 0), ypos = c(0, 0))
 } else {
   stop("names of pvals and estimates do not match")
 }
@@ -200,19 +226,23 @@ if (all(names(corr.pvals) == names(corr.estimates))) {
 scatter <- plotDF[, .(slope_sqtl, slope_eqtl, ctype)] %>% 
   mutate(ctype = if_else(ctype == "PR", "Productive", "Unproductive")) %>%
   ggplot() + geom_pointdensity(aes(slope_eqtl, slope_sqtl), alpha = .6) +
-    geom_smooth(aes(slope_eqtl, slope_sqtl), method = "lm", se = F, formula = y~x) +
-    geom_text(data = corr.df, 
-              mapping = aes(x = xpos, y = ypos, 
-                            label = glue("cor: {corr}\np: {pvalue}", 
-                                        corr = if_else(abs(estimate) > .001, scales::number(estimate, .01), scales::scientific(estimate)),
-                                        pvalue = if_else(pval > .001, scales::number(pval, .01), scales::scientific(pval)),
-                                    )
-                          ) 
-            ) +
-    labs(x = "eQTL effect size", y = "sQTL effect size", 
-         title = glue("{tissue}")
-        ) +
-    facet_wrap(~ctype) + theme_cowplot()
+    geom_abline(aes(intercept = 0, slope = estimate), 
+                data = corr.df, linetype = "dashed", color = "navy", linewidth = 1) +
+    geom_text(
+              aes(
+                  x = xpos, y = ypos,
+                  label = glue(
+                               "cor: {corr}\np: {pvalue}", 
+                               corr = if_else(abs(estimate) > .001, scales::number(estimate, .01), scales::scientific(estimate)),
+                               pvalue = if_else(pval > .001, scales::number(pval, .01), scales::scientific(pval))
+                              )
+                  ),
+              data = corr.df, size = 6, hjust = .5, vjust = 1
+              ) +
+    labs(x = "eQTL effect size", y = "sQTL effect size", title = glue("{tissue}")) +
+    facet_wrap(~ctype) + 
+    theme_cowplot() + 
+    theme(strip.background = element_rect(fill = "white"))
 
 print("save scatter")
 ggsave(glue("{out_prefix}/{tissue}-scatter.png"), scatter, width = 7, height = 5, dpi = 200)
