@@ -1,6 +1,6 @@
 --
-title: "GTEx sQTL enrichment"
-date: 2024-6-15
+title: "GTEx sQTL enrichment (version 2)"
+date: 2024-6-22
 categories: ['qtl']
 code-fold: true
 execute:
@@ -33,7 +33,7 @@ library(tidyverse)
 
 ```
 ```{r}
-base_path= "../smk-plots/gtex-sqtl-enrichment"
+base_path= "../smk-plots/gtex-sqtl-enrichment-v2"
 
 ```
 
