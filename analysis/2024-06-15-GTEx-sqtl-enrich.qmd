@@ -1,4 +1,4 @@
---
+---
 title: "GTEx sQTL enrichment"
 date: 2024-6-15
 categories: ['qtl']
@@ -27,13 +27,14 @@ An unproductive sQTL is a cluster that has both productive intron and unproducti
 
 
 
+
 ```{r}
 #| include: false
 library(tidyverse)
 
 ```
 ```{r}
-base_path= "../smk-plots/gtex-sqtl-enrichment"
+base_path= "../smk-plots/gtex-sqtl-enrichment-v1"
 
 ```
 
@@ -49,7 +50,6 @@ head(scatter)
 
 # Enrichment of sQTL in eQTL pvalues
 
-Curious that, a bunch of qqplots for sQTL enrichment in eQTL pvalues fall flat to a flat line. They are all Brain tissues. Is it because the top sQTL SNPs are highly splicing specific mechanisms, and unrelated to expression changes? We know that alternative splicing is a lot more prevalent in Brain tissues, so these top sQTLs are really just capturing the difference in splicing only? Does it mean unproductive splicing is less relevant in expression regulation in brain?
 
 
 ```{r}

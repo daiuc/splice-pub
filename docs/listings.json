@@ -2,13 +2,13 @@
   {
     "listing": "/index.html",
     "items": [
-      "/analysis/2024-06-15-GTEx-sqtl-enrich.html",
-      "/analysis/2024-06-22-GTEx-sqtl-enrich.html",
       "/analysis/2024-06-25-bug-fix.html",
       "/analysis/2024-06-25-pyfastx-1-or-0-base.html",
+      "/analysis/2024-06-22-GTEx-sqtl-enrich.html",
       "/analysis/2024-06-20-GTEx-DGE-vs-DS-TissueExample.html",
       "/analysis/2024-06-18-GTEx-DGE-vs-DS.html",
       "/analysis/2024-06-17-unprod-splicing-ratio-GTEx.html",
+      "/analysis/2024-06-15-GTEx-sqtl-enrich.html",
       "/analysis/2024-06-15-GWAS-list.html",
       "/analysis/2024-06-10-GenomeTracks.html",
       "/analysis/2024-06-10-tally-sQTLs.html"

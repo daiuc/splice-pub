@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="dcterms.date" content="2024-06-22">
 
-<title>mysite</title>
+<title>mysite - GTEx sQTL enrichment - updated</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -154,19 +121,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content page-columns page-full" id="quarto-document-content">
 
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">GTEx sQTL enrichment - updated</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">qtl</div>
+  </div>
+  </div>
 
 
 
-<table class="table">
-<colgroup>
-<col style="width: 4%">
-</colgroup>
-<tbody>
-<tr class="odd">
-<td>title: “GTEx sQTL enrichment (version 2)” date: 2024-6-22 categories: [‘qtl’] code-fold: true execute: include: true eval: true cache: false echo: false</td>
-</tr>
-</tbody>
-</table>
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 22, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
 <p>The underlying data for both the qqplot and the scatter plot are the from this procedure:</p>
 <ol type="1">
 <li>Map sQTLs using permutation pass with QTLtools against leafcutter2 output. Each phenotype is an intron.</li>
@@ -177,19 +159,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>For the scatter plot, each top SNP is the top SNP of a productive or unprodutive sQTL. X axis is SNP’s regression slope for gene expression, and Y axis is the regression slope of splicing.</p>
 <p>Note each sQTL is either a productive or unproductive sQTLs, and represent a intron cluster. A productive sQTL is a cluster that only have productive introns. The strongest intron is chosen to represent the cluster (instead of aggregated of all the introns).</p>
 <p>An unproductive sQTL is a cluster that has both productive intron and unproductive introns with permutation pass q value &lt; 0.1. The best intron (largest top SNP slope) is chosen to represent the cluster as unproductive sQTL. Note even though the cluster is labeld as unproductive sQTL, either a productive or an unproductive intron is chosen to represent the cluster. For this reason, it may be a bit confliciting in the correlation plot.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>base_path<span class="ot">=</span> <span class="st">"../smk-plots/gtex-sqtl-enrichment-v2"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
 <section id="enrichment-of-sqtl-in-eqtl-pvalues" class="level1 page-columns page-full">
 <h1>Enrichment of sQTL in eQTL pvalues</h1>
-<p>Curious that, a bunch of qqplots for sQTL enrichment in eQTL pvalues fall flat to a flat line. They are all Brain tissues. Is it because the top sQTL SNPs are highly splicing specific mechanisms, and unrelated to expression changes? We know that alternative splicing is a lot more prevalent in Brain tissues, so these top sQTLs are really just capturing the difference in splicing only? Does it mean unproductive splicing is less relevant in expression regulation in brain?</p>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(qqs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
+<div>
+
+</div>
 <div class="cell column-screen quarto-layout-panel" data-layout-ncol="4">
 <div class="quarto-layout-row">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
@@ -809,10 +783,9 @@ Figure&nbsp;49
 </section>
 <section id="comparison-of-sqtl-top-snp-beta-and-eqtl-effect-size-nominal-beta-of-same-top-sqtl-snp" class="level1 page-columns page-full">
 <h1>Comparison of sQTL (top SNP beta) and eQTL effect size (nominal beta of same top sQTL SNP)</h1>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(scatter)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
+<div>
+
+</div>
 <div class="cell column-screen quarto-layout-panel" data-layout-ncol="4">
 <div class="quarto-layout-row">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
