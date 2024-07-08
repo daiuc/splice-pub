@@ -23,7 +23,7 @@ For the scatter plot, each top SNP is the top SNP of a productive or unprodutive
 
 Note each sQTL is either a productive or unproductive sQTLs, and represent a intron cluster. A productive sQTL is a cluster that only have productive introns. The strongest intron is chosen to represent the cluster (instead of aggregated of all the introns). 
 
-An unproductive sQTL is a cluster that has both productive intron and unproductive introns with permutation pass q value < 0.1. The best intron (largest top SNP slope) is chosen to represent the cluster as unproductive sQTL. Note even though the cluster is labeld as unproductive sQTL, either a productive or an unproductive intron is chosen to represent the cluster. For this reason, it may be a bit confliciting in the correlation plot.
+An unproductive sQTL is a cluster that has both productive intron and unproductive introns with permutation pass q value < 0.1. The best intron (largest top SNP slope) is chosen to represent the cluster as unproductive sQTL. Note, comparing to previous version, here for u-sQTLs (ctype = PR,UP) select the best unproductive intron to represent the cluster.
 
 
 

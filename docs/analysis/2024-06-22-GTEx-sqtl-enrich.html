@@ -158,7 +158,7 @@ ul.task-list li input[type="checkbox"] {
 <p>Then for the qqplot, I plotted the pvalue of expression regression for each productive vs.&nbsp;unproductive sQTLs top SNP.</p>
 <p>For the scatter plot, each top SNP is the top SNP of a productive or unprodutive sQTL. X axis is SNP’s regression slope for gene expression, and Y axis is the regression slope of splicing.</p>
 <p>Note each sQTL is either a productive or unproductive sQTLs, and represent a intron cluster. A productive sQTL is a cluster that only have productive introns. The strongest intron is chosen to represent the cluster (instead of aggregated of all the introns).</p>
-<p>An unproductive sQTL is a cluster that has both productive intron and unproductive introns with permutation pass q value &lt; 0.1. The best intron (largest top SNP slope) is chosen to represent the cluster as unproductive sQTL. Note even though the cluster is labeld as unproductive sQTL, either a productive or an unproductive intron is chosen to represent the cluster. For this reason, it may be a bit confliciting in the correlation plot.</p>
+<p>An unproductive sQTL is a cluster that has both productive intron and unproductive introns with permutation pass q value &lt; 0.1. The best intron (largest top SNP slope) is chosen to represent the cluster as unproductive sQTL. Note, comparing to previous version, here for u-sQTLs (ctype = PR,UP) select the best unproductive intron to represent the cluster.</p>
 <section id="enrichment-of-sqtl-in-eqtl-pvalues" class="level1 page-columns page-full">
 <h1>Enrichment of sQTL in eQTL pvalues</h1>
 <div>
