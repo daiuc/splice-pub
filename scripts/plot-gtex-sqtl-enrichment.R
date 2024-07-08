@@ -98,6 +98,19 @@ readGTExNOM <- function(tissue, basepath) {
   return(df)
 }
 
+readGTExNOM_allSnps <- function(tissue, basepath) {
+  base1.gtex <- glue("{basepath}/code/results/eqtl/GTEx")
+  paths <- glue("{base1.gtex}/{tissue}/nom-all-snps/chr{1:22}.txt.gz")
+  df <- map_dfr(paths, fread)
+  names(df) <- c(
+    "pid", "pchr", "pstart", "pend", "pstrand", "nVar", "dist",
+    "vid", "vchr", "vstart", "vend", "pval", "r2", "slope", "topflag"
+  )
+  # randomly select 2000 snps
+  set.seed(123)
+  df <- df[sample(nrow(df), 2000), ]
+  return(df)
+}
 
 # ------ main ------
 
@@ -110,6 +123,10 @@ nomDF <- readGTExNOM(tissue, basepath)
 print("dim of nomDF")
 print(dim(nomDF))
 
+# genomewide snps, randomly select 2000
+nomDF_genome <- readGTExNOM_allSnps(tissue, basepath)
+print("dim of nomDF_geonomewide")
+print(dim(nomDF_genome))
 
 
 # determine p-sqTLs and u-sQTLs
@@ -178,12 +195,18 @@ qqplotNeg <- list(
 ) %>%
   multiqq(flipY = TRUE)
 
+# randomly selected genome-wide snps
+qqplot_gw <- rbind(
+  multiqq(list(GenomeWide = nomDF_genome[slope < 0, pval]))$data,
+  multiqq(list(GenomeWide = nomDF_genome[slope > 0, pval]), flipY = T)$data
+)
+
 Title <- glue("{tissue}")
-COLORS <- RColorBrewer::brewer.pal(9, "Blues")[c(4, 6)]
-names(COLORS) <- c("Productive", "Unproductive")
+COLORS <- c(RColorBrewer::brewer.pal(9, "Blues")[c(4,6)], "grey")
+names(COLORS) <- c("Productive", "Unproductive", "GenomeWide")
 
 
-qqplot <- rbind(qqplot$data, qqplotNeg$data) %>%
+qqplot <- rbind(qqplot$data, qqplotNeg$data, qqplot_gw) %>%
   ggplot(aes(x, y, col = group)) + geom_point() +
     geom_abline(intercept = 0, slope = 1) +
     labs(x = "Expected -log10(p)", y = "Observed -log10(p)", title = Title) +
@@ -226,6 +249,7 @@ if (all(names(corr.pvals) == names(corr.estimates))) {
 scatter <- plotDF[, .(slope_sqtl, slope_eqtl, ctype)] %>% 
   mutate(ctype = if_else(ctype == "PR", "Productive", "Unproductive")) %>%
   ggplot() + geom_pointdensity(aes(slope_eqtl, slope_sqtl), alpha = .6) +
+    scale_color_viridis_c() +
     geom_abline(aes(intercept = 0, slope = estimate), 
                 data = corr.df, linetype = "dashed", color = "navy", linewidth = 1) +
     geom_text(
