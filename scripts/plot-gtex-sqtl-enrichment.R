@@ -248,7 +248,7 @@ if (all(names(corr.pvals) == names(corr.estimates))) {
 
 scatter <- plotDF[, .(slope_sqtl, slope_eqtl, ctype)] %>% 
   mutate(ctype = if_else(ctype == "PR", "Productive", "Unproductive")) %>%
-  ggplot() + geom_pointdensity(aes(slope_eqtl, slope_sqtl), alpha = .6) +
+  ggplot() + geom_pointdensity(aes(slope_sqtl, slope_eqtl), alpha = .6) +
     scale_color_viridis_c() +
     geom_abline(aes(intercept = 0, slope = estimate), 
                 data = corr.df, linetype = "dashed", color = "navy", linewidth = 1) +
@@ -263,7 +263,7 @@ scatter <- plotDF[, .(slope_sqtl, slope_eqtl, ctype)] %>%
                   ),
               data = corr.df, size = 6, hjust = .5, vjust = 1
               ) +
-    labs(x = "eQTL effect size", y = "sQTL effect size", title = glue("{tissue}")) +
+    labs(x = "sQTL effect size", y = "eQTL effect size", title = glue("{tissue}")) +
     facet_wrap(~ctype) + 
     theme_cowplot() + 
     theme(strip.background = element_rect(fill = "white"))
@@ -274,7 +274,8 @@ ggsave(glue("{out_prefix}/{tissue}-scatter.png"), scatter, width = 7, height = 5
 #---- save data ----
 outobj <- list(
   joinedDF = mergeDF,
-  corrDF = corr.df
+  corrDF = corr.df,
+  genomewide_snps = nomDF_genome
 )
 print(glue("save data to {out_prefix}/{tissue}.rds"))
 saveRDS(outobj, glue("{out_prefix}/{tissue}.rds"))
