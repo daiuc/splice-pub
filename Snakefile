@@ -25,23 +25,25 @@ localrules:
 
 rule all:
     input: 
-        expand('smk-plots/gtex-sqtl-enrichment-v2/{TISSUE}-qqplot.png', TISSUE=GtexOutputSubTissues.split(',')),
+        expand('smk-plots/gtex-sqtl-enrichment-v4/{TISSUE}-qqplot.png', TISSUE=GtexOutputSubTissues.split(',')),
 
 
 rule plotGTExsQTLEnrichment:
     # previous version was saved smk-plots/gtex-sqtl-enrichment-v1
     output:
-        qqplot = 'smk-plots/gtex-sqtl-enrichment-v2/{tissue}-qqplot.png',
-        scatter = 'smk-plots/gtex-sqtl-enrichment-v2/{tissue}-scatter.png',
-        rds = 'smk-plots/gtex-sqtl-enrichment-v2/{tissue}-plotdata.rds',
+        qqplot = 'smk-plots/gtex-sqtl-enrichment-v4/{tissue}-qqplot.png',
+        scatter = 'smk-plots/gtex-sqtl-enrichment-v4/{tissue}-scatter.png',
+        rds = 'smk-plots/gtex-sqtl-enrichment-v4/{tissue}-plotdata.rds',
     params:
         script = 'scripts/plot-gtex-sqtl-enrichment.R',
         basepath = '/project/yangili1/cdai/SpliFi',
-        out_prefix = '/project/yangili1/cdai/splice-pub/smk-plots/gtex-sqtl-enrichment-v2',
-        FDR = 0.1
+        out_prefix = '/project/yangili1/cdai/splice-pub/smk-plots/gtex-sqtl-enrichment-v4',
+        FDR = 0.1,
+        annot = '/project/yangili1/cdai/splice-pub/data/WGS_Feature_overlap_collapsed_VEP_short_4torus.MAF01.txt.gz',
     shell:
         '''
-        Rscript {params.script} {wildcards.tissue} {params.basepath} {params.out_prefix} {params.FDR}
+        Rscript {params.script} {wildcards.tissue} {params.basepath} {params.out_prefix} {params.FDR} {params.annot}
         touch {output}
+
         '''
 
