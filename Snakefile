@@ -44,6 +44,5 @@ rule plotGTExsQTLEnrichment:
         '''
         Rscript {params.script} {wildcards.tissue} {params.basepath} {params.out_prefix} {params.FDR} {params.annot}
         touch {output}
-
         '''
 

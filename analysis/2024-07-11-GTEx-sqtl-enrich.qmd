@@ -61,7 +61,7 @@ head(scatter)
 
 ```{r}
 #| column: screen
-#| label: fig-qqplot
+#| label: "fig-qqplot-eQTL-sQTL-diff-direction"
 #| layout-ncol: 4
 #| out-width: 100%
 
@@ -88,3 +88,15 @@ knitr::include_graphics(qqs)
 knitr::include_graphics(scatter)
 ```
 
+# qqplot where both same direction and different direction of sQTL and eQTL effect size are shown
+
+
+```{r}
+#| column: screen
+#| label: "fig-qqplot-eQTL-sQTL-both-direction"
+#| layout-ncol: 4
+#| out-width: 100%
+base_path2 = "../smk-plots/gtex-sqtl-enrichment-v4-A"
+qqs2 <- list.files(base_path2, pattern = "qqplot*", full.names = TRUE)
+knitr::include_graphics(qqs2)
+```
