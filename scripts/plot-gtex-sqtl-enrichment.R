@@ -1,4 +1,26 @@
+# version 3
 
+
+if (interactive()) {
+  tissue  <- "Liver"
+  basepath <- "/project/yangili1/cdai/SpliFi"
+  out_prefix <- "/project/yangili1/cdai/splice-pub/smk-plots/gtex-sqtl-enrichment"
+  FDR <- 0.1
+  vep <- "/project/yangili1/cdai/splice-pub/data/WGS_Feature_overlap_collapsed_VEP_short_4torus.MAF01.txt.gz"
+} else {
+  args <- commandArgs(trailingOnly = TRUE)
+
+  if (length(args) != 5) {
+    # stop("Usage: Rscript plot-gtex-sqtl-enrichment.R tissue basepath out_prefix FDR")
+    stop("Usage: Rscript plot-gtex-sqtl-enrichment.R tissue basepath out_prefix FDR annot_vep")
+  }
+
+  tissue <- args[1]
+  basepath <- args[2]
+  out_prefix <- args[3]
+  FDR <- as.numeric(args[4])
+  vep <- args[5] # annotation vep formatted for TORUS
+}
 
 library(tidyverse)
 library(data.table)
@@ -6,26 +28,7 @@ library(glue)
 library(cowplot)
 library(ggpointdensity)
 
-if (interactive()) {
-  tissue  <- "Liver"
-  basepath <- "/project/yangili1/cdai/SpliFi"
-  out_prefix <- "/project/yangili1/cdai/splice-pub/smk-plots/gtex-sqtl-enrichment"
-  FDR <- 0.1
-} else {
-  args <- commandArgs(trailingOnly = TRUE)
-
-  if (length(args) != 4) {
-    stop("Usage: Rscript plot-gtex-sqtl-enrichment.R tissue basepath out_prefix FDR")
-  }
-
-  tissue <- args[1]
-  basepath <- args[2]
-  out_prefix <- args[3]
-  FDR <- as.numeric(args[4])
-}
-
 print(glue("tissue: {tissue}, basepath: {basepath}, out_prefix: {out_prefix}"))
-
 
 
 
@@ -114,6 +117,13 @@ readGTExNOM_allSnps <- function(tissue, basepath) {
 
 # ------ main ------
 
+# load vep data for GTEx
+vep.df <- fread(vep)
+# select data.table of vep.df where 
+# promoter_d ==1 or promoter_flanking_region_d == 1 or enhancer_d == 1
+transcriptional.snps <- vep.df[promoter_d == 1 | promoter_flanking_region_d == 1 | enhancer_d == 1, SNP] %>% unique
+# transcriptional.snps <- vep.df[promoter_d == 1, SNP] %>% unique
+
 permDF <- readGTExSQTL(tissue, basepath) %>%
   addLabels
 print("dim of permDF:")
@@ -163,6 +173,14 @@ mergeDF <- inner_join(sqtl[, .(phenotype_id, phenotype_chr, phenotype_start, phe
 mergeDF <- mergeDF[phenotype_chr == pchr & phenotype_strand == pstrand]
 mergeDF <- mergeDF[phenotype_start >= pstart & phenotype_end <= pend]
 
+# remove snps in promoter or promter flanking region for unproductive sQTLs
+snps_to_remove <- intersect(transcriptional.snps, mergeDF[ctype == "PR,UP", best_genotype_id])
+mergeDF <- mergeDF[!best_genotype_id %in% snps_to_remove]
+print(glue("Removed {length(snps_to_remove)} transcriptional snps"))
+
+
+# add qqplot sign: if based on the sign of sqtl slope and eqtl slope
+mergeDF[, samebetasign := sign(slope_sqtl) == sign(slope_eqtl)]
 
 #---- plot qqplot ----
 
@@ -175,23 +193,24 @@ plotDF <- mergeDF[, .(
   slope_sqtl,
   slope_eqtl,
   ctype,
+  samebetasign,
   topflag
 )]
 
 print("dim of plot data:")
 print(dim(plotDF))
 
-# first plot sQTL_slope > 0
+# first plot betas having the same sign
 qqplot <- list(
-  Productive = plotDF[ctype == "PR" & slope_sqtl > 0, pval_eqtl],
-  Unproductive = plotDF[ctype == "PR,UP" & slope_sqtl > 0, pval_eqtl]
+  Productive = plotDF[ctype == "PR" & slope_eqtl < 0, pval_eqtl],
+  Unproductive = plotDF[ctype == "PR,UP" & slope_eqtl < 0, pval_eqtl]
 ) %>%
   multiqq()
 
-# then plot sQTL_slope < 0
+# flip qqplot y axis if having different sign
 qqplotNeg <- list(
-  Productive = plotDF[ctype == "PR" & slope_sqtl < 0, pval_eqtl],
-  Unproductive = plotDF[ctype == "PR,UP" & slope_sqtl < 0, pval_eqtl]
+  Productive = plotDF[ctype == "PR" & slope_eqtl > 0, pval_eqtl],
+  Unproductive = plotDF[ctype == "PR,UP" & slope_eqtl > 0, pval_eqtl]
 ) %>%
   multiqq(flipY = TRUE)
 
@@ -262,7 +281,7 @@ scatter <- plotDF[, .(slope_sqtl, slope_eqtl, ctype)] %>%
                               )
                   ),
               data = corr.df, size = 6, hjust = .5, vjust = 1
-              ) +
+) +
     labs(x = "sQTL effect size", y = "eQTL effect size", title = glue("{tissue}")) +
     facet_wrap(~ctype) + 
     theme_cowplot() + 
@@ -279,4 +298,8 @@ outobj <- list(
 )
 print(glue("save data to {out_prefix}/{tissue}.rds"))
 saveRDS(outobj, glue("{out_prefix}/{tissue}.rds"))
+
+
+
+
 
