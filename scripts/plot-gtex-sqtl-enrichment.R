@@ -1,4 +1,4 @@
-# version 3
+# version 4
 
 
 if (interactive()) {
@@ -180,7 +180,7 @@ print(glue("Removed {length(snps_to_remove)} transcriptional snps"))
 
 
 # add qqplot sign: if based on the sign of sqtl slope and eqtl slope
-mergeDF[, samebetasign := sign(slope_sqtl) == sign(slope_eqtl)]
+mergeDF[, samebetasign := (round(slope_eqtl) * round(slope_sqtl) > 0)]
 
 #---- plot qqplot ----
 
@@ -202,15 +202,15 @@ print(dim(plotDF))
 
 # first plot betas having the same sign
 qqplot <- list(
-  Productive = plotDF[ctype == "PR" & slope_eqtl < 0, pval_eqtl],
-  Unproductive = plotDF[ctype == "PR,UP" & slope_eqtl < 0, pval_eqtl]
+  Productive = plotDF[ctype == "PR" & samebetasign == TRUE, pval_eqtl],
+  Unproductive = plotDF[ctype == "PR,UP" & samebetasign == TRUE, pval_eqtl]
 ) %>%
   multiqq()
 
 # flip qqplot y axis if having different sign
 qqplotNeg <- list(
-  Productive = plotDF[ctype == "PR" & slope_eqtl > 0, pval_eqtl],
-  Unproductive = plotDF[ctype == "PR,UP" & slope_eqtl > 0, pval_eqtl]
+  Productive = plotDF[ctype == "PR" & samebetasign == FALSE, pval_eqtl],
+  Unproductive = plotDF[ctype == "PR,UP" & samebetasign == FALSE, pval_eqtl]
 ) %>%
   multiqq(flipY = TRUE)
 
@@ -228,6 +228,7 @@ names(COLORS) <- c("Productive", "Unproductive", "GenomeWide")
 qqplot <- rbind(qqplot$data, qqplotNeg$data, qqplot_gw) %>%
   ggplot(aes(x, y, col = group)) + geom_point() +
     geom_abline(intercept = 0, slope = 1) +
+    geom_abline(intercept = 0, slope = -1) +
     labs(x = "Expected -log10(p)", y = "Observed -log10(p)", title = Title) +
     scale_color_manual(values = COLORS) +
     theme_cowplot() +
@@ -247,7 +248,7 @@ ggsave(glue("{out_prefix}/{tissue}-qqplot.png"), qqplot, width = 7, height = 5, 
 
 corr <- plotDF[, .(slope_sqtl, slope_eqtl, ctype = if_else(ctype == "PR", "PR", "UP"))]  %>% 
   split(by = "ctype") %>% 
-  map(~cor.test(x = .x$slope_eqtl, y = .x$slope_sqtl, method = "p"))
+  map(~cor.test(x = .x$slope_sqtl, y = .x$slope_eqtl, method = "p"))
 
 corr.pvals <- map(corr, ~.x$p.value) %>% unlist
 corr.estimates <- map(corr, ~.x$estimate[[1]]) %>% unlist
@@ -280,8 +281,8 @@ scatter <- plotDF[, .(slope_sqtl, slope_eqtl, ctype)] %>%
                                pvalue = if_else(pval > .001, scales::number(pval, .01), scales::scientific(pval))
                               )
                   ),
-              data = corr.df, size = 6, hjust = .5, vjust = 1
-) +
+              data = corr.df, size = 6, hjust = .5, vjust = 1, color = "blue"
+              ) +
     labs(x = "sQTL effect size", y = "eQTL effect size", title = glue("{tissue}")) +
     facet_wrap(~ctype) + 
     theme_cowplot() + 
