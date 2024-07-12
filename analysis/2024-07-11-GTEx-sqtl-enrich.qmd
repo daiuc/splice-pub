@@ -1,0 +1,90 @@
+---
+title: "GTEx sQTL enrichment - updated (V4)"
+date: 2024-7-11
+categories: ['qtl']
+code-fold: true
+execute:
+  include: true
+  eval: true
+  cache: false
+  echo: false
+---
+
+
+The underlying data for both the qqplot and the scatter plot are the from this procedure:
+
+1. Map sQTLs using permutation pass with QTLtools against leafcutter2 output. Each phenotype is an intron.
+2. Permpass result report a top SNP for each intron. Use the collection of these top SNPs to subset genotype VCF file. 
+3. Run nominal pass for eQTL with expression data and the subsetted genotype VCF file. This effectively run regression analysis of each top sQTL SNP against gene expression.
+
+Then for the qqplot, I plotted the pvalue of expression regression for each productive vs. unproductive sQTLs top SNP.
+
+For the scatter plot, each top SNP is the top SNP of a productive or unprodutive sQTL. X axis is SNP's regression slope for gene expression, and Y axis is the regression slope of splicing.
+
+Note each sQTL is either a productive or unproductive sQTLs, and represent a intron cluster. A productive sQTL is a cluster that only have productive introns. The strongest intron is chosen to represent the cluster (instead of aggregated of all the introns). 
+
+An unproductive sQTL is a cluster that has both productive intron and unproductive introns with permutation pass q value < 0.1. The best intron (largest top SNP slope) is chosen to represent the cluster as unproductive sQTL. Note, comparing to previous version, here for u-sQTLs (ctype = PR,UP) select the best unproductive intron to represent the cluster.
+
+::: {.callout-note}
+This update removed the following categories of SNPs from the GTEx VEP annotation file:
+
+  - enhancer_d
+  - promoter_d
+  - promoter_flanking_region_d
+
+qqplot Y axis is flipped if sQTL slope and eQTL slope are in opposite direction.
+:::
+
+
+
+```{r}
+#| include: false
+library(tidyverse)
+```
+```{r}
+base_path= "../smk-plots/gtex-sqtl-enrichment-v4"
+
+```
+
+```{r}
+#| include: false
+#| echo: false
+qqs <- list.files(base_path, pattern = "qqplot*", full.names = TRUE)
+scatter <- list.files(base_path, pattern = "scatter", full.names = TRUE)
+head(qqs)
+head(scatter)
+```
+
+
+# Enrichment of sQTL in eQTL pvalues
+
+
+```{r}
+#| column: screen
+#| label: fig-qqplot
+#| layout-ncol: 4
+#| out-width: 100%
+
+knitr::include_graphics(qqs)
+```
+
+
+# Comparison of sQTL (top SNP beta) and eQTL effect size (nominal beta of same top sQTL SNP)
+
+::: {.callout-note}
+
+- cor.test used pearson correlation
+
+:::
+
+
+```{r}
+#| column: screen
+#| label: fig-scatterplots
+#| fig-cap: comparison of sQTL and eQTL effect size
+#| layout-ncol: 4
+#| out-width: 100%
+
+knitr::include_graphics(scatter)
+```
+

@@ -1,0 +1,322 @@
+---
+title: Functional enrichment of eQTL, u-sQTL, s-QTL (GTEx), do not render!
+date: "2024-7-8"
+code-fold: false
+format: html
+execute:
+  include: false
+  cache: false
+  eval: false
+---
+
+
+This document is meant to only run with an interactive shell.
+
+
+```{python}
+import numpy as np
+import pandas as pd
+import os
+import glob
+import subprocess
+
+# from collections import OrderedDict
+
+import qtl.annotation
+import qtl.torus
+
+import pybedtools as pbt
+import gzip
+```
+
+## Annotation
+```{python}
+annot = qtl.annotation.Annotation("../data/gencode.v26.GRCh38.genes.gtf", verbose=False)
+sample_df = pd.read_csv(
+    "../code/workflow/submodules/gtex-v8/data/GTEx_Analysis_v8_RNAseq_samples.txt",
+    sep="\t",
+)
+sample_s = (
+    sample_df[sample_df["has_genotype"]]
+    .groupby("tissue_id")
+    .apply(lambda x: x["sample_id"].tolist())
+)
+sample_s = sample_s[sample_s.apply(len) >= 70]
+size_s = sample_s.apply(len)
+```
+
+## VEP annotation
+
+```{python}
+# | label: VEP annotation for top eQTLs sQTLs
+
+vep_df = pd.read_csv(
+    "../data/WGS_Feature_overlap_collapsed_VEP_short_4torus.MAF01.txt.gz",
+    sep="\t",
+    index_col=0,
+)
+vep_df = vep_df.astype(np.int8)
+vep_df.columns = [qtl.torus.torus_dict[i[:-2].upper()] for i in vep_df.columns]
+
+# variant IDs for each category
+variant_sets = {}
+for p in vep_df:
+    variant_sets[p] = set(vep_df.loc[vep_df[p] == 1].index)
+variant_set_s = pd.Series(variant_sets)
+```
+
+
+```{python}
+# | variant set info
+
+len(variant_set_s)
+variant_set_s.keys()
+variant_set_s.info()
+variant_set_s.index
+variant_set_s.head()
+```
+
+```{python}
+#| label: write TORUS SNP annotation file
+
+def silent_write(fo, text):
+    fo.write(text)
+
+snp_anno_torus = "../data/torus/snp_anno_torus.txt.gz"
+# if file exists, truncate it
+if os.path.exists(snp_anno_torus):
+    os.remove(snp_anno_torus)
+fout = gzip.open(snp_anno_torus, "wt")
+
+header = ["SNP", "category_d"]
+fout.write("\t".join(header) + "\n")
+category_d = {str(i+1): variant_set_s.keys()[i] for i in range(len(variant_set_s))}
+category_d = {v:k for k,v in category_d.items()}
+for c in variant_set_s.keys():
+    snps = list(variant_set_s[c])
+    for s in snps:
+        silent_write(fout, f"{s}\t{category_d[c]}\n")
+fout.close()
+```
+
+
+```{python}
+category_d.keys()
+category_d.values()
+
+```
+
+## cis-QTLs
+```{python}
+egene_files = {
+    os.path.basename(i).split(".")[0]: i
+    for i in glob.glob("../data/GTEx_Analysis_v8_eQTL/*.v8.egenes.txt.gz")
+}
+tissues1 = sorted(egene_files.keys())
+
+# list all folders under this path
+tissues2 = os.listdir("../code/results/qtl/noisy/GTEx/")
+tissues2 = [x for x in tissues2 if x != "Bladder"]
+tissues2 = sorted(tissues2)
+
+if len(tissues1) != len(tissues2):
+    raise ValueError("tissues1 and tissues2 length do not match")
+tissueDic = {tissues1[i]: tissues2[i] for i in range(len(tissues1))}
+```
+
+
+
+```{python}
+egene_variant_cat_df = []
+for t in tissues1:
+    egenes_df = pd.read_csv(egene_files[t], sep="\t", index_col=0)
+    egenes_df["biotype"] = egenes_df.index.map(lambda x: annot.gene_dict[x].type)
+    egenes_df = egenes_df[
+        (egenes_df["qval"] <= 0.05)
+        & egenes_df["biotype"].isin(["protein_coding", "lincRNA"])
+    ]
+    variant_ids = egenes_df["variant_id"].values
+    pct_s = variant_set_s.apply(lambda x: len([i for i in variant_ids if i in x]))
+    pct_s.name = t
+    egene_variant_cat_df.append(pct_s)
+
+egene_variant_cat_df = pd.concat(egene_variant_cat_df, axis=1)
+egene_variant_cat_pct_df = egene_variant_cat_df / egene_variant_cat_df.sum(axis=0)
+
+egene_variant_cat_pct_df.columns = [
+    tissueDic[x] for x in egene_variant_cat_pct_df.columns.values
+]
+```
+
+
+
+
+
+```{python}
+# | label: make gene info for intersectBed
+# i = 0
+gtf_df = []
+for gid, g in annot.gene_dict.items():
+    # if i > 100: break
+    if g.type == "protein_coding":
+        # select g.id, g.chr, g.start, g.end, g.strand, g.name and construct a dataframe
+        row = g.chr, g.start_pos, g.end_pos, g.id, 1000, g.strand
+        gtf_df.append(row)
+
+    # i += 1
+
+gtf_df = pd.DataFrame(
+    gtf_df, columns=["chrom", "start", "end", "name", "score", "strand"]
+)
+gtf_bed = pbt.BedTool.from_dataframe(gtf_df).sort()
+```
+
+```{python}
+def get_coord_from_pid(pid):
+    chrom, start, end, clustrand, itype = pid.split(":")
+    strand = clustrand[-1]
+    start, end = int(start), int(end)
+    return chrom, start, end, pid, 1000, strand
+```
+
+```{python}
+import numpy as np
+from scipy import stats
+
+
+def compute_t_statistic(slope, p_value, df):
+    # Calculate the two-tailed critical value
+    critical_value = stats.t.ppf((1 + (1 - p_value)) / 2, df)
+
+    # Calculate the t-statistic
+    t_statistic = np.sign(slope) * abs(critical_value)
+
+    return t_statistic
+```
+
+
+
+```{python}
+
+pr_sgene_variant_cat_df = []
+up_sgene_variant_cat_df = []
+for t in tissues2:
+    print(f"Processing sQTLs for {t}...")
+    # sgene_files = glob.glob(f'../code/results/qtl/noisy/GTEx/{t}/separateNoise/cis_100000/perm/chr*.addQval.txt.gz')
+    sgene_files = [
+        f"../code/results/qtl/noisy/GTEx/{t}/separateNoise/cis_100000/perm/chr{str(i)}.addQval.txt.gz"
+        for i in range(1, 23)
+    ]
+    sgene_df = []
+    for i in range(1, 23):
+        chrom = f"chr{str(i)}"
+        sgene_file = f"../code/results/qtl/noisy/GTEx/{t}/separateNoise/cis_100000/perm/{chrom}.addQval.txt.gz"
+        df = pd.read_csv(sgene_file, sep=" ")
+        df = df[(df["q"] < 0.1) & (df["phenotype_id"].str.contains("PR|UP"))]
+        sgene_df.append(df)
+    sgene_df = pd.concat(sgene_df)
+    sgene_df["t_stat"] = [
+        compute_t_statistic(s, p, d)
+        for s, p, d in zip(
+            sgene_df["slope"], sgene_df["pval_nom"], sgene_df["dof_true"]
+        )
+    ]
+    sgene_bed = sgene_df["phenotype_id"].apply(get_coord_from_pid).tolist()
+    sgene_bed = pd.DataFrame(
+        sgene_bed, columns=["chrom", "start", "end", "name", "score", "strand"]
+    )
+
+    # intersectBed with gene_info to get gene_id
+    sgene_bed = pbt.BedTool.from_dataframe(sgene_bed).sort()
+    x = sgene_bed.intersect(gtf_bed, wo=True, f=0.9, s=True)
+    
+    x = x.to_dataframe(
+        names=[
+            "chrom",
+            "start",
+            "end",
+            "name",
+            "score",
+            "strand",
+            "chrom2",
+            "start2",
+            "end2",
+            "name2",
+            "score2",
+            "strand2",
+            "overlap",
+        ]
+    )
+    x = x[(x["start"] >= x["start2"]) & (x["end"] <= x["end2"])][["name", "name2"]]
+    x.columns = ["phenotype_id", "gene_id"]
+
+    # inner join sgene_df and x, which only keeps phehnotypes with gene_id
+    sgene_df = sgene_df.merge(x, on="phenotype_id")
+
+    # now split to UP and PR sgenes
+    pr_sgene_df = sgene_df[sgene_df["phenotype_id"].str.contains("PR")]
+    up_sgene_df = sgene_df[sgene_df["phenotype_id"].str.contains("UP")]
+
+    # write out data file for torus input
+    torus_data_columns = ['SNP', 'gene', 'beta', 't-stat', 'p-value']
+    out_pr_sgene = pr_sgene_df[['best_genotype_id', 'phenotype_id', 'slope', 't_stat', 'pval_nom']]
+    out_up_sgene = up_sgene_df[['best_genotype_id', 'phenotype_id', 'slope', 't_stat', 'pval_nom']]
+    out_pr_sgene.columns = torus_data_columns
+    out_up_sgene.columns = torus_data_columns
+    fo_p = gzip.open(f"../data/torus/torus_{t}_p-sqtl.txt.gz", "wt")
+    fo_u = gzip.open(f"../data/torus/torus_{t}_u-sqtl.txt.gz", "wt")
+    out_pr_sgene.to_csv(fo_p, sep="\t", header=True, index=False)
+    out_up_sgene.to_csv(fo_u, sep="\t", header=True, index=False)
+    
+
+    # for p-sQTLs
+    variant_ids = pr_sgene_df["best_genotype_id"].drop_duplicates().values
+    pct_s = variant_set_s.apply(lambda x: len([i for i in variant_ids if i in x]))
+    pct_s.name = t
+    pr_sgene_variant_cat_df.append(pct_s)
+
+    # for u-sQTLs
+    variant_ids = up_sgene_df["best_genotype_id"].drop_duplicates().values
+    pct_s = variant_set_s.apply(lambda x: len([i for i in variant_ids if i in x]))
+    pct_s.name = t
+    up_sgene_variant_cat_df.append(pct_s)
+
+pr_sgene_variant_cat_df = pd.concat(pr_sgene_variant_cat_df, axis=1)
+up_sgene_variant_cat_df = pd.concat(up_sgene_variant_cat_df, axis=1)
+
+pr_sgene_variant_cat_pct_df = pr_sgene_variant_cat_df / pr_sgene_variant_cat_df.sum(
+    axis=0
+)
+up_sgene_variant_cat_pct_df = up_sgene_variant_cat_df / up_sgene_variant_cat_df.sum(
+    axis=0
+)
+```
+
+
+```{python}
+pr_sgene_variant_cat_pct_df.head()
+up_sgene_variant_cat_pct_df.head()
+egene_variant_cat_pct_df.head()
+```
+
+
+```{python}
+annot_file = '../data/torus/snp_anno_torus.txt.gz'
+for t in tissues2[:2]:
+  torus_data_file_pr = f'../data/torus/torus_{t}_p-sqtl.txt.gz'
+  torus_data_file_up = f'../data/torus/torus_{t}_u-sqtl.txt.gz'
+  torus_result_pr = f"../data/torus/torus_enrich_result_{t}_p.txt"
+  torus_result_up = f"../data/torus/torus_enrich_result_{t}_u.txt"
+  cmd_p = f"/home/chaodai/bin/torus -est -d {torus_data_file_pr}  -annot {annot_file}  > {torus_result_pr}"
+  cmd_u = f"/home/chaodai/bin/torus -est -d {torus_data_file_up}  -annot {annot_file}  > {torus_result_up}"
+  for cmd in (cmd_p, cmd_u):
+    result = subprocess.run(cmd, shell=True)
+```
+
+
+```{bash}
+qtl_stats='../data/torus/torus_Lung_p-sqtl.txt.gz'
+anno_file='../data/torus/snp_anno_torus.txt.gz'
+torus -d $qtl_stats -annot $anno_file -est #--no_dtss --fastqtl
+```
+

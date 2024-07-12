@@ -2,6 +2,8 @@
   {
     "listing": "/index.html",
     "items": [
+      "/analysis/2024-07-11-GTEx-sqtl-enrich.html",
+      "/analysis/2024-07-10-GTEx-sqtl-enrich.html",
       "/analysis/2024-06-25-bug-fix.html",
       "/analysis/2024-06-25-pyfastx-1-or-0-base.html",
       "/analysis/2024-06-22-GTEx-sqtl-enrich.html",

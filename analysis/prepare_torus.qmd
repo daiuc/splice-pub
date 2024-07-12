@@ -1,0 +1,17 @@
+---
+title: 'prepare torus input data'
+format: html
+---
+
+
+
+
+```{r}
+
+library(tidyverse)
+library(data.table)
+
+```
+
+
+
