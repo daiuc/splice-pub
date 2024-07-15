@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/analysis/2024-07-15-GTEx-sqtl-enrich.html",
       "/analysis/2024-07-11-GTEx-sqtl-enrich.html",
       "/analysis/2024-07-10-GTEx-sqtl-enrich.html",
       "/analysis/2024-06-25-bug-fix.html",
