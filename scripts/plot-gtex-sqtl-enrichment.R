@@ -1,4 +1,4 @@
-# version 5
+# version 4.5
 # for qq plot only plotting snps where signs are different
 
 
@@ -183,21 +183,6 @@ print(glue("Removed {length(snps_to_remove)} transcriptional snps"))
 # add qqplot sign: if based on the sign of sqtl slope and eqtl slope
 mergeDF[, samebetasign := (round(slope_eqtl) * round(slope_sqtl) > 0)]
 
-
-# bring in nominal pass slope of sQTLs
-sqtl_nom_rawPSI.f <- glue("{basepath}/code/results/qtl/noisy/GTEx/{tissue}/separateNoise/cis_100000/nom-raw-psi/chr{1:22}.txt")
-sqtl_nom_rawPSI <- map_dfr(sqtl_nom_rawPSI.f, fread)
-sqtl_nom_rawPSI <- sqtl_nom_rawPSI[, .(phenotype_id = V1, best_genotype_id = V8, pval_rawPSI = V12, slope_rawPSI = V14)]
-
-
-mergeDF <- left_join(
-  x = mergeDF,
-  y = sqtl_nom_rawPSI,
-  by = c("phenotype_id", "best_genotype_id"),
-)
-
-
-
 #---- plot qqplot ----
 
 plotDF <- mergeDF[, .(
@@ -208,7 +193,6 @@ plotDF <- mergeDF[, .(
   pval_eqtl = pval,
   slope_sqtl,
   slope_eqtl,
-  slope_rawPSI,
   ctype,
   samebetasign,
   topflag
@@ -242,6 +226,7 @@ Title <- glue("{tissue}")
 COLORS <- c(RColorBrewer::brewer.pal(9, "Blues")[c(4,6)], "grey")
 names(COLORS) <- c("Productive", "Unproductive", "GenomeWide")
 
+
 # not plotting snps where signs are the same
 qqplot <- rbind(qqplotNeg$data, qqplot_gw) %>%
   ggplot(aes(x, y, col = group)) + geom_point() +
@@ -264,9 +249,9 @@ ggsave(glue("{out_prefix}/{tissue}-qqplot.png"), qqplot, width = 7, height = 5, 
 
 #---- plot enrichment ----
 
-corr <- plotDF[, .(slope_rawPSI, slope_eqtl, ctype = if_else(ctype == "PR", "PR", "UP"))]  %>% 
+corr <- plotDF[, .(slope_sqtl, slope_eqtl, ctype = if_else(ctype == "PR", "PR", "UP"))]  %>% 
   split(by = "ctype") %>% 
-  map(~cor.test(x = .x$slope_rawPSI, y = .x$slope_eqtl, method = "p"))
+  map(~cor.test(x = .x$slope_sqtl, y = .x$slope_eqtl, method = "p"))
 
 corr.pvals <- map(corr, ~.x$p.value) %>% unlist
 corr.estimates <- map(corr, ~.x$estimate[[1]]) %>% unlist
@@ -284,9 +269,9 @@ if (all(names(corr.pvals) == names(corr.estimates))) {
 }
 
 
-scatter <- plotDF[, .(slope_rawPSI, slope_eqtl, ctype)] %>% 
+scatter <- plotDF[, .(slope_sqtl, slope_eqtl, ctype)] %>% 
   mutate(ctype = if_else(ctype == "PR", "Productive", "Unproductive")) %>%
-  ggplot() + geom_pointdensity(aes(slope_rawPSI, slope_eqtl), alpha = .6) +
+  ggplot() + geom_pointdensity(aes(slope_sqtl, slope_eqtl), alpha = .6) +
     scale_color_viridis_c() +
     geom_abline(aes(intercept = 0, slope = estimate), 
                 data = corr.df, linetype = "dashed", color = "navy", linewidth = 1) +
