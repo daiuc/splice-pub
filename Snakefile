@@ -16,8 +16,8 @@ GtexOutputSubTissues = GtexSingleSubTissues + ',' + GtexMultiSubTissues
 GtexOutputSubTissues = GtexOutputSubTissues.translate(fixChr)
 
 
-print(f"Number of Tissues: {len(GtexOutputSubTissues.split(','))}")
-print('\n'.join(GtexOutputSubTissues.split(',')))
+# print(f"Number of Tissues: {len(GtexOutputSubTissues.split(','))}")
+# print('\n'.join(GtexOutputSubTissues.split(',')))
 
 
 localrules: 
@@ -25,19 +25,19 @@ localrules:
 
 rule all:
     input: 
-        expand('smk-plots/gtex-sqtl-enrichment-v4/{TISSUE}-qqplot.png', TISSUE=GtexOutputSubTissues.split(',')),
+        expand('smk-plots/gtex-sqtl-enrichment-v5/{TISSUE}-qqplot.png', TISSUE=GtexOutputSubTissues.split(',')),
 
 
 rule plotGTExsQTLEnrichment:
     # previous version was saved smk-plots/gtex-sqtl-enrichment-v1
     output:
-        qqplot = 'smk-plots/gtex-sqtl-enrichment-v4/{tissue}-qqplot.png',
-        scatter = 'smk-plots/gtex-sqtl-enrichment-v4/{tissue}-scatter.png',
-        rds = 'smk-plots/gtex-sqtl-enrichment-v4/{tissue}-plotdata.rds',
+        qqplot = 'smk-plots/gtex-sqtl-enrichment-v5/{tissue}-qqplot.png',
+        scatter = 'smk-plots/gtex-sqtl-enrichment-v5/{tissue}-scatter.png',
+        rds = 'smk-plots/gtex-sqtl-enrichment-v5/{tissue}-plotdata.rds',
     params:
         script = 'scripts/plot-gtex-sqtl-enrichment.R',
         basepath = '/project/yangili1/cdai/SpliFi',
-        out_prefix = '/project/yangili1/cdai/splice-pub/smk-plots/gtex-sqtl-enrichment-v4',
+        out_prefix = '/project/yangili1/cdai/splice-pub/smk-plots/gtex-sqtl-enrichment-v5',
         FDR = 0.1,
         annot = '/project/yangili1/cdai/splice-pub/data/WGS_Feature_overlap_collapsed_VEP_short_4torus.MAF01.txt.gz',
     shell:
