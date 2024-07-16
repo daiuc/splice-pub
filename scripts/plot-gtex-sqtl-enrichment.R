@@ -1,5 +1,4 @@
-# version 5
-# for qq plot only plotting snps where signs are different
+# version 4
 
 
 if (interactive()) {
@@ -224,30 +223,29 @@ qqplot <- list(
 ) %>%
   multiqq()
 
-# here we are not flipping the y-axis since we are only plotting snps where signs are different
+# flip qqplot y axis if having different sign
 qqplotNeg <- list(
   Productive = plotDF[ctype == "PR" & samebetasign == FALSE, pval_eqtl],
   Unproductive = plotDF[ctype == "PR,UP" & samebetasign == FALSE, pval_eqtl]
 ) %>%
-  multiqq(flipY = FALSE)
+  multiqq(flipY = TRUE)
 
 # randomly selected genome-wide snps
-# qqplot_gw <- rbind(
-#   multiqq(list(GenomeWide = nomDF_genome[slope < 0, pval]))$data,
-#   multiqq(list(GenomeWide = nomDF_genome[slope > 0, pval]), flipY = T)$data
-# )
-qqplot_gw <- multiqq(list(GenomeWide = nomDF_genome[ , pval]))$data
+qqplot_gw <- rbind(
+  multiqq(list(GenomeWide = nomDF_genome[slope < 0, pval]))$data,
+  multiqq(list(GenomeWide = nomDF_genome[slope > 0, pval]), flipY = T)$data
+)
 
 Title <- glue("{tissue}")
 COLORS <- c(RColorBrewer::brewer.pal(9, "Blues")[c(4,6)], "grey")
 names(COLORS) <- c("Productive", "Unproductive", "GenomeWide")
 
-# not plotting snps where signs are the same
-qqplot <- rbind(qqplotNeg$data, qqplot_gw) %>%
+
+qqplot <- rbind(qqplot$data, qqplotNeg$data, qqplot_gw) %>%
   ggplot(aes(x, y, col = group)) + geom_point() +
     geom_abline(intercept = 0, slope = 1) +
+    geom_abline(intercept = 0, slope = -1) +
     labs(x = "Expected -log10(p)", y = "Observed -log10(p)", title = Title) +
-    coord_cartesian(xlim = c(0,4)) +
     scale_color_manual(values = COLORS) +
     theme_cowplot() +
     theme(legend.title = element_blank())
@@ -301,7 +299,6 @@ scatter <- plotDF[, .(slope_rawPSI, slope_eqtl, ctype)] %>%
                   ),
               data = corr.df, size = 6, hjust = .5, vjust = 1, color = "blue"
               ) +
-    coord_cartesian(xlim = c(-4, 4), ylim = c(-2, 2)) +
     labs(x = "sQTL effect size", y = "eQTL effect size", title = glue("{tissue}")) +
     facet_wrap(~ctype) + 
     theme_cowplot() + 
