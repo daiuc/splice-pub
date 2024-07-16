@@ -46,3 +46,16 @@ rule plotGTExsQTLEnrichment:
         touch {output}
         '''
 
+rule prepTorusInputData:
+    output: 
+      prod = 'data/torus/torus_{tissue}_p-sqtl.txt.gz',
+      unpr = 'data/torus/torus_{tissue}_u-sqtl.txt.gz',
+    params:
+      script = 'scripts/torus-make-input-data.py',
+      fdr = 0.1,
+      outprefix = 'data/torus/torus'
+    shell:
+      '''
+      python {params.script} --tissue {wildcards.tissue} --fdr {params.fdr} --outprefix {params.outprefix}
+      touch {output}
+      '''
