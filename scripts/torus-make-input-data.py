@@ -46,9 +46,9 @@ if __name__ == "__main__":
     ]
 
     # round up slope, t_stat, and pval_nom to 25 decimal places
-    sgene_df["slope"] = sgene_df["slope"].round(5)
-    sgene_df["t_stat"] = sgene_df["t_stat"].round(5)
-    sgene_df["pval_nom"] = sgene_df["pval_nom"].round(5)
+    sgene_df["slope"] = sgene_df["slope"].round(25)
+    sgene_df["t_stat"] = sgene_df["t_stat"].round(75)
+    sgene_df["pval_nom"] = sgene_df["pval_nom"].round(199)
 
     pr_sgene_df = sgene_df[sgene_df["phenotype_id"].str.contains("PR")]
     up_sgene_df = sgene_df[sgene_df["phenotype_id"].str.contains("UP")]
@@ -61,11 +61,21 @@ if __name__ == "__main__":
         ["best_genotype_id", "phenotype_id", "slope", "t_stat", "pval_nom"]
     ]
 
-    out_pr_sgene.columns = torus_cols
+    # snp map and gene map, for sQTL gene map refer to snp to intron mapping
+    snp_map = sgene_df[['best_genotype_id', 'best_genotype_chr', 'best_genotype_start']].drop_duplicates()
+    gene_map = sgene_df[['phenotype_id', 'phenotype_chr', 'phenotype_start', 'phenotype_end']].drop_duplicates()
+
+
+    # write out
+    out_pr_sgene.columns = torus_cols # rename columsn
     out_up_sgene.columns = torus_cols
     with gzip.open(f"{outprefix}_{tissue}_p-sqtl.txt.gz", "wt") as f:
-        out_pr_sgene.to_csv(f, sep="\t", index=False, header=True)
+        out_pr_sgene.to_csv(f, sep="\t", index=False, header=False)
     with gzip.open(f"{outprefix}_{tissue}_u-sqtl.txt.gz", "wt") as f:
-        out_up_sgene.to_csv(f, sep="\t", index=False, header=True)
+        out_up_sgene.to_csv(f, sep="\t", index=False, header=False)
+    with gzip.open(f"{outprefix}_{tissue}_snp_map.txt.gz", "wt") as f:
+        snp_map.to_csv(f, sep="\t", index=False, header=False)
+    with gzip.open(f"{outprefix}_{tissue}_gene_map.txt.gz", "wt") as f:
+        gene_map.to_csv(f, sep="\t", index=False, header=False)
 
     print(f"{tissue} done!")
