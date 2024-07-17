@@ -1,0 +1,158 @@
+---
+title: "TORUS input prep"
+date: 2024-7-15
+format: html
+categories: ['torus', 'enrichment']
+code-fold: false
+execute:
+  include: true
+  eval: true
+  cache: false
+  echo: true
+---
+
+
+# Problem with runing TORUS
+
+1. getting lots of nan values in the output
+2. underflow errors
+3. possible infinite loop?
+
+
+# How I run TORUS
+
+1. input data file
+
+Genes are actually intron ids. Results are from qtltools, where beta and p-value are direct output but t-stat are calculated from p-value. 
+
+```{bash}
+zcat ../data/torus/torus_Liver_p-sqtl.txt.gz| head
+```
+
+2. SNP and gene map files.
+
+Genes are actually intron ids.
+
+```{bash}
+zcat ../data/torus/torus_Liver_snp_map.txt.gz | head
+zcat ../data/torus/torus_Liver_gene_map.txt.gz | head
+```
+
+
+
+3. SNP annotation file
+
+Downloaded from GTEx protal
+
+```{bash}
+zcat ../data/WGS_Feature_overlap_collapsed_VEP_short_4torus.MAF01.txt.gz | head | cut -f 1-5
+```
+
+
+3. Run TORUS
+
+```{bash}
+#| eval: false
+torus -est \
+  -d ../data/torus/torus_Liver_p-sqtl.txt.gz \
+  -smap ../data/torus/torus_Liver_snp_map.txt.gz \
+  -gmap ../data/torus/torus_Liver_gene_map.txt.gz \
+  -annot ../data/WGS_Feature_overlap_collapsed_VEP_short_4torus.MAF01.txt.gz > ../data/torus/Liver-p-enrichment.txt
+torus -est \
+  -d ../data/torus/torus_Liver_u-sqtl.txt.gz \
+  -smap ../data/torus/torus_Liver_snp_map.txt.gz \
+  -gmap ../data/torus/torus_Liver_gene_map.txt.gz \
+  -annot ../data/WGS_Feature_overlap_collapsed_VEP_short_4torus.MAF01.txt.gz > ../data/torus/Liver-u-enrichment.txt
+```
+
+4. Results
+
+Lots of nan values in stdout and the final output. Many seems to be in infinit loop?
+
+
+
+```{bash}
+cat ../data/torus/torus_Spleen_enrichment_p-sqtl.txt
+```
+
+
+# TORUS instructed data format
+
+From [torus](https://github.com/xqwen/torus/tree/master/examples/GTEx_liver)
+
+1. input data file
+
+```
+SNP	gene	beta	 t-stat	p-value
+1_30923_G_T_b37	ENSG00000227232.4	0.00399184253633977	0.0232610959574911	0.981503781647425
+1_51479_T_A_b37	ENSG00000227232.4	-0.0264207753473278	-0.101592859539226	0.919350965625195
+1_55299_C_T_b37	ENSG00000227232.4	-0.224656599916996	-0.977243563498281	0.331590265844854
+
+```
+
+2. SNP annotation file
+
+```
+SNP   binding_d
+chr1.51479  0
+chr1.52058  2
+chr1.52238  1
+```
+
+3. SNP and gene map files
+
+To control for SNP distance to TSS, TORUS **requires** gene TSS information and SNP position files (i.e., gene map and SNP map).
+
+Gene map file format:
+```
+ENSG00000237683  1  139379 139379
+ENSG00000237491  1  714162 714162
+ENSG00000230021  1  741274 741274
+```
+
+snps map
+
+```
+chr1.51479  1  51479
+chr1.52058  1  52058
+chr1.52238  1  52238
+
+```
+
+4. Output from enrichment analysis
+
+
+The first column represents the annotation name and its corresponding level (for a categorical variable). The second column is the point estimate (MLE) of the log odds ratio. Columns 3-4 represent the 95% confidence interval for the corresponding point estimate.
+```
+binding.1      0.623         0.226      1.021
+binding.2      1.222         0.946      1.499
+```
+
+
+# MatrixEQTL format
+
+SNP map file format:
+
+```
+snp	chr	pos
+Snp_01	chr1	721289
+Snp_02	chr1	752565
+Snp_03	chr1	777121
+Snp_04	chr1	785988
+Snp_05	chr1	792479
+Snp_06	chr1	798958
+```
+GENE map file format:
+
+```
+geneid	chr	s1	s2
+Gene_01	chr1	721289	731289
+Gene_02	chr1	752565	762565
+Gene_03	chr1	777121	787121
+Gene_04	chr1	785988	795988
+Gene_05	chr1	792479	802479
+Gene_06	chr1	798958	808958
+Gene_07	chr1	888658	898658
+```
+
+

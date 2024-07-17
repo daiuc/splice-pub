@@ -1,0 +1,12 @@
+{
+  "hash": "e4f1b1ec44092e76d239f389d24fe97c",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"sQTL procedure\"\ndate: 2024-7-16\nformat: html\ncategories: ['sqtl', 'method']\ncode-fold: false\nexecute:\n  include: true\n  eval: true\n  cache: false\n  echo: true\n---\n\n# `QTLtools cis --perm` data preparation\n\n\n1. bed: phenotype bed file\n2. cov: covariate file\n3. vcf: genotype vcf file\n\n\n## phenotype bed file\n\nUsed a python [script](https://github.com/daiuc/SpliFi/blob/d433ad3784df09b659b8d54e8b8e2bf5f7aa280b/code/workflow/scripts/preparePheno.py) to prepare phenotype for QTLtools.\n\n\n- introns with missing PSI ratios from over 40% of samples are removed.\n- introns with less than 0.005 std are also removed.\n- PSI values from leafcutter output are [added with pseudo count](https://github.com/daiuc/SpliFi/blob/d433ad3784df09b659b8d54e8b8e2bf5f7aa280b/code/workflow/scripts/preparePheno.py#L166C17-L166C68) of 0.5.\n\n::: {#9d166e17 .cell execution_count=1}\n``` {.python .cell-code}\ncount = (float(num) + 0.5) / ((float(denom)) + 0.5)\n```\n:::\n\n\n- PSI values are quantile normalized\n\n::: {#dcfbc89e .cell execution_count=2}\n``` {.python .cell-code}\ndef qqnorm(x):\n    n = len(x)\n    a = 3.0 / 8.0 if n <= 10 else 0.5\n    return norm.ppf((rankdata(x) - a) / (n + 1.0 - 2.0 * a))\n\n# qqnorms on the columns\nmatrix = np.array(valRows)\nfor i in range(len(matrix[0, :])):\n    matrix[:, i] = qqnorm(matrix[:, i])\n```\n:::\n\n\n# covariate file\n\nA combination of:\n\n- phenotype PCs (top 11)\n- genotype pcs (top 5)\n\n",
+    "supporting": [
+      "2024-07-16-sQTL-procedure_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}
