@@ -1,0 +1,65 @@
+---
+title: "coloc procedure"
+format: html
+date: 2024-7-17
+categories: ['coloc']
+code-fold: true
+execute:
+  include: true
+  eval: true
+  cache: false
+  echo: true
+---
+
+
+# intro
+
+Previously GWAS data are prepared in steps:
+
+1. reformat using an interactive notebook/script to make sure the data is in the right format
+2. run script to find hit loci
+3. run coloc
+
+:::{.important}
+Don't forget many sumstats are hg19!
+:::
+
+
+## Example data
+
+
+Raw GWAS sum stats:
+```{bash}
+ls /project2/yangili1/cdai/A2I/code/resources/GWAS/
+```
+
+munged: 
+```{bash}
+ls /project2/yangili1/cdai/A2I/code/resources/GWAS/Height*
+```
+
+```{bash}
+#| code-fold: false
+less /project2/yangili1/cdai/A2I/code/resources/GWAS/Height_sumstats_hg38.tsv.gz | head
+
+```
+
+```{bash}
+#| code-fold: false
+less /project2/yangili1/cdai/A2I/code/resources/GWAS/Height_sumstats_hg38.colnames.txt | head
+
+```
+
+Identified Hits loci:
+
+```{bash}
+#| echo: false
+less /project2/yangili1/cdai/A2I/code/resources/GWAS/Height_Hits_1e-7_hg38.tsv | head
+```
+
+
+pre-munged sum stats:
+```{bash}
+less /project2/yangili1/cdai/A2I/code/resources/GWAS/gwas_download/Locke_height_UKBiobank_2018.txt.gz | head
+```
+
