@@ -1,0 +1,407 @@
+---
+title: "Check sqtl beta beta corr plot"
+date: 2024-7-16
+format: html
+categories: ['corr', 'sqtl', 'WholeBlood']
+code-fold: true
+execute:
+  include: true
+  eval: true
+  cache: false
+  echo: false
+---
+
+
+# Check sqtl beta beta corr plot
+
+```{r}
+#| include: false
+#| cache: false
+library(tidyverse)
+library(glue)
+library(data.table)
+library(ggpointdensity)
+library(cowplot)
+library(matrixStats)
+library(patchwork)
+
+addLabels <- function(dt) {
+  pid_split <- str_split(dt$phenotype_id, ":")
+  dt$itype <- map_chr(pid_split, ~ .x[5])
+  dt$clu <- map_chr(pid_split, ~ .x[4])
+  dt$clu <- str_extract(dt$clu, "clu_[0-9]+")
+
+  dt <- dt[, ctype := paste(sort(unique(itype)), collapse = ","), by = clu][]
+  return(dt)
+}
+
+readGTExSQTL <- function(tissue, basepath = "/project/yangili1/cdai/SpliFi") {
+  base1.gtex <- glue("{basepath}/code/results/qtl/noisy/GTEx/")
+  base2.gtex <- "/cis_100000/perm"
+  suffix <- "addQval.txt.gz"
+  folder <- glue("{base1.gtex}/{tissue}/separateNoise{base2.gtex}")
+  files <- glue("{folder}/chr{1:22}.{suffix}")
+  dt <- map_dfr(files, fread)
+}
+
+readGTExNOM <- function(tissue, basepath = "/project/yangili1/cdai/SpliFi") {
+  base1.gtex <- glue("{basepath}/code/results/eqtl/GTEx")
+  paths <- glue("{base1.gtex}/{tissue}/nom/chr{1:22}.txt.gz")
+  df <- map_dfr(paths, fread)
+  names(df) <- c(
+    "pid", "pchr", "pstart", "pend", "pstrand", "nVar", "dist",
+    "vid", "vchr", "vstart", "vend", "pval", "r2", "slope", "topflag"
+  )
+  return(df)
+}
+
+
+
+tissue <- "WholeBlood"
+FDR <- .1
+minReads <- 10
+base_path = "../smk-plots/gtex-sqtl-enrichment-v4"
+vep <- "../data/WGS_Feature_overlap_collapsed_VEP_short_4torus.MAF01.txt.gz"
+```
+
+
+
+
+```{r}
+tissues <- c(
+  "Cells-EBV-transformedlymphocytes", "Liver", "WholeBlood"
+)
+```
+
+```{r}
+#| include: true
+#| echo: false
+scatter <- list.files(base_path, pattern = "scatter", full.names = TRUE)
+scatter <- scatter[str_detect(scatter, paste(tissues, collapse = "|"))]
+scatter
+```
+
+
+
+```{r}
+#| column: page
+#| label: fig-scatterplots
+#| fig-cap: comparison of sQTL and eQTL effect size
+#| layout-ncol: 4
+#| out-width: 100%
+
+knitr::include_graphics(scatter)
+```
+
+
+# Take a closer look at whole blood
+
+```{r}
+#| cache: true
+# load vep data for GTEx
+vep.df <- fread(vep)
+# select data.table of vep.df where 
+# promoter_d ==1 or promoter_flanking_region_d == 1 or enhancer_d == 1
+transcriptional.snps <- vep.df[promoter_d == 1 | promoter_flanking_region_d == 1 | enhancer_d == 1, SNP] %>% unique
+
+```
+
+```{r}
+permDF <- readGTExSQTL(tissue) %>% addLabels
+permDF <- permDF[q < FDR]
+```
+
+
+```{r}
+nomDF <- readGTExNOM(tissue)
+```
+
+
+**Consider selecting random intron for PR**
+**also try random selection for UP**
+
+```{r}
+sqtl <- permDF[q < FDR & itype %in% c("PR", "UP") & ctype %in% c("PR", "PR,UP")]
+
+
+# select the best intron per cluster based on the largest effect size
+# note u-sQTLs are selected based on teh largest unproductive effect size
+sqtl <- sqtl[, rk := frank(-abs(slope), ties.method = "first"), by = .(clu, itype)]
+sqtl <- rbind(
+  sqtl[ctype == "PR"][itype == 'PR' & rk == 1][order(clu)], # best intron for PR cluster
+  sqtl[ctype == "PR,UP"][itype == "UP" & rk == 1][order(clu)] # best intron for PR,UP cluster
+) %>%
+  .[naturalsort::naturalorder(phenotype_id)]
+
+# give key for joining with eqtl nominal pass
+sqtl.v <- sqtl[, best_genotype_id] %>% unique()
+
+# first subset nominal data using potentila keys to join
+nomDF <- nomDF[vid %in% sqtl.v]
+```
+
+
+```{r}
+#| label: join tables
+mergeDF <- inner_join(sqtl[, .(phenotype_id, phenotype_chr, phenotype_start, phenotype_end, phenotype_strand, best_genotype_id, best_nom_dist, pval_nom, slope, itype, ctype)],
+  nomDF[, .(pid, pchr, pstart, pend, pstrand, vid, dist, pval, slope, topflag)],
+  by = c("best_genotype_id" = "vid"),
+  suffix = c("_sqtl", "_eqtl"),
+  relationship = "many-to-many"
+)
+
+```
+
+
+```{r}
+# a eQTL (gene) must encompass the sQTL (intron)
+# thus, the start and end of the eQTL must be within the start and end of the sQTL
+# the strand must be the same, and the chromosome must be the same
+
+mergeDF <- mergeDF[phenotype_chr == pchr & phenotype_strand == pstrand]
+mergeDF <- mergeDF[phenotype_start >= pstart & phenotype_end <= pend]
+```
+
+
+```{r}
+#| label: remove snps in promoters or enhancers
+#| cache: false
+# remove snps in promoter or promter flanking region for unproductive sQTLs
+snps_to_remove <- intersect(transcriptional.snps, mergeDF[ctype == "PR,UP", best_genotype_id])
+mergeDF <- mergeDF[!best_genotype_id %in% snps_to_remove]
+print(glue("Removed {length(snps_to_remove)} transcriptional snps"))
+
+```
+
+
+```{r}
+#| label: read counts
+cnts <- fread(glue("../code/results/pheno/noisy/GTEx/{tissue}/leafcutter_perind_numers.counts.noise_by_intron.gz"))
+cnts <- cnts[chrom %in% mergeDF$phenotype_id]
+
+data.cols <- names(cnts)[-c(1)]
+```
+
+```{r}
+#| label: compute rowMeans, rowMedians, rowSds
+cnts.summ <- cnts[, .(
+  chrom,
+  Means = rowMeans(as.matrix(.SD)),
+  Medians = rowMedians(as.matrix(.SD)),
+  Sds = rowSds(as.matrix(.SD))
+), .SDcols = data.cols]
+```
+
+```{r}
+#| label: plot cnt summary
+cnts.summ %>% 
+  melt(id.vars = "chrom", variable.name = "stat") %>% 
+  ggplot() + stat_ecdf(aes(value, color = stat)) +
+    scale_x_log10(breaks = c(0, 1, 5, 10, 20, 50, 100, 500, 1000, 2000, 5000)) +
+    labs(x = "Read count", y = "ECDF", title = "Read count distribution") +
+    theme_cowplot() +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+Remove introns with low read counts (less than `{r} minReads` reads).
+
+```{r}
+#| label: remove low read counts
+low_reads_introns <- cnts.summ[Means >= minReads, chrom] %>% unique
+```
+
+```{r}
+plotDF <- mergeDF[,
+  .(gid = best_genotype_id,
+    intron_id = phenotype_id,
+    gene_id = pid,
+    pval_sqtl = pval_nom,
+    pval_eqtl = pval,
+    slope_sqtl,
+    slope_eqtl,
+    ctype,
+    topflag
+  )]
+
+plotDF2 <- plotDF
+
+print("Number of sQTLs removed due to low read counts:")
+plotDF[intron_id %in% low_reads_introns, .(N = uniqueN(intron_id)), by = ctype]
+
+# remove low read counts
+plotDF <- plotDF[!intron_id %in% low_reads_introns]
+
+print("Number of sQTLs remaining:")
+plotDF[, .(N = uniqueN(intron_id)), by = ctype]
+```
+
+```{r}
+cnts.summ[, binsbyMean := cut(Means, breaks = c(0, 1, 2, 5, 10, 20, 50, 100, Inf), include.lowest = F)]
+plotDF2 <- left_join(
+  plotDF2,
+  cnts.summ[, .(intron_id = chrom, binsbyMean)],
+  by = "intron_id")
+```
+
+```{r}
+test_corr <- function(df) {
+  corr <- df[, .(slope_sqtl, slope_eqtl, ctype = if_else(ctype == "PR", "PR", "UP"))] %>%
+    split(by = "ctype") %>% 
+    map(~cor.test(x = .x$slope_sqtl, y = .x$slope_eqtl, method = "p"))
+  
+  corr.pvals <- map(corr, ~.x$p.value) %>% unlist
+  corr.estimates <- map(corr, ~.x$estimate[[1]]) %>% unlist
+  
+  if (all(names(corr.pvals) == names(corr.estimates))) {
+    corr.df <- data.frame(
+      ctype = if_else(names(corr.pvals) == "PR", "Productive", "Unproductive"),
+      pval = corr.pvals,
+      estimate = corr.estimates
+    )
+    corr.df <- corr.df %>% 
+    mutate(xpos = c(0, 0), ypos = c(0, 0))
+  } else {
+    stop("names of pvals and estimates do not match")
+  }
+  return(corr.df)
+}
+```
+
+```{r}
+#| eval: false
+corr <- plotDF[, .(slope_sqtl, slope_eqtl, ctype = if_else(ctype == "PR", "PR", "UP"))] %>%
+  split(by = "ctype") %>% 
+  map(~cor.test(x = .x$slope_sqtl, y = .x$slope_eqtl, method = "p"))
+
+corr.pvals <- map(corr, ~.x$p.value) %>% unlist
+corr.estimates <- map(corr, ~.x$estimate[[1]]) %>% unlist
+
+if (all(names(corr.pvals) == names(corr.estimates))) {
+  corr.df <- data.frame(
+    ctype = if_else(names(corr.pvals) == "PR", "Productive", "Unproductive"),
+    pval = corr.pvals,
+    estimate = corr.estimates
+  )
+  corr.df <- corr.df %>% 
+  mutate(xpos = c(0, 0), ypos = c(0, 0))
+} else {
+  stop("names of pvals and estimates do not match")
+}
+
+```
+
+Correlation test for `{r} tissue`:
+
+Original:
+```{r}
+corr.df <- test_corr(plotDF)
+corr.df
+```
+
+split by intron bins:
+
+```{r}
+plotDF2[, .N, by = .(ctype, binsbyMean)][order(ctype, binsbyMean)]
+```
+
+
+```{r}
+
+scatter <- plotDF[, .(slope_sqtl, slope_eqtl, ctype)] %>% 
+  mutate(ctype = if_else(ctype == "PR", "Productive", "Unproductive")) %>%
+  ggplot() + geom_pointdensity(aes(slope_sqtl, slope_eqtl), alpha = .6) +
+    scale_color_viridis_c() +
+    geom_abline(aes(intercept = 0, slope = estimate), 
+                data = corr.df, linetype = "dashed", color = "navy", linewidth = 1) +
+    geom_text(aes(x = xpos, y = ypos, 
+                  label = glue("cor: {corr}\np: {pvalue}",
+                               corr = if_else(abs(estimate) > .001,
+                                              scales::number(estimate, .01),
+                                              scales::scientific(estimate)),
+                               pvalue = if_else(pval > .001,
+                                                scales::number(pval, .01),
+                                                scales::scientific(pval)))),
+              data = corr.df, size = 6, hjust = .5, vjust = 1, color = "blue") +
+    coord_cartesian(xlim = c(-4, 4), ylim = c(-2, 2)) +
+    labs(x = "sQTL effect size", y = "eQTL effect size", title = glue("{tissue}")) +
+    facet_wrap(~ctype) + 
+    theme_cowplot() + 
+    theme(strip.background = element_rect(fill = "white"))
+```
+
+
+::: {#fig-elephants layout-ncol=2}
+
+
+```{r}
+#| fig-cap: before removing low reads
+knitr::include_graphics(glue("../smk-plots/gtex-sqtl-enrichment-v4/{tissue}-scatter.png"))
+```
+
+```{r}
+#| fig-cap: after removing low reads
+scatter
+```
+
+Beta beta correlation plot for `{r} tissue`:
+:::
+
+
+```{r}
+plotDF2.l <- split(plotDF2, by = "binsbyMean")
+bins <- names(plotDF2.l) %>% sort
+names(bins) <- bins
+bins <- bins[sort(names(bins))]
+
+```
+
+
+```{r}
+corr.df.l  <- map(bins, ~test_corr(plotDF2.l[[.x]]))
+```
+
+```{r}
+corr.df.l
+```
+
+
+```{r}
+
+plot_scatter <- function(df, tissue, corr.df, binname) {
+  df[, .(slope_sqtl, slope_eqtl, ctype)] %>% 
+    mutate(ctype = if_else(ctype == "PR", "Productive", "Unproductive")) %>%
+    ggplot() + geom_pointdensity(aes(slope_sqtl, slope_eqtl), alpha = .6) +
+      scale_color_viridis_c() +
+      geom_abline(aes(intercept = 0, slope = estimate), 
+                  data = corr.df, linetype = "dashed", color = "navy", linewidth = 1) +
+      geom_text(aes(x = xpos, y = ypos, 
+                    label = glue("cor: {corr}\np: {pvalue}",
+                                 corr = if_else(abs(estimate) > .001,
+                                                scales::number(estimate, .01),
+                                                scales::scientific(estimate)),
+                                 pvalue = if_else(pval > .001,
+                                                  scales::number(pval, .01),
+                                                  scales::scientific(pval)))),
+                data = corr.df, size = 6, hjust = .5, vjust = 1, color = "blue") +
+      coord_cartesian(xlim = c(-4, 4), ylim = c(-2, 2)) +
+      labs(x = "sQTL effect size", y = "eQTL effect size", 
+          title = str_wrap(glue("{tissue}, mean in {binname}"), width = 40)) +
+      facet_wrap(~ctype) + 
+      theme_cowplot() + 
+      theme(strip.background = element_rect(fill = "white"))
+}
+```
+
+
+```{r}
+ggs <- map(bins, ~plot_scatter(plotDF2.l[[.x]], tissue, corr.df.l[[.x]], .x))
+```
+
+
+```{r}
+#| column: screen
+#| fig-height: 12
+#| fig-width: 10
+wrap_plots(ggs, ncol = 2)
+```
+

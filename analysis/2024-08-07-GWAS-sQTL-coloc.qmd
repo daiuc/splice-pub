@@ -1,0 +1,313 @@
+---
+title: "coloc with GWAS and sQTL"
+date: 2024-8-7
+format: html
+categories: ['GWAS', 'coloc', 'sQTL']
+code-fold: true
+execute:
+  include: true
+  eval: false
+  cache: false
+  echo: false
+---
+
+
+
+
+```{r}
+#| include: false
+#| eval: true
+
+suppressMessages(library(tidyverse))
+suppressMessages(library(glue))
+suppressMessages(library(data.table))
+suppressMessages(library(GenomicRanges))
+suppressMessages(library(hyprcoloc))
+```
+
+
+
+# Data description
+
+### AD GWAS
+
+1. formatted gwas summsary stats [description](2024-08-06-process-GWAS-summary-stats.qmd)
+
+
+
+```{r}
+# GWAS loci
+loci = rtracklayer::import.bed('../code/resources/GWAS/hg38/AD_hitloci.bed')
+mcols(loci) = NULL
+
+# GWAS summary stats
+```
+
+
+
+```{r}
+# sQTL-eQTL pairs
+tissue = 'Liver'
+pheno_ids = dir(glue('../code/results/coloc/sqtl-eqtl/GTEx/{tissue}'), '.*eqtl.*sqtl.*id.*txt', full.names = TRUE)
+pheno_ids = naturalsort::naturalsort(pheno_ids)
+pheno_ids = map_dfr(pheno_ids[1:2], ~fread(.x))
+colnames(pheno_ids) = c('intron_id', 'gene_id')
+```
+
+
+```{r}
+# use gene_id to find gene loci, used for as molQTL loci
+genes = fread('/project/yangili1/cdai/annotations/hg38/gencode.v26.GRCh38.genes.csv')
+genes = genes[feature == 'gene', .(seqname, start, end, strand, gene_id)] %>% unique()
+
+# remove the dots in gene_id
+genes[, gene_id := str_remove(gene_id, '\\..*')]
+```
+
+
+```{r}
+gene_ids = inner_join(
+  pheno_ids[, .(gene_id)],
+  genes,
+  by = 'gene_id'
+) %>% unique
+
+gene_ids = makeGRangesFromDataFrame(gene_ids, keep.extra.columns = TRUE)
+# extend the range by 500kb on both sides, start cannot be negative
+start(gene_ids) = pmax(1, start(gene_ids) - 500000)
+end(gene_ids) = end(gene_ids) + 500000
+```
+
+
+
+
+```{r}
+# intersect loci (gwas) with pheno_id loci, keep only ones that have overlaps for both
+ovlaps = findOverlaps(loci, gene_ids, minoverlap = 5000)
+
+coloc_loci = map2(
+  queryHits(ovlaps),
+  subjectHits(ovlaps),
+  ~GenomicRanges::reduce(c(loci[.x], gene_ids[.y]), ignore.strand = TRUE)
+) %>% do.call(c, .)
+
+mcols(coloc_loci) = mcols(gene_ids[subjectHits(ovlaps)])
+
+# intron id and gene id for the coloc loci
+coloc_phenos = pheno_ids[gene_id %in% coloc_loci$gene_id]
+```
+
+
+
+
+```{r}
+# nominal summary stats
+
+gwas.stats_f = '../code/resources/GWAS/hg38/AD_sumstats_Jansenetal_hg19tohg38.tsv.gz'
+gwas.colnames = fread(gwas.stats_f, nrow = 2) %>% colnames
+
+sqtl.f = dir('../code/results/coloc/sqtl-eqtl/GTEx/Liver', 'sqtl_nominal.txt.gz$', full.names = T) %>% 
+  naturalsort::naturalsort(.)
+sqtl.stats = map_dfr(sqtl.f, fread)
+# subsect sqtl.stats to reduce size
+sqtl.stats = sqtl.stats[V1 %in% pheno_ids[gene_id %in% coloc_loci$gene_id][, intron_id]]
+
+eqtl.f = dir('../code/results/coloc/sqtl-eqtl/GTEx/Liver', 'eqtl_nominal.txt.gz$', full.names = T) %>% 
+  naturalsort::naturalsort(.)
+eqtl.stats = map_dfr(eqtl.f, fread)
+eqtl.stats = eqtl.stats[V1 %in% coloc_loci$gene_id]
+
+```
+
+
+```{r}
+
+# col1 pid
+# col2 pchr
+# col3 pstart
+# col4 pend
+# col5 pstrand
+# col6 number of snps
+# col7 distance
+# col8 snp id
+# col9 snp chr
+# col10 snp start
+# col11 snp end
+# col12 nominal pval
+# col13 r2
+# col14 slope
+# col15 slope SE
+# col16 1/0 to indicate top snp
+
+```
+
+```{r}
+traits = c("AD", "eQTL", "sQTL")
+map(seq_len(nrow(coloc_phenos))[5],
+  \(i) {
+    intron_id = coloc_phenos$intron_id[[i]]
+    gene_id = coloc_phenos$gene_id[[i]]
+    locus = coloc_loci[coloc_loci$gene_id %in% gene_id]
+    
+    print(glue('{gene_id} {intron_id} coloc with GWAS at loci: {locus}'))
+    g.stats = glue("tabix {gwas.stats_f} {as.character(locus)}")
+    g.stats = fread(cmd = g.stats, header = F, col.names = gwas.colnames)
+    if ("SNP" %in% colnames(g.stats)) {
+      g.stats = g.stats[, .(id = paste0(`#CHR`, ':', BP), BETA, SE, SNP)]
+    } else {
+      g.stats = g.stats[, .(id = paste0(`#CHR`, ':', BP), BETA, SE)]
+    }
+    e.stats = eqtl.stats[V1 %in% gene_id]
+    e.stats[, id := paste0(V9, ":", V11)]
+    s.stats = sqtl.stats[V1 %in% intron_id]
+    s.stats[, id := paste0(V9, ":", V11)]
+
+    shared.snps = purrr::reduce(list(g.stats$id, e.stats$id, s.stats$id), intersect) %>% 
+      naturalsort::naturalsort(.)
+    shared.snps = data.table(id = shared.snps)
+
+    # make beta matrix
+    mx.BETAs = inner_join(
+      shared.snps,
+      g.stats[, .(id, BETA.g = BETA)],
+      by = 'id',
+      multiple = "any"
+      ) %>% 
+      inner_join(
+        .,
+        e.stats[id %in% shared.snps$id, .(id, BETA.e = V14)],
+        by = 'id',
+        suffix = c('.g', '.e'),
+        multiple = "any"
+      ) %>% 
+      inner_join(
+        ., 
+        s.stats[id %in% shared.snps$id, .(id, BETA.s = V14)],
+        by = 'id',
+        suffix = c('', '.s'),
+        multiple = "any"
+      ) 
+    mx.BETAs = mx.BETAs[naturalsort::naturalorder(id)] %>% column_to_rownames('id')
+    colnames(mx.BETAs) = traits
+    
+    # make SE matrix
+    mx.SEs = inner_join(
+      shared.snps,
+      g.stats[, .(id, SE.g = SE)],
+      by = 'id',
+      multiple = "any"
+      ) %>% 
+      inner_join(
+        .,
+        e.stats[id %in% shared.snps$id, .(id, SE.e = V15)],
+        by = 'id',
+        suffix = c('.g', '.e'),
+        multiple = "any"
+      ) %>% 
+      inner_join(
+        ., 
+        s.stats[id %in% shared.snps$id, .(id, SE.s = V15)],
+        by = 'id',
+        suffix = c('', '.s'),
+        multiple = "any"
+      ) 
+    mx.SEs = mx.SEs[naturalsort::naturalorder(id)] %>% column_to_rownames('id')
+    colnames(mx.SEs) = traits
+
+    # remove rows with any zeros because hyprcoloc does not allow zeros
+    non_zeros1 = rownames(mx.BETAs)[rowSums(mx.BETAs != 0) == ncol(mx.BETAs)]
+    non_zeros2 = rownames(mx.SEs)[rowSums(mx.SEs != 0) == ncol(mx.SEs)]
+    keep_rows = intersect(non_zeros1, non_zeros2)
+    mx.BETAs = mx.BETAs[keep_rows, ] %>% as.matrix
+    mx.SEs = mx.SEs[keep_rows, ] %>% as.matrix
+
+    # run hyprcoloc
+    trait.names = colnames(mx.BETAs)
+    snp.ids = rownames(mx.BETAs)
+    res = hyprcoloc(mx.BETAs, mx.SEs,
+            trait.names = trait.names,
+            snp.id = snp.ids,
+            snpscores = TRUE,
+            bb.selection = "alignment"
+            )
+
+            # trait.names <- colnames(mx$betas)
+            # snp.ids <- rownames(mx$betas)
+            # res <- hyprcoloc(mx$betas, mx$ses,
+            #         trait.names = trait.names,
+            #         snp.id = snp.ids,
+            #         snpscores = T,
+            #         bb.selection = "alignment"
+            #         )
+            # return(res)
+ 
+ 
+    mx.BETAs %>% dim %>% print
+    mx.BETAs %>% head %>% print
+    mx.SEs %>% dim %>% print
+    mx.SEs %>% head %>% print
+
+
+
+
+    return(res)
+  }
+)
+```
+
+
+
+```{r}
+
+eqtl.stats %>% dim
+sqtl.stats %>% dim
+eqtl.stats[1:5]
+sqtl.stats[1:5]
+
+
+dim(loci)
+head(loci)
+
+gene_ids %>% width %>% summary
+gene_ids
+
+coloc_loci[coloc_loci$gene_id %in% 'ENSG00000084636']
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

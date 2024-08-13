@@ -1,0 +1,17 @@
+{
+  "hash": "502461335036098ea70609a14cb3b837",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"coloc with GWAS and sQTL\"\ndate: 2024-8-7\nformat: html\ncategories: ['GWAS', 'coloc', 'sQTL']\ncode-fold: true\nexecute:\n  include: true\n  eval: false\n  cache: false\n  echo: false\n---\n\n\n\n\n\n\n# Data description\n\n### AD GWAS\n\n1. formatted gwas summsary stats [description](2024-08-06-process-GWAS-summary-stats.qmd)\n\n\n\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n",
+    "supporting": [
+      "2024-08-07-GWAS-sQTL-coloc_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

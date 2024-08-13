@@ -1,0 +1,512 @@
+---
+title: "Process GWAS summary stats"
+date: 2024-8-6
+format: html
+categories: ['GWAS']
+code-fold: true
+execute:
+  include: true
+  eval: false
+  cache: false
+  echo: false
+---
+
+
+
+
+```{r}
+#| include: false
+#| eval: true
+
+suppressMessages(library(tidyverse))
+suppressMessages(library(glue))
+suppressMessages(library(data.table))
+suppressMessages(library(GenomicRanges))
+suppressMessages(library(rtracklayer))
+suppressMessages(library(yaml))
+```
+
+
+
+```{r}
+#| eval: true
+yml = yaml.load_file('../code/resources/GWAS/selected-gwas.yaml')
+
+
+hg19to38chain = '../../annotations/liftover/hg19ToHg38.over.chain'
+chain = import.chain(hg19to38chain)
+
+
+MinPVal = 1e-5
+
+```
+
+
+
+# GWAS summary stats
+
+
+```{r}
+#| include: true
+#| eval: true
+
+yml %>% pluck("GWAS") %>% 
+  map_chr(pluck, "trait") %>% 
+  enframe(name = "GWAS", value = "Trait")  %>% 
+  gt::gt()
+  
+
+yml %>% pluck("GWAS") %>%
+  map_chr(pluck, "path") %>% 
+  enframe(name = "GWAS", value = "Path")  %>%
+  gt::gt()
+```
+
+
+```{r}
+# helper functions
+
+extend_grange <- function(gr, to_length = 1e6) {
+
+  to_length <- as.integer(to_length)
+  half_length <- as.integer(to_length / 2)
+  current_width <- width(gr)
+  
+  if (current_width >= to_length) {
+    return(gr)
+  } else {
+    midpoint <- start(gr) + (end(gr) - start(gr)) / 2
+
+    new_start <- max(0, round(midpoint - half_length))
+    new_end <- round(midpoint + half_length)
+
+    # Update the GRanges object with the new range
+    extended_gr <- GRanges(seqnames = seqnames(gr), ranges = IRanges(start = new_start, end = new_end))
+    seqlevelsStyle(extended_gr) <- "UCSC"
+
+    return(extended_gr)
+  }
+  
+ }
+```
+
+# Liftover hg19 to hg38 where applicable
+
+Run interactively to yield lifted summary stats.
+
+```{r}
+# AD - process summary stats
+
+# load full summary stats
+dt <- fread(yml$GWAS$AD$path)
+
+# extract SNPS, and liftover from hg19 to hg38
+snps <- dt[, .(CHR, BP, id = `uniqID.a1a2`)]
+snps = GRanges(seqnames = snps$CHR, 
+                   ranges = IRanges(start = snps$BP, end = snps$BP),
+                   strand = "*",
+                   id = snps$id)
+seqlevelsStyle(snps) = "UCSC"
+snps = liftOver(snps, chain) %>% unlist
+snps = as.data.frame(snps)
+
+# merge back with summary stats
+dt2 = inner_join(
+  dt, snps,
+  by = c("uniqID.a1a2" = "id")
+)
+
+dt2 = as.data.table(dt2)
+dt2 = dt2[, .(`#CHR` = seqnames, BP = start, id = `uniqID.a1a2`, SNP, Z, P, BETA, SE, Nsum, Neff, A1, A2, MAF)]
+
+# write out full summary stats, with unified column names, and lifted coordinates
+dt2 %>% 
+  fwrite('../code/resources/GWAS/hg38/AD_sumstats_Jansenetal_hg19tohg38.tsv', sep = '\t', quote = FALSE)
+
+# bgzip it
+```
+
+
+
+
+
+
+
+```{r}
+# AD - get hit loci
+
+# select SNPs with P < MinPVal
+loci = makeGRangesFromDataFrame(
+  dt2[P < MinPVal, .(CHR, BP, P)],
+  keep.extra.columns = FALSE,
+  seqnames.field = "CHR",
+  start.field = "BP",
+  end.field = "BP",
+  ignore.strand = TRUE
+)
+seqlevelsStyle(loci) = "UCSC"
+print(glue("Construct loci from {length(loci)} SNPS with P < {MinPVal}"))
+
+# reduce ranges to granges that are less than .5MB apart
+loci = GenomicRanges::reduce(loci, min.gapwidth = 5e5, ignore.strand = TRUE)
+
+# extend loci to >=1MB
+loci = split(loci, seq_along(loci)) %>% 
+  map_dfr(~extend_grange(.x, 1e6) %>% as.data.frame) %>%
+  makeGRangesFromDataFrame(ignore.strand = TRUE) %>% 
+  sort
+print(glue("Extended loci to >=1MB, {length(loci)} loci"))
+
+# write out loci with rtracklayer
+export.bed(loci, '../code/resources/GWAS/hg38/AD_hitloci.bed')
+
+```
+
+
+
+
+```{r}
+# PD - process summary stats
+
+# load full summary stats
+dt <- fread(yml$GWAS$PD$path)
+CHRBP = str_split(dt$SNP, ":", simplify = TRUE)
+dt[, `:=`(`CHR` = CHRBP[,1], BP = as.integer(CHRBP[,2]))]
+
+# extract SNPS, and liftover from hg19 to hg38
+snps <- dt[, .(CHR, BP, id = SNP)]
+snps = GRanges(seqnames = snps$CHR, 
+                   ranges = IRanges(start = snps$BP, end = snps$BP),
+                   strand = "*",
+                   id = snps$id)
+seqlevelsStyle(snps) = "UCSC"
+snps = liftOver(snps, chain) %>% unlist
+snps = as.data.frame(snps)
+
+# merge back with summary stats
+dt2 = inner_join(
+  dt, snps,
+  by = c("SNP" = "id")
+)
+
+dt2 = as.data.table(dt2)
+dt2 = dt2[, .(`#CHR` = seqnames, BP = start, id = SNP, BETA = b, SE = se, P = p, N_cases, N_controls, A1, A2, freq)]
+
+# write out full summary stats, with unified column names, and lifted coordinates
+dt2 %>% 
+  fwrite('../code/resources/GWAS/hg38/PD_nallsEtAl2019.tsv', sep = '\t', quote = FALSE)
+
+# bgzip it
+```
+
+
+```{r}
+# PD - get hit loci
+
+# select SNPs with P < MinPVal
+loci = makeGRangesFromDataFrame(
+  dt2[p < MinPVal, .(CHR, BP, p)],
+  keep.extra.columns = FALSE,
+  seqnames.field = "CHR",
+  start.field = "BP",
+  end.field = "BP",
+  ignore.strand = TRUE
+)
+seqlevelsStyle(loci) = "UCSC"
+print(glue("Construct loci from {length(loci)} SNPS with P < {MinPVal}"))
+
+# reduce ranges to granges that are less than .5MB apart
+loci = GenomicRanges::reduce(loci, min.gapwidth = 5e5, ignore.strand = TRUE)
+
+# extend loci to >=1MB
+loci = split(loci, seq_along(loci)) %>% 
+  map_dfr(~extend_grange(.x, 1e6) %>% as.data.frame) %>%
+  makeGRangesFromDataFrame(ignore.strand = TRUE) %>% 
+  sort
+print(glue("Extended loci to >=1MB, {length(loci)} loci"))
+
+# write out loci with rtracklayer
+export.bed(loci, '../code/resources/GWAS/hg38/PD_hitloci.bed')
+
+```
+
+
+```{r}
+# HT - process summary stats
+
+# load full summary stats
+dt <- fread(yml$GWAS$HT$path)
+dt <- unique(dt)
+
+# extract SNPS, and liftover from hg19 to hg38
+snps <- dt[, .(CHR, BP=POS, id = SNP)]
+snps = GRanges(seqnames = snps$CHR, 
+                   ranges = IRanges(start = snps$BP, end = snps$BP),
+                   strand = "*",
+                   id = snps$id)
+seqlevelsStyle(snps) = "UCSC"
+snps = liftOver(snps, chain) %>% unlist
+snps = as.data.frame(snps)
+
+# merge back with summary stats
+dt2 = inner_join(
+  dt, snps,
+  by = c("SNP" = "id")
+)
+
+dt2 = as.data.table(dt2)
+dt2 = dt2[, .(`#CHR` = seqnames, BP = start, SNP, BETA, SE, P, N, Tested_Allele, Other_Allele, freq = Freq_Tested_Allele_in_HRS)]
+
+# write out full summary stats, with unified column names, and lifted coordinates
+dt2 %>% fwrite('../code/resources/GWAS/hg38/HT.tsv', sep = '\t', quote = FALSE)
+
+# bgzip it
+```
+
+
+```{r}
+# HT - get hit loci
+
+# select SNPs with P < MinPVal
+loci = makeGRangesFromDataFrame(
+  dt2[P < MinPVal, .(CHR, BP = POS, P)][],
+  keep.extra.columns = FALSE,
+  seqnames.field = "CHR",
+  start.field = "BP",
+  end.field = "BP",
+  ignore.strand = TRUE
+)
+seqlevelsStyle(loci) = "UCSC"
+print(glue("Construct loci from {length(loci)} SNPS with P < {MinPVal}"))
+
+# reduce ranges to granges that are less than .5MB apart
+loci = GenomicRanges::reduce(loci, min.gapwidth = 5e5, ignore.strand = TRUE)
+
+# extend loci to >=1MB
+loci = split(loci, seq_along(loci)) %>% 
+  map_dfr(~extend_grange(.x, 1e6) %>% as.data.frame) %>%
+  makeGRangesFromDataFrame(ignore.strand = TRUE) %>% 
+  sort
+print(glue("Extended loci to >=1MB, {length(loci)} loci"))
+
+# write out loci with rtracklayer
+export.bed(loci, '../code/resources/GWAS/hg38/HT_hitloci.bed')
+
+```
+
+
+
+
+```{r}
+# T2D - process summary stats
+
+# load full summary stats
+dt <- fread(yml$GWAS$T2D$path)
+dt <- dt[order(Chr, Pos)]
+dt[, P := as.numeric(Pvalue)]
+dt[, Pvalue := NULL]
+
+# remove duplicates
+dt[, ndups := .N, by = SNP]
+dt.p1 = dt[ndups == 1]
+dt.p2 = dt[ndups > 1]
+dt.p2$rk = dt.p2[, .(v = rank(P, ties.method = "random")), by = SNP][, v]
+dt.p2 = dt.p2[rk == 1]
+dt = rbind(dt.p1[, -c("ndups")], dt.p2[, -c("ndups", "rk")])
+dt = dt[order(Chr, Pos)]
+
+# extract SNPS, and liftover from hg19 to hg38
+snps <- dt[, .(CHR=Chr, BP=Pos, id = SNP)]
+snps = GRanges(seqnames = snps$CHR, 
+                   ranges = IRanges(start = snps$BP, end = snps$BP),
+                   strand = "*",
+                   id = snps$id)
+seqlevelsStyle(snps) = "UCSC"
+snps = liftOver(snps, chain) %>% unlist
+snps = as.data.frame(snps)
+
+# merge back with summary stats
+dt2 = inner_join(
+  dt, snps,
+  by = c("SNP" = "id")
+)
+
+dt2 = as.data.table(dt2)
+dt2 = dt2[, .(`#CHR` = seqnames, BP = start, id = SNP, BETA = Beta, SE, P, Neff, EA, NEA, EAF)]
+
+# write out full summary stats, with unified column names, and lifted coordinates
+dt2 %>% 
+  fwrite('../code/resources/GWAS/hg38/T2D', sep = '\t', quote = FALSE)
+
+# bgzip it
+```
+
+
+
+```{r}
+# T2D - get hit loci
+
+# select SNPs with P < MinPVal
+loci = makeGRangesFromDataFrame(
+  dt2[P < MinPVal, .(CHR, BP, P)][],
+  keep.extra.columns = FALSE,
+  seqnames.field = "CHR",
+  start.field = "BP",
+  end.field = "BP",
+  ignore.strand = TRUE
+)
+seqlevelsStyle(loci) = "UCSC"
+print(glue("Construct loci from {length(loci)} SNPS with P < {MinPVal}"))
+
+# reduce ranges to granges that are less than .5MB apart
+loci = GenomicRanges::reduce(loci, min.gapwidth = 5e5, ignore.strand = TRUE)
+
+# extend loci to >=1MB
+loci = split(loci, seq_along(loci)) %>% 
+  map_dfr(~extend_grange(.x, 1e6) %>% as.data.frame) %>%
+  makeGRangesFromDataFrame(ignore.strand = TRUE) %>% 
+  sort
+print(glue("Extended loci to >=1MB, {length(loci)} loci"))
+
+# write out loci with rtracklayer
+export.bed(loci, '../code/resources/GWAS/hg38/T2D_hitloci.bed')
+
+```
+
+
+
+
+
+
+
+
+
+
+
+# Before processing
+
+
+## AD
+
+- Total Number of SNPs: 13,367,299;
+- Number of SNPs with P-value < `{r} MinPVal`: 1,457,396;
+
+
+```{r}
+#| label: display-sample-AD-sum
+#| include: true
+#| eval: true
+#| cache: true
+
+dt <- fread(yml$GWAS$AD$path, nrows = 10)
+head(dt) %>% gt::gt(.)
+```
+
+
+## PD
+
+- Total Number of SNPs: 17,510,617;
+- Number of SNPs with P-value < `{r} MinPVal`: 5,806;
+
+```{r}
+#| label: display-sample-PD-sum
+#| include: true
+#| eval: true
+#| cache: true
+
+dt = fread(yml$GWAS$PD$path, nrows = 10)
+head(dt) %>% gt::gt(.)
+```
+
+## HT
+
+- Total Number of SNPs: 2,348,397;
+- Number of SNPs with P-value < `{r} MinPVal`: 5,806;
+
+```{r}
+#| label: display-sample-HT-sum
+#| include: true
+#| eval: true
+#| cache: true
+
+dt = fread(yml$GWAS$HT$path, nrows = 10)
+head(dt) %>% gt::gt(.)
+```
+
+
+## T2D
+
+- Total Number of SNPs: 23,465,132;
+- Number of SNPs with P-value < `{r} MinPVal`: 44,546;
+
+```{r}
+#| label: display-sample-T2D-sum
+#| include: true
+#| eval: true
+#| cache: true
+
+dt = fread(yml$GWAS$T2D$path, nrows = 10)
+head(dt) %>% gt::gt(.)
+
+```
+
+
+
+# After process/mungingg
+
+## AD
+```{r}
+#| include: true
+#| eval: true
+#| cache: true
+
+dt <- fread('../code/resources/GWAS/hg38/AD_sumstats_Jansenetal_hg19tohg38.tsv.gz', nrows = 10)
+head(dt) %>% gt::gt(.)
+```
+
+## PD
+```{r}
+#| include: true
+#| eval: true
+#| cache: true
+
+dt <- fread('../code/resources/GWAS/hg38/PD_nallsEtAl2019.tsv.gz', nrows = 10)
+head(dt) %>% gt::gt(.)
+```
+
+
+## HT
+```{r}
+#| include: true
+#| eval: true
+#| cache: true
+
+dt <- fread('../code/resources/GWAS/hg38/HT.tsv.gz', nrows = 10)
+head(dt) %>% gt::gt(.)
+```
+
+
+## T2D
+```{r}
+#| include: true
+#| eval: true
+#| cache: true
+
+dt <- fread('../code/resources/GWAS/hg38/T2D.tsv.gz', nrows = 10)
+head(dt) %>% gt::gt(.)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,35 @@
+---
+title: "Plot heatmap of effect size correlation between eQTL and sQTL"
+date: 2024-7-25
+format: html
+categories: ['beta']
+code-fold: true
+execute:
+  include: true
+  eval: true
+  cache: false
+  echo: false
+---
+
+
+# Intro
+
+The goal is to compute the correlations between sQTL beta and eQTL beta for top p vs. u sQTL top SNPs in a heatmap. It effectively summarises the 49 beta vs. beta scatter plots.
+
+data:
+
+1. p vs. u sQTL top SNPs
+2. regression slope in sQTL mapping
+3. regression slope in eQTL mapping
+
+do this for each of the 49 tissues. Result is a 2x49 matrix where 
+
+- row labels: u or p sQTL (2)
+- col labels: tissue (49)
+- values: correlation value of betas. 
+
+plot heatmap: 
+
+- split heatmap into 5 sub heatmaps, each is 2x10 (9) matrix
+
+

@@ -1,0 +1,15 @@
+{
+  "hash": "178879bb5392a35b6f39efeededfa437",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"eQTL sQTL coloc with HyprColoc tally\"\ndate: 2024-8-5\nformat: html\ncategories: ['coloc']\ncode-fold: true\nexecute:\n  include: true\n  eval: true\n  cache: false\n  echo: true\n---\n\n\n\n# Intro\n\nColoc using HyprColoc. Detailed procedures in `../code/workflow/rules/coloc.smk`. Briefly, \nfirst collect sQTL and eQTLs with FDR = 0.1. Then get intron/gene pairs. Run nominal pass \nto get betas and standard errors. Then run HyprColoc on shared SNPs on each pair.\n\n\n\n# code\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nsuppressMessages(library(tidyverse))\nsuppressMessages(library(glue))\nsuppressMessages(library(data.table))\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nbase_dir = '../code/results/coloc/sqtl-eqtl/GTEx'\ncoloc_result_pat = '.*coloc-res.txt'\ncoloc_res_files = list.files(base_dir, pattern = coloc_result_pat, full.names = TRUE, recursive = TRUE)\n\ntissues = str_split(coloc_res_files, '/', simplify = T) %>% .[, 7] %>% unique\nnames(tissues) = tissues\ncoloc_files = map(tissues, ~coloc_res_files[str_detect(coloc_res_files, .x)]) %>% \n  map(~naturalsort::naturalsort(.x))\n\ncoloc_res = imap(\n  coloc_files,\n  \\(fl, t) {\n    map_dfr(fl, ~fread(.x) %>% mutate(tissue = t))\n  }\n)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\ncoloc_res = map(\n  coloc_res,\n  \\(dt) {\n    intron_gene = str_split(dt$id, '\\\\|', simplify = T)\n    dt = mutate(dt, intron = intron_gene[, 1], gene = intron_gene[, 2])\n    dt = mutate(dt, itype = str_extract(intron, 'PR|UP|NE'))\n    return(dt)\n  }\n)\n\n\ncoloc_res = map(\n  coloc_res,\n  \\(dt) dt[posterior_prob > 0.7]\n)\n```\n:::\n\n\n\nNumber of significant coloc results per tissue with posterior probability > 0.7\n\n\n::: {.cell}\n\n```{.r .cell-code}\ncoloc_res %>% \n  map(\\(dt) dt[, .(N = uniqueN(id)), by = itype])\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n$Liver\n    itype     N\n   <char> <int>\n1:     PR   379\n2:     UP   154\n\n$Lung\n    itype     N\n   <char> <int>\n1:     PR  1334\n2:     UP   408\n3:     NE     1\n\n$`Muscle-Skeletal`\n    itype     N\n   <char> <int>\n1:     PR  1452\n2:     UP   441\n3:     NE     1\n```\n\n\n:::\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
