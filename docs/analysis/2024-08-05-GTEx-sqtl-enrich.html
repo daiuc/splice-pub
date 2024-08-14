@@ -8,7 +8,7 @@
 
 <meta name="dcterms.date" content="2024-08-15">
 
-<title>mysite - GTEx sQTL enrichment - updated (V4) - different pseudocount</title>
+<title>mysite - GTEx sQTL enrichment (V4, different pseudocount)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -142,8 +142,22 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#enrichment-of-sqtl-in-eqtl-pvalues" id="toc-enrichment-of-sqtl-in-eqtl-pvalues" class="nav-link active" data-scroll-target="#enrichment-of-sqtl-in-eqtl-pvalues">Enrichment of sQTL in eQTL pvalues</a></li>
-  <li><a href="#comparison-of-sqtl-top-snp-beta-and-eqtl-effect-size-nominal-beta-of-same-top-sqtl-snp" id="toc-comparison-of-sqtl-top-snp-beta-and-eqtl-effect-size-nominal-beta-of-same-top-sqtl-snp" class="nav-link" data-scroll-target="#comparison-of-sqtl-top-snp-beta-and-eqtl-effect-size-nominal-beta-of-same-top-sqtl-snp">Comparison of sQTL (top SNP beta) and eQTL effect size (nominal beta of same top sQTL SNP)</a></li>
+  <li><a href="#enrichment-of-sqtl-in-eqtl-pvalues" id="toc-enrichment-of-sqtl-in-eqtl-pvalues" class="nav-link active" data-scroll-target="#enrichment-of-sqtl-in-eqtl-pvalues">Enrichment of sQTL in eQTL pvalues</a>
+  <ul class="collapse">
+  <li><a href="#with-new-pseudo-count" id="toc-with-new-pseudo-count" class="nav-link" data-scroll-target="#with-new-pseudo-count">With new pseudo count</a></li>
+  <li><a href="#with-old-pseudo" id="toc-with-old-pseudo" class="nav-link" data-scroll-target="#with-old-pseudo">with old pseudo</a></li>
+  </ul></li>
+  <li><a href="#comparison-of-sqtl-top-snp-beta-and-eqtl-effect-size-nominal-beta-of-same-top-sqtl-snp" id="toc-comparison-of-sqtl-top-snp-beta-and-eqtl-effect-size-nominal-beta-of-same-top-sqtl-snp" class="nav-link" data-scroll-target="#comparison-of-sqtl-top-snp-beta-and-eqtl-effect-size-nominal-beta-of-same-top-sqtl-snp">Comparison of sQTL (top SNP beta) and eQTL effect size (nominal beta of same top sQTL SNP)</a>
+  <ul class="collapse">
+  <li><a href="#with-new-pseudo-count-1" id="toc-with-new-pseudo-count-1" class="nav-link" data-scroll-target="#with-new-pseudo-count-1">With new pseudo count</a></li>
+  <li><a href="#with-old-pseudo-count" id="toc-with-old-pseudo-count" class="nav-link" data-scroll-target="#with-old-pseudo-count">With old pseudo count</a></li>
+  </ul></li>
+  <li><a href="#compare-number-of-qtls" id="toc-compare-number-of-qtls" class="nav-link" data-scroll-target="#compare-number-of-qtls">Compare number of qtls</a>
+  <ul class="collapse">
+  <li><a href="#with-new-pseudo-count-2" id="toc-with-new-pseudo-count-2" class="nav-link" data-scroll-target="#with-new-pseudo-count-2">with new pseudo count</a></li>
+  <li><a href="#with-old-pseudo-count-1" id="toc-with-old-pseudo-count-1" class="nav-link" data-scroll-target="#with-old-pseudo-count-1">with old pseudo count</a></li>
+  <li><a href="#intersection-of-sqtls-between-new-and-old-pseudo-count" id="toc-intersection-of-sqtls-between-new-and-old-pseudo-count" class="nav-link" data-scroll-target="#intersection-of-sqtls-between-new-and-old-pseudo-count">intersection of sQTLs between new and old pseudo count</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -152,7 +166,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">GTEx sQTL enrichment - updated (V4) - different pseudocount</h1>
+<h1 class="title">GTEx sQTL enrichment (V4, different pseudocount)</h1>
   <div class="quarto-categories">
     <div class="quarto-category">qtl</div>
   </div>
@@ -190,8 +204,10 @@ Note
 <div class="callout-body-container callout-body">
 <p>Changed pseducount count method in phenotype prep script</p>
 <ul>
-<li>from: <span class="math inline">\(\frac{num + 0.5 }{ denom + 0.5}\)</span></li>
-<li>to : <span class="math inline">\(\frac{num + addon }{ denom + addon}\)</span>, where <code>addon = denom * .01 if denom &lt; 100 else 0.05</code></li>
+<li><p>from: <span class="math display">\[\frac{num + 0.5 }{ denom + 0.5}\]</span></p></li>
+<li><p>to : <span class="math display">\[\frac{num + addon }{ denom + addon}\]</span>, where <code>addon = denom * .01 if denom &lt; 100 else 0.01</code></p></li>
+<li><p>liver/kidney plots used spearman correlation and new pseudo count</p></li>
+<li><p>other tissues used pearson correlation and close to old pseudo count</p></li>
 </ul>
 </div>
 </div>
@@ -226,6 +242,8 @@ Note
 </div>
 <section id="enrichment-of-sqtl-in-eqtl-pvalues" class="level1 page-columns page-full">
 <h1>Enrichment of sQTL in eQTL pvalues</h1>
+<section id="with-new-pseudo-count" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="with-new-pseudo-count">With new pseudo count</h2>
 <div>
 
 </div>
@@ -235,7 +253,7 @@ Note
 <div id="fig-qqplot-eQTL-sQTL-diff-direction-1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-Hippocampus-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Adipose-Subcutaneous-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;1: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
@@ -247,7 +265,7 @@ Figure&nbsp;1: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
 <div id="fig-qqplot-eQTL-sQTL-diff-direction-2" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Kidney-Cortex-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Adipose-Visceral_Omentum_-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;2: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
@@ -259,7 +277,7 @@ Figure&nbsp;2: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
 <div id="fig-qqplot-eQTL-sQTL-diff-direction-3" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Liver-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/AdrenalGland-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;3: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
@@ -271,7 +289,7 @@ Figure&nbsp;3: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
 <div id="fig-qqplot-eQTL-sQTL-diff-direction-4" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Muscle-Skeletal-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Artery-Aorta-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;4: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
@@ -280,7 +298,574 @@ Figure&nbsp;4: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
 </div>
 </div>
 </div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-5" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Artery-Coronary-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
 </div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-6" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Artery-Tibial-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-7" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-Amygdala-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-8" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-Anteriorcingulatecortex_BA24_-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-9" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-Caudate_basalganglia_-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-10" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-CerebellarHemisphere-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-11" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-Cerebellum-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-12" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-Cortex-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;12: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-13" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-13-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-FrontalCortex_BA9_-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-13-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;13: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-14" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-14-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-Hippocampus-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-14-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;14: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-15" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-Hypothalamus-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;15: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-16" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-16-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-Nucleusaccumbens_basalganglia_-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-16-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;16: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-17" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-17-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-Putamen_basalganglia_-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-17-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;17: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-18" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-18-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-Spinalcord_cervicalc-1_-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-18-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;18: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-19" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-19-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-Substantianigra-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-19-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;19: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-20" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-20-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Breast-MammaryTissue-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-20-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;20: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-21" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-21-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Cells-Culturedfibroblasts-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-21-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;21: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-22" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-22-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Cells-EBV-transformedlymphocytes-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-22-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;22: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-23" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-23-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Colon-Sigmoid-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-23-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;23: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-24" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-24-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Colon-Transverse-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-24-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;24: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-25" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-25-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Esophagus-GastroesophagealJunction-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-25-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;25: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-26" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-26-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Esophagus-Mucosa-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-26-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;26: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-27" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-27-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Esophagus-Muscularis-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-27-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;27: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-28" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-28-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Heart-AtrialAppendage-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-28-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;28: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-29" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-29-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Heart-LeftVentricle-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-29-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;29: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-30" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-30-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Kidney-Cortex-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-30-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;30: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-31" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-31-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Liver-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-31-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;31: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-32" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-32-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Lung-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-32-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;32: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-33" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-33-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/MinorSalivaryGland-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-33-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;33: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-34" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-34-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Muscle-Skeletal-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-34-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;34: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-35" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-35-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Nerve-Tibial-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-35-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;35: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-36" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-36-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Ovary-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-36-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;36: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-37" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-37-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Pancreas-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-37-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;37: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-38" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-38-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Pituitary-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-38-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;38: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-39" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-39-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Prostate-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-39-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;39: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-40" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-40-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Skin-NotSunExposed_Suprapubic_-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-40-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;40: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-41" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-41-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Skin-SunExposed_Lowerleg_-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-41-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;41: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-42" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-42-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/SmallIntestine-TerminalIleum-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-42-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;42: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-43" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-43-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Spleen-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-43-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;43: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-44" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-44-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Stomach-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-44-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;44: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-45" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-45-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Testis-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-45-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;45: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-46" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-46-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Thyroid-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-46-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;46: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-47" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-47-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Uterus-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-47-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;47: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-48" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-48-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Vagina-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-48-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;48: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-49" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-49-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/WholeBlood-qqplot.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-eQTL-sQTL-diff-direction-49-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;49: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="with-old-pseudo" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="with-old-pseudo">with old pseudo</h2>
 <div>
 
 </div>
@@ -290,10 +875,10 @@ Figure&nbsp;4: qqplot of eQTL pvalues of sQTL top SNPs (new pseudocount)
 <div id="fig-qqplot-eQTL-sQTL-diff-direction-old-1" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-Hippocampus-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-1" class="img-fluid figure-img" style="width:100.0%">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Adipose-Subcutaneous-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-1" class="img-fluid figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5
+Figure&nbsp;50
 </figcaption>
 </figure>
 </div>
@@ -302,10 +887,10 @@ Figure&nbsp;5
 <div id="fig-qqplot-eQTL-sQTL-diff-direction-old-2" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../smk-plots/gtex-sqtl-enrichment-v4/Kidney-Cortex-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-2" class="img-fluid figure-img" style="width:100.0%">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Adipose-Visceral_Omentum_-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-2" class="img-fluid figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6
+Figure&nbsp;51
 </figcaption>
 </figure>
 </div>
@@ -314,10 +899,10 @@ Figure&nbsp;6
 <div id="fig-qqplot-eQTL-sQTL-diff-direction-old-3" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../smk-plots/gtex-sqtl-enrichment-v4/Liver-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-3" class="img-fluid figure-img" style="width:100.0%">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/AdrenalGland-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-3" class="img-fluid figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;7
+Figure&nbsp;52
 </figcaption>
 </figure>
 </div>
@@ -326,16 +911,581 @@ Figure&nbsp;7
 <div id="fig-qqplot-eQTL-sQTL-diff-direction-old-4" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../smk-plots/gtex-sqtl-enrichment-v4/Muscle-Skeletal-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-4" class="img-fluid figure-img" style="width:100.0%">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Artery-Aorta-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-4" class="img-fluid figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8
+Figure&nbsp;53
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-5" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Artery-Coronary-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-5" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;54
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-6" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Artery-Tibial-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-6" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;55
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-7" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-Amygdala-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-7" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;56
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-8" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-Anteriorcingulatecortex_BA24_-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-8" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;57
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-9" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-Caudate_basalganglia_-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-9" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;58
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-10" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-CerebellarHemisphere-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-10" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;59
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-11" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-Cerebellum-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-11" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;60
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-12" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-Cortex-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-12" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;61
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-13" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-13-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-FrontalCortex_BA9_-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-13" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-13-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;62
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-14" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-14-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-Hippocampus-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-14" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-14-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;63
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-15" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-Hypothalamus-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-15" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;64
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-16" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-16-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-Nucleusaccumbens_basalganglia_-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-16" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-16-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;65
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-17" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-17-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-Putamen_basalganglia_-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-17" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-17-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;66
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-18" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-18-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-Spinalcord_cervicalc-1_-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-18" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-18-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;67
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-19" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-19-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-Substantianigra-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-19" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-19-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;68
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-20" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-20-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Breast-MammaryTissue-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-20" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-20-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;69
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-21" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-21-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Cells-Culturedfibroblasts-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-21" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-21-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;70
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-22" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-22-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Cells-EBV-transformedlymphocytes-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-22" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-22-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;71
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-23" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-23-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Colon-Sigmoid-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-23" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-23-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;72
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-24" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-24-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Colon-Transverse-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-24" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-24-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;73
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-25" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-25-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Esophagus-GastroesophagealJunction-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-25" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-25-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;74
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-26" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-26-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Esophagus-Mucosa-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-26" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-26-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;75
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-27" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-27-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Esophagus-Muscularis-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-27" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-27-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;76
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-28" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-28-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Heart-AtrialAppendage-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-28" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-28-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;77
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-29" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-29-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Heart-LeftVentricle-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-29" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-29-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;78
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-30" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-30-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Kidney-Cortex-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-30" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-30-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;79
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-31" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-31-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Liver-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-31" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-31-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;80
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-32" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-32-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Lung-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-32" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-32-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;81
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-33" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-33-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/MinorSalivaryGland-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-33" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-33-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;82
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-34" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-34-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Muscle-Skeletal-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-34" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-34-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;83
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-35" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-35-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Nerve-Tibial-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-35" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-35-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;84
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-36" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-36-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Ovary-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-36" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-36-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;85
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-37" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-37-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Pancreas-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-37" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-37-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;86
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-38" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-38-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Pituitary-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-38" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-38-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;87
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-39" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-39-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Prostate-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-39" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-39-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;88
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-40" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-40-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Skin-NotSunExposed_Suprapubic_-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-40" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-40-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;89
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-41" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-41-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Skin-SunExposed_Lowerleg_-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-41" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-41-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;90
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-42" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-42-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/SmallIntestine-TerminalIleum-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-42" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-42-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;91
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-43" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-43-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Spleen-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-43" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-43-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;92
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-44" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-44-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Stomach-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-44" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-44-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;93
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-45" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-45-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Testis-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-45" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-45-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;94
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-46" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-46-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Thyroid-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-46" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-46-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;95
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-47" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-47-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Uterus-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-47" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-47-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;96
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-48" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-48-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Vagina-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-48" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-48-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;97
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-qqplot-eQTL-sQTL-diff-direction-old-49" class="quarto-figure quarto-figure-center quarto-float anchored" width="100%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-eQTL-sQTL-diff-direction-old-49-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/WholeBlood-qqplot.png" id="fig-qqplot-eQTL-sQTL-diff-direction-old-49" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-qqplot-eQTL-sQTL-diff-direction-old-49-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;98
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
 </div>
+</section>
 </section>
 <section id="comparison-of-sqtl-top-snp-beta-and-eqtl-effect-size-nominal-beta-of-same-top-sqtl-snp" class="level1 page-columns page-full">
 <h1>Comparison of sQTL (top SNP beta) and eQTL effect size (nominal beta of same top sQTL SNP)</h1>
@@ -354,6 +1504,8 @@ Note
 </ul>
 </div>
 </div>
+<section id="with-new-pseudo-count-1" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="with-new-pseudo-count-1">With new pseudo count</h2>
 <div>
 
 </div>
@@ -363,10 +1515,10 @@ Note
 <div id="fig-scatterplots-1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-scatterplots-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-Hippocampus-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Adipose-Subcutaneous-scatter.png" class="img-fluid figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;9: comparison of sQTL and eQTL effect size (new pseudocount)
+Figure&nbsp;99: comparison of sQTL and eQTL effect size (new pseudocount)
 </figcaption>
 </figure>
 </div>
@@ -375,10 +1527,10 @@ Figure&nbsp;9: comparison of sQTL and eQTL effect size (new pseudocount)
 <div id="fig-scatterplots-2" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-scatterplots-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Kidney-Cortex-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Adipose-Visceral_Omentum_-scatter.png" class="img-fluid figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10: comparison of sQTL and eQTL effect size (new pseudocount)
+Figure&nbsp;100: comparison of sQTL and eQTL effect size (new pseudocount)
 </figcaption>
 </figure>
 </div>
@@ -387,10 +1539,10 @@ Figure&nbsp;10: comparison of sQTL and eQTL effect size (new pseudocount)
 <div id="fig-scatterplots-3" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-scatterplots-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Liver-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/AdrenalGland-scatter.png" class="img-fluid figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;11: comparison of sQTL and eQTL effect size (new pseudocount)
+Figure&nbsp;101: comparison of sQTL and eQTL effect size (new pseudocount)
 </figcaption>
 </figure>
 </div>
@@ -399,16 +1551,583 @@ Figure&nbsp;11: comparison of sQTL and eQTL effect size (new pseudocount)
 <div id="fig-scatterplots-4" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-scatterplots-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Muscle-Skeletal-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Artery-Aorta-scatter.png" class="img-fluid figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;12: comparison of sQTL and eQTL effect size (new pseudocount)
+Figure&nbsp;102: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-5" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Artery-Coronary-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;103: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-6" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Artery-Tibial-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;104: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-7" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-Amygdala-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;105: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-8" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-Anteriorcingulatecortex_BA24_-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;106: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-9" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-Caudate_basalganglia_-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;107: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-10" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-CerebellarHemisphere-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;108: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-11" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-Cerebellum-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;109: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-12" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-Cortex-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;110: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-13" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-13-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-FrontalCortex_BA9_-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-13-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;111: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-14" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-14-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-Hippocampus-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-14-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;112: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-15" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-Hypothalamus-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;113: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-16" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-16-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-Nucleusaccumbens_basalganglia_-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-16-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;114: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-17" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-17-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-Putamen_basalganglia_-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-17-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;115: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-18" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-18-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-Spinalcord_cervicalc-1_-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-18-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;116: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-19" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-19-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Brain-Substantianigra-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-19-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;117: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-20" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-20-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Breast-MammaryTissue-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-20-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;118: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-21" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-21-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Cells-Culturedfibroblasts-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-21-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;119: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-22" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-22-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Cells-EBV-transformedlymphocytes-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-22-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;120: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-23" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-23-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Colon-Sigmoid-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-23-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;121: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-24" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-24-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Colon-Transverse-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-24-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;122: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-25" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-25-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Esophagus-GastroesophagealJunction-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-25-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;123: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-26" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-26-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Esophagus-Mucosa-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-26-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;124: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-27" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-27-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Esophagus-Muscularis-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-27-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;125: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-28" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-28-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Heart-AtrialAppendage-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-28-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;126: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-29" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-29-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Heart-LeftVentricle-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-29-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;127: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-30" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-30-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Kidney-Cortex-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-30-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;128: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-31" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-31-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Liver-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-31-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;129: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-32" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-32-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Lung-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-32-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;130: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-33" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-33-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/MinorSalivaryGland-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-33-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;131: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-34" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-34-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Muscle-Skeletal-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-34-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;132: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-35" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-35-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Nerve-Tibial-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-35-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;133: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-36" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-36-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Ovary-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-36-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;134: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-37" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-37-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Pancreas-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-37-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;135: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-38" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-38-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Pituitary-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-38-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;136: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-39" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-39-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Prostate-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-39-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;137: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-40" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-40-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Skin-NotSunExposed_Suprapubic_-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-40-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;138: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-41" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-41-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Skin-SunExposed_Lowerleg_-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-41-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;139: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-42" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-42-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/SmallIntestine-TerminalIleum-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-42-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;140: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-43" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-43-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Spleen-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-43-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;141: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-44" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-44-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Stomach-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-44-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;142: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-45" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-45-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Testis-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-45-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;143: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-46" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-46-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Thyroid-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-46-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;144: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-47" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-47-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Uterus-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-47-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;145: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-48" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-48-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/Vagina-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-48-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;146: comparison of sQTL and eQTL effect size (new pseudocount)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-49" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-49-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4-test/WholeBlood-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-49-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;147: comparison of sQTL and eQTL effect size (new pseudocount)
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
 </div>
+</section>
+<section id="with-old-pseudo-count" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="with-old-pseudo-count">With old pseudo count</h2>
 <div>
 
 </div>
@@ -418,10 +2137,10 @@ Figure&nbsp;12: comparison of sQTL and eQTL effect size (new pseudocount)
 <div id="fig-scatterplots-old-1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-scatterplots-old-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-Hippocampus-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Adipose-Subcutaneous-scatter.png" class="img-fluid figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;13: comparison of sQTL and eQTL effect size (old)
+Figure&nbsp;148: comparison of sQTL and eQTL effect size (old)
 </figcaption>
 </figure>
 </div>
@@ -430,10 +2149,10 @@ Figure&nbsp;13: comparison of sQTL and eQTL effect size (old)
 <div id="fig-scatterplots-old-2" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-scatterplots-old-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../smk-plots/gtex-sqtl-enrichment-v4/Kidney-Cortex-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Adipose-Visceral_Omentum_-scatter.png" class="img-fluid figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;14: comparison of sQTL and eQTL effect size (old)
+Figure&nbsp;149: comparison of sQTL and eQTL effect size (old)
 </figcaption>
 </figure>
 </div>
@@ -442,10 +2161,10 @@ Figure&nbsp;14: comparison of sQTL and eQTL effect size (old)
 <div id="fig-scatterplots-old-3" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-scatterplots-old-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../smk-plots/gtex-sqtl-enrichment-v4/Liver-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/AdrenalGland-scatter.png" class="img-fluid figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;15: comparison of sQTL and eQTL effect size (old)
+Figure&nbsp;150: comparison of sQTL and eQTL effect size (old)
 </figcaption>
 </figure>
 </div>
@@ -454,18 +2173,1535 @@ Figure&nbsp;15: comparison of sQTL and eQTL effect size (old)
 <div id="fig-scatterplots-old-4" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-scatterplots-old-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../smk-plots/gtex-sqtl-enrichment-v4/Muscle-Skeletal-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Artery-Aorta-scatter.png" class="img-fluid figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;16: comparison of sQTL and eQTL effect size (old)
+Figure&nbsp;151: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-5" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Artery-Coronary-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;152: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-6" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Artery-Tibial-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;153: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-7" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-Amygdala-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;154: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-8" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-Anteriorcingulatecortex_BA24_-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;155: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-9" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-Caudate_basalganglia_-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;156: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-10" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-CerebellarHemisphere-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;157: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-11" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-Cerebellum-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;158: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-12" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-Cortex-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;159: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-13" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-13-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-FrontalCortex_BA9_-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-13-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;160: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-14" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-14-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-Hippocampus-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-14-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;161: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-15" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-Hypothalamus-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;162: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-16" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-16-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-Nucleusaccumbens_basalganglia_-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-16-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;163: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-17" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-17-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-Putamen_basalganglia_-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-17-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;164: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-18" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-18-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-Spinalcord_cervicalc-1_-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-18-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;165: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-19" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-19-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Brain-Substantianigra-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-19-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;166: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-20" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-20-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Breast-MammaryTissue-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-20-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;167: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-21" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-21-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Cells-Culturedfibroblasts-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-21-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;168: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-22" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-22-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Cells-EBV-transformedlymphocytes-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-22-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;169: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-23" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-23-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Colon-Sigmoid-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-23-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;170: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-24" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-24-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Colon-Transverse-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-24-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;171: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-25" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-25-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Esophagus-GastroesophagealJunction-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-25-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;172: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-26" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-26-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Esophagus-Mucosa-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-26-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;173: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-27" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-27-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Esophagus-Muscularis-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-27-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;174: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-28" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-28-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Heart-AtrialAppendage-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-28-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;175: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-29" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-29-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Heart-LeftVentricle-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-29-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;176: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-30" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-30-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Kidney-Cortex-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-30-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;177: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-31" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-31-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Liver-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-31-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;178: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-32" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-32-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Lung-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-32-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;179: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-33" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-33-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/MinorSalivaryGland-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-33-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;180: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-34" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-34-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Muscle-Skeletal-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-34-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;181: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-35" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-35-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Nerve-Tibial-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-35-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;182: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-36" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-36-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Ovary-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-36-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;183: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-37" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-37-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Pancreas-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-37-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;184: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-38" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-38-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Pituitary-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-38-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;185: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-39" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-39-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Prostate-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-39-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;186: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-40" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-40-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Skin-NotSunExposed_Suprapubic_-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-40-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;187: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-41" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-41-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Skin-SunExposed_Lowerleg_-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-41-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;188: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-42" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-42-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/SmallIntestine-TerminalIleum-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-42-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;189: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-43" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-43-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Spleen-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-43-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;190: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-44" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-44-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Stomach-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-44-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;191: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-45" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-45-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Testis-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-45-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;192: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-46" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-46-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Thyroid-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-46-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;193: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-47" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-47-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Uterus-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-47-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;194: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-48" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-48-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/Vagina-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-48-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;195: comparison of sQTL and eQTL effect size (old)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-scatterplots-old-49" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplots-old-49-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../smk-plots/gtex-sqtl-enrichment-v4/WholeBlood-scatter.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplots-old-49-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;196: comparison of sQTL and eQTL effect size (old)
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
 </div>
+</section>
+</section>
+<section id="compare-number-of-qtls" class="level1">
+<h1>Compare number of qtls</h1>
+<section id="with-new-pseudo-count-2" class="level2">
+<h2 class="anchored" data-anchor-id="with-new-pseudo-count-2">with new pseudo count</h2>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>$`Adipose-Subcutaneous`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1: 11659 0.789     PR
+2:  3051 0.206     UP
+3:    71 0.005     NE
+
+$`Adipose-Visceral_Omentum_`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  9622 0.792     PR
+2:  2467 0.203     UP
+3:    55 0.005     NE
+
+$AdrenalGland
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  5322 0.798     PR
+2:  1307 0.196     UP
+3:    40 0.006     NE
+
+$`Artery-Aorta`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  8162 0.798     PR
+2:  2010 0.196     UP
+3:    59 0.006     NE
+
+$`Artery-Coronary`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  4675 0.795     PR
+2:  1180 0.201     UP
+3:    26 0.004     NE
+
+$`Artery-Tibial`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1: 11164 0.797     PR
+2:  2782 0.199     UP
+3:    67 0.005     NE
+
+$`Brain-Amygdala`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  1987 0.813     PR
+2:   450 0.184     UP
+3:     8 0.003     NE
+
+$`Brain-Anteriorcingulatecortex_BA24_`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  2789 0.815     PR
+2:   621 0.181     UP
+3:    12 0.004     NE
+
+$`Brain-Caudate_basalganglia_`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  3863 0.803     PR
+2:   925 0.192     UP
+3:    24 0.005     NE
+
+$`Brain-CerebellarHemisphere`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  4719 0.780     PR
+2:  1292 0.214     UP
+3:    36 0.006     NE
+
+$`Brain-Cerebellum`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  5528 0.786     PR
+2:  1467 0.209     UP
+3:    35 0.005     NE
+
+$`Brain-Cortex`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  4497 0.804     PR
+2:  1067 0.191     UP
+3:    26 0.005     NE
+
+$`Brain-FrontalCortex_BA9_`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  3578 0.810     PR
+2:   820 0.186     UP
+3:    20 0.005     NE
+
+$`Brain-Hippocampus`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  2586 0.803     PR
+2:   619 0.192     UP
+3:    17 0.005     NE
+
+$`Brain-Hypothalamus`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  3180 0.801     PR
+2:   770 0.194     UP
+3:    18 0.005     NE
+
+$`Brain-Nucleusaccumbens_basalganglia_`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  3910 0.798     PR
+2:   962 0.196     UP
+3:    25 0.005     NE
+
+$`Brain-Putamen_basalganglia_`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  2982 0.810     PR
+2:   685 0.186     UP
+3:    15 0.004     NE
+
+$`Brain-Spinalcord_cervicalc-1_`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  2453 0.803     PR
+2:   585 0.192     UP
+3:    16 0.005     NE
+
+$`Brain-Substantianigra`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  1746 0.817     PR
+2:   385 0.180     UP
+3:     6 0.003     NE
+
+$`Breast-MammaryTissue`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  8674 0.782     PR
+2:  2360 0.213     UP
+3:    59 0.005     NE
+
+$`Cells-Culturedfibroblasts`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1: 11372 0.815     PR
+2:  2531 0.181     UP
+3:    51 0.004     NE
+
+$`Cells-EBV-transformedlymphocytes`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  4732 0.807     PR
+2:  1104 0.188     UP
+3:    31 0.005     NE
+
+$`Colon-Sigmoid`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  7053 0.792     PR
+2:  1808 0.203     UP
+3:    48 0.005     NE
+
+$`Colon-Transverse`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  7702 0.788     PR
+2:  2015 0.206     UP
+3:    58 0.006     NE
+
+$`Esophagus-GastroesophagealJunction`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  7364 0.797     PR
+2:  1828 0.198     UP
+3:    46 0.005     NE
+
+$`Esophagus-Mucosa`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  9445 0.805     PR
+2:  2237 0.191     UP
+3:    51 0.004     NE
+
+$`Esophagus-Muscularis`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  9508 0.795     PR
+2:  2403 0.201     UP
+3:    49 0.004     NE
+
+$`Heart-AtrialAppendage`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  7091 0.800     PR
+2:  1737 0.196     UP
+3:    40 0.005     NE
+
+$`Heart-LeftVentricle`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  5492 0.812     PR
+2:  1243 0.184     UP
+3:    31 0.005     NE
+
+$`Kidney-Cortex`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  1115 0.808     PR
+2:   260 0.188     UP
+3:     5 0.004     NE
+
+$Liver
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  3118 0.784     PR
+2:   836 0.210     UP
+3:    24 0.006     NE
+
+$Lung
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1: 10787 0.787     PR
+2:  2852 0.208     UP
+3:    64 0.005     NE
+
+$MinorSalivaryGland
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  3537 0.791     PR
+2:   916 0.205     UP
+3:    20 0.004     NE
+
+$`Muscle-Skeletal`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1: 10232 0.810     PR
+2:  2338 0.185     UP
+3:    57 0.005     NE
+
+$`Nerve-Tibial`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1: 11891 0.781     PR
+2:  3255 0.214     UP
+3:    74 0.005     NE
+
+$Ovary
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  4033 0.769     PR
+2:  1185 0.226     UP
+3:    27 0.005     NE
+
+$Pancreas
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  4843 0.784     PR
+2:  1296 0.210     UP
+3:    35 0.006     NE
+
+$Pituitary
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  6154 0.778     PR
+2:  1719 0.217     UP
+3:    41 0.005     NE
+
+$Prostate
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  5118 0.773     PR
+2:  1464 0.221     UP
+3:    35 0.005     NE
+
+$`Skin-NotSunExposed_Suprapubic_`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1: 10037 0.790     PR
+2:  2614 0.206     UP
+3:    52 0.004     NE
+
+$`Skin-SunExposed_Lowerleg_`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1: 11473 0.792     PR
+2:  2948 0.204     UP
+3:    60 0.004     NE
+
+$`SmallIntestine-TerminalIleum`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  4108 0.780     PR
+2:  1130 0.215     UP
+3:    26 0.005     NE
+
+$Spleen
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  5539 0.780     PR
+2:  1526 0.215     UP
+3:    36 0.005     NE
+
+$Stomach
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  5886 0.786     PR
+2:  1564 0.209     UP
+3:    43 0.006     NE
+
+$Testis
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1: 13434 0.763     PR
+2:  4079 0.232     UP
+3:    92 0.005     NE
+
+$Thyroid
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1: 12614 0.785     PR
+2:  3384 0.211     UP
+3:    78 0.005     NE
+
+$Uterus
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  3205 0.781     PR
+2:   877 0.214     UP
+3:    22 0.005     NE
+
+$Vagina
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  3158 0.778     PR
+2:   878 0.216     UP
+3:    23 0.006     NE
+
+$WholeBlood
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  7443 0.795     PR
+2:  1869 0.200     UP
+3:    49 0.005     NE</code></pre>
+</div>
+</div>
+</section>
+<section id="with-old-pseudo-count-1" class="level2">
+<h2 class="anchored" data-anchor-id="with-old-pseudo-count-1">with old pseudo count</h2>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>$`Adipose-Subcutaneous`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1: 12485 0.788     PR
+2:  3280 0.207     UP
+3:    82 0.005     NE
+
+$`Adipose-Visceral_Omentum_`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1: 10207 0.785     PR
+2:  2733 0.210     UP
+3:    61 0.005     NE
+
+$AdrenalGland
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  5602 0.794     PR
+2:  1407 0.200     UP
+3:    43 0.006     NE
+
+$`Artery-Aorta`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  8650 0.790     PR
+2:  2242 0.205     UP
+3:    62 0.006     NE
+
+$`Artery-Coronary`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  4834 0.786     PR
+2:  1289 0.210     UP
+3:    26 0.004     NE
+
+$`Artery-Tibial`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1: 11907 0.792     PR
+2:  3054 0.203     UP
+3:    77 0.005     NE
+
+$`Brain-Amygdala`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  2020 0.806     PR
+2:   478 0.191     UP
+3:     9 0.004     NE
+
+$`Brain-Anteriorcingulatecortex_BA24_`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  2861 0.812     PR
+2:   648 0.184     UP
+3:    15 0.004     NE
+
+$`Brain-Caudate_basalganglia_`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  4027 0.801     PR
+2:   967 0.192     UP
+3:    31 0.006     NE
+
+$`Brain-CerebellarHemisphere`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  4893 0.772     PR
+2:  1403 0.222     UP
+3:    38 0.006     NE
+
+$`Brain-Cerebellum`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  5784 0.779     PR
+2:  1597 0.215     UP
+3:    41 0.006     NE
+
+$`Brain-Cortex`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  4617 0.793     PR
+2:  1178 0.202     UP
+3:    26 0.004     NE
+
+$`Brain-FrontalCortex_BA9_`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  3734 0.802     PR
+2:   899 0.193     UP
+3:    24 0.005     NE
+
+$`Brain-Hippocampus`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  2681 0.804     PR
+2:   638 0.191     UP
+3:    17 0.005     NE
+
+$`Brain-Hypothalamus`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  3249 0.796     PR
+2:   815 0.200     UP
+3:    20 0.005     NE
+
+$`Brain-Nucleusaccumbens_basalganglia_`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  4124 0.796     PR
+2:  1033 0.199     UP
+3:    27 0.005     NE
+
+$`Brain-Putamen_basalganglia_`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  3047 0.801     PR
+2:   741 0.195     UP
+3:    15 0.004     NE
+
+$`Brain-Spinalcord_cervicalc-1_`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  2490 0.796     PR
+2:   620 0.198     UP
+3:    17 0.005     NE
+
+$`Brain-Substantianigra`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  1748 0.816     PR
+2:   387 0.181     UP
+3:     8 0.004     NE
+
+$`Breast-MammaryTissue`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  9052 0.777     PR
+2:  2530 0.217     UP
+3:    64 0.005     NE
+
+$`Cells-Culturedfibroblasts`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1: 12077 0.812     PR
+2:  2738 0.184     UP
+3:    59 0.004     NE
+
+$`Cells-EBV-transformedlymphocytes`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  4981 0.802     PR
+2:  1198 0.193     UP
+3:    29 0.005     NE
+
+$`Colon-Sigmoid`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  7384 0.785     PR
+2:  1963 0.209     UP
+3:    55 0.006     NE
+
+$`Colon-Transverse`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  8148 0.787     PR
+2:  2146 0.207     UP
+3:    58 0.006     NE
+
+$`Esophagus-GastroesophagealJunction`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  7689 0.792     PR
+2:  1975 0.203     UP
+3:    49 0.005     NE
+
+$`Esophagus-Mucosa`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  9952 0.800     PR
+2:  2439 0.196     UP
+3:    56 0.004     NE
+
+$`Esophagus-Muscularis`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1: 10129 0.792     PR
+2:  2609 0.204     UP
+3:    56 0.004     NE
+
+$`Heart-AtrialAppendage`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  7492 0.797     PR
+2:  1865 0.198     UP
+3:    40 0.004     NE
+
+$`Heart-LeftVentricle`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  5859 0.811     PR
+2:  1329 0.184     UP
+3:    38 0.005     NE
+
+$`Kidney-Cortex`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  1122 0.805     PR
+2:   266 0.191     UP
+3:     5 0.004     NE
+
+$Liver
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  3322 0.775     PR
+2:   937 0.219     UP
+3:    25 0.006     NE
+
+$Lung
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1: 11526 0.784     PR
+2:  3099 0.211     UP
+3:    72 0.005     NE
+
+$MinorSalivaryGland
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  3561 0.785     PR
+2:   956 0.211     UP
+3:    22 0.005     NE
+
+$`Muscle-Skeletal`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1: 11118 0.804     PR
+2:  2649 0.192     UP
+3:    61 0.004     NE
+
+$`Nerve-Tibial`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1: 12537 0.778     PR
+2:  3499 0.217     UP
+3:    82 0.005     NE
+
+$Ovary
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  4162 0.767     PR
+2:  1236 0.228     UP
+3:    30 0.006     NE
+
+$Pancreas
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  5220 0.783     PR
+2:  1411 0.212     UP
+3:    37 0.006     NE
+
+$Pituitary
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  6512 0.777     PR
+2:  1823 0.218     UP
+3:    42 0.005     NE
+
+$Prostate
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  5323 0.770     PR
+2:  1558 0.225     UP
+3:    35 0.005     NE
+
+$`Skin-NotSunExposed_Suprapubic_`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1: 10691 0.787     PR
+2:  2826 0.208     UP
+3:    60 0.004     NE
+
+$`Skin-SunExposed_Lowerleg_`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1: 12237 0.787     PR
+2:  3244 0.209     UP
+3:    60 0.004     NE
+
+$`SmallIntestine-TerminalIleum`
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  4268 0.778     PR
+2:  1187 0.216     UP
+3:    29 0.005     NE
+
+$Spleen
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  5797 0.777     PR
+2:  1625 0.218     UP
+3:    41 0.005     NE
+
+$Stomach
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  6175 0.784     PR
+2:  1648 0.209     UP
+3:    50 0.006     NE
+
+$Testis
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1: 14076 0.761     PR
+2:  4334 0.234     UP
+3:    88 0.005     NE
+
+$Thyroid
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1: 13370 0.778     PR
+2:  3727 0.217     UP
+3:    92 0.005     NE
+
+$Uterus
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  3308 0.780     PR
+2:   915 0.216     UP
+3:    19 0.004     NE
+
+$Vagina
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  3279 0.776     PR
+2:   923 0.219     UP
+3:    22 0.005     NE
+
+$WholeBlood
+       N     P  itype
+   &lt;int&gt; &lt;num&gt; &lt;char&gt;
+1:  8333 0.785     PR
+2:  2227 0.210     UP
+3:    54 0.005     NE</code></pre>
+</div>
+</div>
+</section>
+<section id="intersection-of-sqtls-between-new-and-old-pseudo-count" class="level2">
+<h2 class="anchored" data-anchor-id="intersection-of-sqtls-between-new-and-old-pseudo-count">intersection of sQTLs between new and old pseudo count</h2>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>$`Adipose-Subcutaneous`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:     13778      1003      2069
+
+$`Adipose-Visceral_Omentum_`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:     11334       810      1667
+
+$AdrenalGland
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      6178       491       874
+
+$`Artery-Aorta`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      9513       718      1441
+
+$`Artery-Coronary`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      5392       489       757
+
+$`Artery-Tibial`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:     13151       862      1887
+
+$`Brain-Amygdala`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      2164       281       343
+
+$`Brain-Anteriorcingulatecortex_BA24_`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      3081       341       443
+
+$`Brain-Caudate_basalganglia_`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      4406       406       619
+
+$`Brain-CerebellarHemisphere`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      5605       442       729
+
+$`Brain-Cerebellum`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      6593       437       829
+
+$`Brain-Cortex`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      5169       421       652
+
+$`Brain-FrontalCortex_BA9_`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      4039       379       618
+
+$`Brain-Hippocampus`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      2857       365       479
+
+$`Brain-Hypothalamus`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      3541       427       543
+
+$`Brain-Nucleusaccumbens_basalganglia_`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      4474       423       710
+
+$`Brain-Putamen_basalganglia_`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      3287       395       516
+
+$`Brain-Spinalcord_cervicalc-1_`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      2728       326       399
+
+$`Brain-Substantianigra`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      1889       248       254
+
+$`Breast-MammaryTissue`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:     10227       866      1419
+
+$`Cells-Culturedfibroblasts`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:     13169       785      1705
+
+$`Cells-EBV-transformedlymphocytes`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      5516       351       692
+
+$`Colon-Sigmoid`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      8280       629      1122
+
+$`Colon-Transverse`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      9019       756      1333
+
+$`Esophagus-GastroesophagealJunction`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      8598       640      1115
+
+$`Esophagus-Mucosa`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:     10878       855      1569
+
+$`Esophagus-Muscularis`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:     11119       841      1675
+
+$`Heart-AtrialAppendage`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      8211       657      1186
+
+$`Heart-LeftVentricle`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      6080       686      1146
+
+$`Kidney-Cortex`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      1238       142       155
+
+$Liver
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      3640       338       644
+
+$Lung
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:     12709       994      1988
+
+$MinorSalivaryGland
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      4116       357       423
+
+$`Muscle-Skeletal`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:     11747       880      2081
+
+$`Nerve-Tibial`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:     14257       963      1861
+
+$Ovary
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      4851       394       577
+
+$Pancreas
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      5705       469       963
+
+$Pituitary
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      7340       574      1037
+
+$Prostate
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      6080       537       836
+
+$`Skin-NotSunExposed_Suprapubic_`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:     11898       805      1679
+
+$`Skin-SunExposed_Lowerleg_`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:     13523       958      2018
+
+$`SmallIntestine-TerminalIleum`
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      4815       449       669
+
+$Spleen
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      6638       463       825
+
+$Stomach
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      6859       634      1014
+
+$Testis
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:     16739       866      1759
+
+$Thyroid
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:     15028      1048      2161
+
+$Uterus
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      3799       305       443
+
+$Vagina
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      3656       403       568
+
+$WholeBlood
+   intersect inNewOnly inOldOnly
+       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+1:      8567       794      2047</code></pre>
+</div>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

@@ -1,5 +1,5 @@
 ---
-title: "GTEx sQTL enrichment - updated (V4) - different pseudocount"
+title: "GTEx sQTL enrichment (V4, different pseudocount)"
 date: 2024-8-15
 categories: ['qtl']
 code-fold: true
@@ -14,9 +14,12 @@ execute:
 ::: {.callout-note}
 Changed pseducount count method in phenotype prep script
 
--  from: $\frac{num + 0.5 }{ denom + 0.5}$
--  to  : $\frac{num + addon }{ denom + addon}$, where `addon = denom * .01 if denom < 100 else 0.05`
+-  from: $$\frac{num + 0.5 }{ denom + 0.5}$$
+-  to  : $$\frac{num + addon }{ denom + addon}$$, where `addon = denom * .01 if denom < 100 else 0.01`
 
+
+- liver/kidney plots used spearman correlation and new pseudo count
+- other tissues used pearson correlation and close to old pseudo count
 :::
 
 
@@ -49,9 +52,13 @@ qqplot Y axis is flipped if sQTL slope and eQTL slope are in opposite direction.
 
 ```{r}
 #| include: false
-library(tidyverse)
+suppressMessages(library(data.table))
+suppressMessages(library(tidyverse))
+library(glue)
 
+fdr = 0.1
 ```
+
 
 ```{r}
 base_path= "../smk-plots/gtex-sqtl-enrichment-v4-test"
@@ -78,6 +85,8 @@ scatter.old <- str_replace(scatter, "v4-test", "v4")
 # Enrichment of sQTL in eQTL pvalues
 
 
+## With new pseudo count
+
 ```{r}
 #| column: screen
 #| label: "fig-qqplot-eQTL-sQTL-diff-direction"
@@ -87,6 +96,10 @@ scatter.old <- str_replace(scatter, "v4-test", "v4")
 
 knitr::include_graphics(qqs)
 ```
+
+
+
+## with old pseudo
 
 ```{r}
 #| column: screen
@@ -106,6 +119,9 @@ knitr::include_graphics(qqs.old)
 :::
 
 
+## With new pseudo count
+
+
 ```{r}
 #| column: screen
 #| label: fig-scatterplots
@@ -116,6 +132,7 @@ knitr::include_graphics(qqs.old)
 knitr::include_graphics(scatter)
 ```
 
+## With old pseudo count
 
 ```{r}
 #| column: screen
@@ -127,6 +144,99 @@ knitr::include_graphics(scatter)
 knitr::include_graphics(scatter.old)
 ```
 
+
+# Compare number of qtls
+
+```{r}
+tissues = qqs %>% basename %>% str_remove("\\-qqplot\\.png")
+names(tissues) = tissues
+```
+
+
+## with new pseudo count
+
+```{r}
+paths2 = map(
+  tissues,
+  ~glue("../code/results/qtl/noisy/GTEx/{.x}/test_pseudocount/cis_100000/perm") %>% 
+    dir(pattern = ".*addQval.txt.gz$", full.names = TRUE) %>% 
+    naturalsort::naturalsort(.)
+)
+```
+  
+
+```{r}
+#| cache: true
+
+sqtl.perms2 = map(paths2, ~map_dfr(.x, fread))
+sqtl.perms2 = map(
+  sqtl.perms2,
+  ~.x[str_detect(phenotype_id, "PR|UP|NE") & q < fdr] %>% 
+    .[, .(phenotype_id, itype = str_extract(phenotype_id, "PR|UP|NE"))]
+)
+
+map(
+  sqtl.perms2,
+    ~.x[, .(N = uniqueN(phenotype_id)), by = itype] %>% 
+    .[, .(N, P = round(N/sum(N), 3), itype)] %>% 
+    .[order(-N)]
+)
+
+
+```
+
+
+## with old pseudo count
+
+```{r}
+paths = map(
+  tissues,
+  ~glue("../code/results/qtl/noisy/GTEx/{.x}/separateNoise/cis_100000/perm") %>% 
+    dir(pattern = ".*addQval.txt.gz$", full.names = TRUE) %>% 
+    naturalsort::naturalsort(.)
+)
+```
+  
+
+```{r}
+#| cache: true
+
+sqtl.perms = map(paths, ~map_dfr(.x, fread))
+sqtl.perms = map(
+  sqtl.perms,
+  ~.x[str_detect(phenotype_id, "PR|UP|NE") & q < fdr] %>% 
+    .[, .(phenotype_id, itype = str_extract(phenotype_id, "PR|UP|NE"))]
+)
+
+map(
+  sqtl.perms,
+    ~.x[, .(N = uniqueN(phenotype_id)), by = itype] %>% 
+    .[, .(N, P = round(N/sum(N), 3), itype)] %>% 
+    .[order(-N)]
+)
+```
+
+
+## intersection of sQTLs between new and old pseudo count
+
+
+```{r}
+#| cache: true
+intersected_ids = map2(
+  sqtl.perms2,
+  sqtl.perms,
+  ~list(
+    intersect = intersect(.x$phenotype_id, .y$phenotype_id),
+    inNewOnly = setdiff(.x$phenotype_id, .y$phenotype_id),
+    inOldOnly = setdiff(.y$phenotype_id, .x$phenotype_id)
+  )
+)
+
+map(
+  intersected_ids,
+  ~map(.x, ~length(.x)) %>% as.data.table
+)
+```
 
 
 
