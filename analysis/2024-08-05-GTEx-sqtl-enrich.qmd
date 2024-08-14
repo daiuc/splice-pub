@@ -15,7 +15,8 @@ execute:
 Changed pseducount count method in phenotype prep script
 
 -  from: $$\frac{num + 0.5 }{ denom + 0.5}$$
--  to  : $$\frac{num + addon }{ denom + addon}$$, where `addon = denom * .01 if denom < 100 else 0.01`
+-  to  : $$\frac{num + addon }{ denom + addon}$$, where `addon = denom * .01 if denom < 100 else 0.01`. 
+using different addon can make a noticeable difference in qtl results.
 
 
 - liver/kidney plots used spearman correlation and new pseudo count
@@ -61,7 +62,7 @@ fdr = 0.1
 
 
 ```{r}
-base_path= "../smk-plots/gtex-sqtl-enrichment-v4-test"
+base_path= "../smk-plots/gtex-sqtl-enrichment-v4-C"
 
 ```
 
@@ -78,8 +79,8 @@ head(scatter)
 ```{r}
 #| include: false
 #| echo: false
-qqs.old <- str_replace(qqs, "v4-test", "v4")
-scatter.old <- str_replace(scatter, "v4-test", "v4")
+qqs.old <- str_replace(qqs, "v4-C", "v4")
+scatter.old <- str_replace(scatter, "v4-C", "v4")
 ```
 
 # Enrichment of sQTL in eQTL pvalues
@@ -106,6 +107,7 @@ knitr::include_graphics(qqs)
 #| label: "fig-qqplot-eQTL-sQTL-diff-direction-old"
 #| layout-ncol: 4
 #| out-width: 100%
+#| fig-cap: qqplot of eQTL pvalues of sQTL top SNPs (old pseudocount)
 
 knitr::include_graphics(qqs.old)
 ```
