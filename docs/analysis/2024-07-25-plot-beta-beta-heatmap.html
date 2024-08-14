@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2024-07-25">
+<meta name="dcterms.date" content="2024-08-11">
 
-<title>mysite - Plot heatmap of effect size correlation between eQTL and sQTL</title>
+<title>mysite - Plot heatmap of effect size correlation between eQTL and sQTL (updated new vs.&nbsp;old pseudo count)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -114,15 +114,20 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#intro" id="toc-intro" class="nav-link active" data-scroll-target="#intro">Intro</a></li>
+  <li><a href="#plots" id="toc-plots" class="nav-link" data-scroll-target="#plots">Plots</a>
+  <ul class="collapse">
+  <li><a href="#correlation-of-effect-sizes-eqtl-and-sqtl-updated-pseudo-count" id="toc-correlation-of-effect-sizes-eqtl-and-sqtl-updated-pseudo-count" class="nav-link" data-scroll-target="#correlation-of-effect-sizes-eqtl-and-sqtl-updated-pseudo-count">Correlation of effect sizes: eQTL and sQTL (updated pseudo count)</a></li>
+  <li><a href="#correlation-of-effect-sizes-eqtl-and-sqtl-old-pseudo-count" id="toc-correlation-of-effect-sizes-eqtl-and-sqtl-old-pseudo-count" class="nav-link" data-scroll-target="#correlation-of-effect-sizes-eqtl-and-sqtl-old-pseudo-count">Correlation of effect sizes: eQTL and sQTL (old pseudo count)</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Plot heatmap of effect size correlation between eQTL and sQTL</h1>
+<h1 class="title">Plot heatmap of effect size correlation between eQTL and sQTL (updated new vs.&nbsp;old pseudo count)</h1>
   <div class="quarto-categories">
     <div class="quarto-category">beta</div>
   </div>
@@ -136,7 +141,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 25, 2024</p>
+      <p class="date">August 11, 2024</p>
     </div>
   </div>
   
@@ -167,8 +172,2561 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li>split heatmap into 5 sub heatmaps, each is 2x10 (9) matrix</li>
 </ul>
+</section>
+<section id="plots" class="level1 page-columns page-full">
+<h1>Plots</h1>
+<section id="correlation-of-effect-sizes-eqtl-and-sqtl-updated-pseudo-count" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="correlation-of-effect-sizes-eqtl-and-sqtl-updated-pseudo-count">Correlation of effect sizes: eQTL and sQTL (updated pseudo count)</h2>
+<div class="cell">
+<div id="tbl-corr-heatmap-data-table" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-corr-heatmap-data-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Correlation matrix of beta values between eQTL and sQTL
+</figcaption>
+<div aria-describedby="tbl-corr-heatmap-data-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div>
+<div id="ewkohmgvhm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ewkohmgvhm table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#ewkohmgvhm thead, #ewkohmgvhm tbody, #ewkohmgvhm tfoot, #ewkohmgvhm tr, #ewkohmgvhm td, #ewkohmgvhm th {
+  border-style: none;
+}
+
+#ewkohmgvhm p {
+  margin: 0;
+  padding: 0;
+}
+
+#ewkohmgvhm .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ewkohmgvhm .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#ewkohmgvhm .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ewkohmgvhm .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ewkohmgvhm .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ewkohmgvhm .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ewkohmgvhm .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ewkohmgvhm .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ewkohmgvhm .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ewkohmgvhm .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ewkohmgvhm .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ewkohmgvhm .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ewkohmgvhm .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#ewkohmgvhm .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#ewkohmgvhm .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ewkohmgvhm .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ewkohmgvhm .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ewkohmgvhm .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ewkohmgvhm .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ewkohmgvhm .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#ewkohmgvhm .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#ewkohmgvhm .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#ewkohmgvhm .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ewkohmgvhm .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#ewkohmgvhm .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#ewkohmgvhm .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ewkohmgvhm .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ewkohmgvhm .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ewkohmgvhm .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ewkohmgvhm .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ewkohmgvhm .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ewkohmgvhm .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ewkohmgvhm .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ewkohmgvhm .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ewkohmgvhm .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ewkohmgvhm .gt_left {
+  text-align: left;
+}
+
+#ewkohmgvhm .gt_center {
+  text-align: center;
+}
+
+#ewkohmgvhm .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ewkohmgvhm .gt_font_normal {
+  font-weight: normal;
+}
+
+#ewkohmgvhm .gt_font_bold {
+  font-weight: bold;
+}
+
+#ewkohmgvhm .gt_font_italic {
+  font-style: italic;
+}
+
+#ewkohmgvhm .gt_super {
+  font-size: 65%;
+}
+
+#ewkohmgvhm .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#ewkohmgvhm .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#ewkohmgvhm .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#ewkohmgvhm .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#ewkohmgvhm .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#ewkohmgvhm .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#ewkohmgvhm .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#ewkohmgvhm .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#ewkohmgvhm div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="type" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">type</th>
+<th id="Cells-Culturedfibroblasts" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Cells-Culturedfibroblasts</th>
+<th id="Cells-EBV-transformedlymphocytes" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Cells-EBV-transformedlymphocytes</th>
+<th id="Muscle-Skeletal" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Muscle-Skeletal</th>
+<th id="MinorSalivaryGland" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">MinorSalivaryGland</th>
+<th id="Heart-LeftVentricle" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Heart-LeftVentricle</th>
+<th id="AdrenalGland" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">AdrenalGland</th>
+<th id="Artery-Tibial" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Artery-Tibial</th>
+<th id="Artery-Aorta" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Artery-Aorta</th>
+<th id="Esophagus-Mucosa" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Esophagus-Mucosa</th>
+<th id="Pancreas" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Pancreas</th>
+<th id="Esophagus-Muscularis" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Esophagus-Muscularis</th>
+<th id="Breast-MammaryTissue" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Breast-MammaryTissue</th>
+<th id="Artery-Coronary" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Artery-Coronary</th>
+<th id="Stomach" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Stomach</th>
+<th id="Adipose-Visceral_Omentum_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Adipose-Visceral_Omentum_</th>
+<th id="Colon-Transverse" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Colon-Transverse</th>
+<th id="Skin-NotSunExposed_Suprapubic_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Skin-NotSunExposed_Suprapubic_</th>
+<th id="Adipose-Subcutaneous" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Adipose-Subcutaneous</th>
+<th id="Skin-SunExposed_Lowerleg_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Skin-SunExposed_Lowerleg_</th>
+<th id="Testis" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Testis</th>
+<th id="Esophagus-GastroesophagealJunction" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Esophagus-GastroesophagealJunction</th>
+<th id="Brain-Hypothalamus" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Hypothalamus</th>
+<th id="Lung" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Lung</th>
+<th id="WholeBlood" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">WholeBlood</th>
+<th id="Colon-Sigmoid" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Colon-Sigmoid</th>
+<th id="Heart-AtrialAppendage" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Heart-AtrialAppendage</th>
+<th id="Brain-Cerebellum" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Cerebellum</th>
+<th id="Uterus" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Uterus</th>
+<th id="Brain-Nucleusaccumbens_basalganglia_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Nucleusaccumbens_basalganglia_</th>
+<th id="Nerve-Tibial" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Nerve-Tibial</th>
+<th id="SmallIntestine-TerminalIleum" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">SmallIntestine-TerminalIleum</th>
+<th id="Brain-Anteriorcingulatecortex_BA24_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Anteriorcingulatecortex_BA24_</th>
+<th id="Brain-FrontalCortex_BA9_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-FrontalCortex_BA9_</th>
+<th id="Brain-Cortex" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Cortex</th>
+<th id="Prostate" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Prostate</th>
+<th id="Vagina" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Vagina</th>
+<th id="Brain-Substantianigra" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Substantianigra</th>
+<th id="Thyroid" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Thyroid</th>
+<th id="Ovary" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Ovary</th>
+<th id="Brain-CerebellarHemisphere" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-CerebellarHemisphere</th>
+<th id="Pituitary" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Pituitary</th>
+<th id="Brain-Putamen_basalganglia_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Putamen_basalganglia_</th>
+<th id="Brain-Caudate_basalganglia_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Caudate_basalganglia_</th>
+<th id="Brain-Hippocampus" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Hippocampus</th>
+<th id="Spleen" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Spleen</th>
+<th id="Brain-Amygdala" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Amygdala</th>
+<th id="Brain-Spinalcord_cervicalc-1_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Spinalcord_cervicalc-1_</th>
+<th id="Liver" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Liver</th>
+<th id="Kidney-Cortex" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Kidney-Cortex</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="type">UP</td>
+<td class="gt_row gt_right" headers="Cells-Culturedfibroblasts">−0.262</td>
+<td class="gt_row gt_right" headers="Cells-EBV-transformedlymphocytes">−0.256</td>
+<td class="gt_row gt_right" headers="Muscle-Skeletal">−0.170</td>
+<td class="gt_row gt_right" headers="MinorSalivaryGland">−0.149</td>
+<td class="gt_row gt_right" headers="Heart-LeftVentricle">−0.140</td>
+<td class="gt_row gt_right" headers="AdrenalGland">−0.128</td>
+<td class="gt_row gt_right" headers="Artery-Tibial">−0.118</td>
+<td class="gt_row gt_right" headers="Artery-Aorta">−0.111</td>
+<td class="gt_row gt_right" headers="Esophagus-Mucosa">−0.105</td>
+<td class="gt_row gt_right" headers="Pancreas">−0.102</td>
+<td class="gt_row gt_right" headers="Esophagus-Muscularis">−0.098</td>
+<td class="gt_row gt_right" headers="Breast-MammaryTissue">−0.096</td>
+<td class="gt_row gt_right" headers="Artery-Coronary">−0.096</td>
+<td class="gt_row gt_right" headers="Stomach">−0.091</td>
+<td class="gt_row gt_right" headers="Adipose-Visceral_Omentum_">−0.086</td>
+<td class="gt_row gt_right" headers="Colon-Transverse">−0.081</td>
+<td class="gt_row gt_right" headers="Skin-NotSunExposed_Suprapubic_">−0.077</td>
+<td class="gt_row gt_right" headers="Adipose-Subcutaneous">−0.075</td>
+<td class="gt_row gt_right" headers="Skin-SunExposed_Lowerleg_">−0.072</td>
+<td class="gt_row gt_right" headers="Testis">−0.072</td>
+<td class="gt_row gt_right" headers="Esophagus-GastroesophagealJunction">−0.069</td>
+<td class="gt_row gt_right" headers="Brain-Hypothalamus">−0.068</td>
+<td class="gt_row gt_right" headers="Lung">−0.066</td>
+<td class="gt_row gt_right" headers="WholeBlood">−0.062</td>
+<td class="gt_row gt_right" headers="Colon-Sigmoid">−0.057</td>
+<td class="gt_row gt_right" headers="Heart-AtrialAppendage">−0.056</td>
+<td class="gt_row gt_right" headers="Brain-Cerebellum">−0.036</td>
+<td class="gt_row gt_right" headers="Uterus">−0.035</td>
+<td class="gt_row gt_right" headers="Brain-Nucleusaccumbens_basalganglia_">−0.017</td>
+<td class="gt_row gt_right" headers="Nerve-Tibial">−0.008</td>
+<td class="gt_row gt_right" headers="SmallIntestine-TerminalIleum">−0.007</td>
+<td class="gt_row gt_right" headers="Brain-Anteriorcingulatecortex_BA24_">−0.002</td>
+<td class="gt_row gt_right" headers="Brain-FrontalCortex_BA9_">−0.001</td>
+<td class="gt_row gt_right" headers="Brain-Cortex">0.002</td>
+<td class="gt_row gt_right" headers="Prostate">0.005</td>
+<td class="gt_row gt_right" headers="Vagina">0.007</td>
+<td class="gt_row gt_right" headers="Brain-Substantianigra">0.008</td>
+<td class="gt_row gt_right" headers="Thyroid">0.010</td>
+<td class="gt_row gt_right" headers="Ovary">0.020</td>
+<td class="gt_row gt_right" headers="Brain-CerebellarHemisphere">0.020</td>
+<td class="gt_row gt_right" headers="Pituitary">0.030</td>
+<td class="gt_row gt_right" headers="Brain-Putamen_basalganglia_">0.032</td>
+<td class="gt_row gt_right" headers="Brain-Caudate_basalganglia_">0.033</td>
+<td class="gt_row gt_right" headers="Brain-Hippocampus">0.041</td>
+<td class="gt_row gt_right" headers="Spleen">0.061</td>
+<td class="gt_row gt_right" headers="Brain-Amygdala">0.061</td>
+<td class="gt_row gt_right" headers="Brain-Spinalcord_cervicalc-1_">0.063</td>
+<td class="gt_row gt_right" headers="Liver">0.066</td>
+<td class="gt_row gt_right" headers="Kidney-Cortex">0.090</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="type">PR</td>
+<td class="gt_row gt_right" headers="Cells-Culturedfibroblasts">0.049</td>
+<td class="gt_row gt_right" headers="Cells-EBV-transformedlymphocytes">−0.006</td>
+<td class="gt_row gt_right" headers="Muscle-Skeletal">−0.013</td>
+<td class="gt_row gt_right" headers="MinorSalivaryGland">−0.003</td>
+<td class="gt_row gt_right" headers="Heart-LeftVentricle">−0.005</td>
+<td class="gt_row gt_right" headers="AdrenalGland">0.061</td>
+<td class="gt_row gt_right" headers="Artery-Tibial">0.043</td>
+<td class="gt_row gt_right" headers="Artery-Aorta">0.052</td>
+<td class="gt_row gt_right" headers="Esophagus-Mucosa">−0.008</td>
+<td class="gt_row gt_right" headers="Pancreas">0.038</td>
+<td class="gt_row gt_right" headers="Esophagus-Muscularis">0.027</td>
+<td class="gt_row gt_right" headers="Breast-MammaryTissue">−0.008</td>
+<td class="gt_row gt_right" headers="Artery-Coronary">0.036</td>
+<td class="gt_row gt_right" headers="Stomach">0.041</td>
+<td class="gt_row gt_right" headers="Adipose-Visceral_Omentum_">0.002</td>
+<td class="gt_row gt_right" headers="Colon-Transverse">−0.033</td>
+<td class="gt_row gt_right" headers="Skin-NotSunExposed_Suprapubic_">−0.021</td>
+<td class="gt_row gt_right" headers="Adipose-Subcutaneous">−0.018</td>
+<td class="gt_row gt_right" headers="Skin-SunExposed_Lowerleg_">0.014</td>
+<td class="gt_row gt_right" headers="Testis">0.031</td>
+<td class="gt_row gt_right" headers="Esophagus-GastroesophagealJunction">0.002</td>
+<td class="gt_row gt_right" headers="Brain-Hypothalamus">0.040</td>
+<td class="gt_row gt_right" headers="Lung">0.014</td>
+<td class="gt_row gt_right" headers="WholeBlood">−0.006</td>
+<td class="gt_row gt_right" headers="Colon-Sigmoid">0.000</td>
+<td class="gt_row gt_right" headers="Heart-AtrialAppendage">0.018</td>
+<td class="gt_row gt_right" headers="Brain-Cerebellum">0.114</td>
+<td class="gt_row gt_right" headers="Uterus">0.035</td>
+<td class="gt_row gt_right" headers="Brain-Nucleusaccumbens_basalganglia_">0.059</td>
+<td class="gt_row gt_right" headers="Nerve-Tibial">−0.022</td>
+<td class="gt_row gt_right" headers="SmallIntestine-TerminalIleum">−0.026</td>
+<td class="gt_row gt_right" headers="Brain-Anteriorcingulatecortex_BA24_">−0.022</td>
+<td class="gt_row gt_right" headers="Brain-FrontalCortex_BA9_">0.031</td>
+<td class="gt_row gt_right" headers="Brain-Cortex">−0.006</td>
+<td class="gt_row gt_right" headers="Prostate">0.079</td>
+<td class="gt_row gt_right" headers="Vagina">−0.035</td>
+<td class="gt_row gt_right" headers="Brain-Substantianigra">−0.010</td>
+<td class="gt_row gt_right" headers="Thyroid">0.006</td>
+<td class="gt_row gt_right" headers="Ovary">−0.071</td>
+<td class="gt_row gt_right" headers="Brain-CerebellarHemisphere">0.040</td>
+<td class="gt_row gt_right" headers="Pituitary">0.050</td>
+<td class="gt_row gt_right" headers="Brain-Putamen_basalganglia_">−0.147</td>
+<td class="gt_row gt_right" headers="Brain-Caudate_basalganglia_">−0.094</td>
+<td class="gt_row gt_right" headers="Brain-Hippocampus">0.004</td>
+<td class="gt_row gt_right" headers="Spleen">0.008</td>
+<td class="gt_row gt_right" headers="Brain-Amygdala">−0.065</td>
+<td class="gt_row gt_right" headers="Brain-Spinalcord_cervicalc-1_">−0.078</td>
+<td class="gt_row gt_right" headers="Liver">−0.091</td>
+<td class="gt_row gt_right" headers="Kidney-Cortex">0.007</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-corr-heatmap-data-table-pval" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-corr-heatmap-data-table-pval-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Correlation pval matrix of beta values between eQTL and sQTL
+</figcaption>
+<div aria-describedby="tbl-corr-heatmap-data-table-pval-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div>
+<div id="eactmxqseq" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#eactmxqseq table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#eactmxqseq thead, #eactmxqseq tbody, #eactmxqseq tfoot, #eactmxqseq tr, #eactmxqseq td, #eactmxqseq th {
+  border-style: none;
+}
+
+#eactmxqseq p {
+  margin: 0;
+  padding: 0;
+}
+
+#eactmxqseq .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#eactmxqseq .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#eactmxqseq .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#eactmxqseq .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#eactmxqseq .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#eactmxqseq .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#eactmxqseq .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#eactmxqseq .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#eactmxqseq .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#eactmxqseq .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#eactmxqseq .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#eactmxqseq .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#eactmxqseq .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#eactmxqseq .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#eactmxqseq .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#eactmxqseq .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#eactmxqseq .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#eactmxqseq .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#eactmxqseq .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#eactmxqseq .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#eactmxqseq .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#eactmxqseq .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#eactmxqseq .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#eactmxqseq .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#eactmxqseq .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#eactmxqseq .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#eactmxqseq .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#eactmxqseq .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#eactmxqseq .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#eactmxqseq .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#eactmxqseq .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#eactmxqseq .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#eactmxqseq .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#eactmxqseq .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#eactmxqseq .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#eactmxqseq .gt_left {
+  text-align: left;
+}
+
+#eactmxqseq .gt_center {
+  text-align: center;
+}
+
+#eactmxqseq .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#eactmxqseq .gt_font_normal {
+  font-weight: normal;
+}
+
+#eactmxqseq .gt_font_bold {
+  font-weight: bold;
+}
+
+#eactmxqseq .gt_font_italic {
+  font-style: italic;
+}
+
+#eactmxqseq .gt_super {
+  font-size: 65%;
+}
+
+#eactmxqseq .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#eactmxqseq .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#eactmxqseq .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#eactmxqseq .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#eactmxqseq .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#eactmxqseq .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#eactmxqseq .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#eactmxqseq .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#eactmxqseq div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="type" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">type</th>
+<th id="Cells-Culturedfibroblasts" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Cells-Culturedfibroblasts</th>
+<th id="Cells-EBV-transformedlymphocytes" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Cells-EBV-transformedlymphocytes</th>
+<th id="Muscle-Skeletal" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Muscle-Skeletal</th>
+<th id="MinorSalivaryGland" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">MinorSalivaryGland</th>
+<th id="Heart-LeftVentricle" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Heart-LeftVentricle</th>
+<th id="AdrenalGland" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">AdrenalGland</th>
+<th id="Artery-Tibial" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Artery-Tibial</th>
+<th id="Artery-Aorta" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Artery-Aorta</th>
+<th id="Esophagus-Mucosa" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Esophagus-Mucosa</th>
+<th id="Pancreas" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Pancreas</th>
+<th id="Esophagus-Muscularis" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Esophagus-Muscularis</th>
+<th id="Breast-MammaryTissue" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Breast-MammaryTissue</th>
+<th id="Artery-Coronary" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Artery-Coronary</th>
+<th id="Stomach" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Stomach</th>
+<th id="Adipose-Visceral_Omentum_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Adipose-Visceral_Omentum_</th>
+<th id="Colon-Transverse" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Colon-Transverse</th>
+<th id="Skin-NotSunExposed_Suprapubic_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Skin-NotSunExposed_Suprapubic_</th>
+<th id="Adipose-Subcutaneous" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Adipose-Subcutaneous</th>
+<th id="Skin-SunExposed_Lowerleg_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Skin-SunExposed_Lowerleg_</th>
+<th id="Testis" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Testis</th>
+<th id="Esophagus-GastroesophagealJunction" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Esophagus-GastroesophagealJunction</th>
+<th id="Brain-Hypothalamus" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Hypothalamus</th>
+<th id="Lung" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Lung</th>
+<th id="WholeBlood" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">WholeBlood</th>
+<th id="Colon-Sigmoid" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Colon-Sigmoid</th>
+<th id="Heart-AtrialAppendage" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Heart-AtrialAppendage</th>
+<th id="Brain-Cerebellum" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Cerebellum</th>
+<th id="Uterus" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Uterus</th>
+<th id="Brain-Nucleusaccumbens_basalganglia_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Nucleusaccumbens_basalganglia_</th>
+<th id="Nerve-Tibial" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Nerve-Tibial</th>
+<th id="SmallIntestine-TerminalIleum" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">SmallIntestine-TerminalIleum</th>
+<th id="Brain-Anteriorcingulatecortex_BA24_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Anteriorcingulatecortex_BA24_</th>
+<th id="Brain-FrontalCortex_BA9_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-FrontalCortex_BA9_</th>
+<th id="Brain-Cortex" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Cortex</th>
+<th id="Prostate" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Prostate</th>
+<th id="Vagina" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Vagina</th>
+<th id="Brain-Substantianigra" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Substantianigra</th>
+<th id="Thyroid" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Thyroid</th>
+<th id="Ovary" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Ovary</th>
+<th id="Brain-CerebellarHemisphere" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-CerebellarHemisphere</th>
+<th id="Pituitary" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Pituitary</th>
+<th id="Brain-Putamen_basalganglia_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Putamen_basalganglia_</th>
+<th id="Brain-Caudate_basalganglia_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Caudate_basalganglia_</th>
+<th id="Brain-Hippocampus" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Hippocampus</th>
+<th id="Spleen" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Spleen</th>
+<th id="Brain-Amygdala" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Amygdala</th>
+<th id="Brain-Spinalcord_cervicalc-1_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Spinalcord_cervicalc-1_</th>
+<th id="Liver" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Liver</th>
+<th id="Kidney-Cortex" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Kidney-Cortex</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="type">UP</td>
+<td class="gt_row gt_right" headers="Cells-Culturedfibroblasts">3.08&nbsp;×&nbsp;10<sup>−23</sup></td>
+<td class="gt_row gt_right" headers="Cells-EBV-transformedlymphocytes">1.91&nbsp;×&nbsp;10<sup>−11</sup></td>
+<td class="gt_row gt_right" headers="Muscle-Skeletal">1.20&nbsp;×&nbsp;10<sup>−9</sup></td>
+<td class="gt_row gt_right" headers="MinorSalivaryGland">3.89&nbsp;×&nbsp;10<sup>−4</sup></td>
+<td class="gt_row gt_right" headers="Heart-LeftVentricle">2.90&nbsp;×&nbsp;10<sup>−4</sup></td>
+<td class="gt_row gt_right" headers="AdrenalGland">4.23&nbsp;×&nbsp;10<sup>−4</sup></td>
+<td class="gt_row gt_right" headers="Artery-Tibial">3.23&nbsp;×&nbsp;10<sup>−6</sup></td>
+<td class="gt_row gt_right" headers="Artery-Aorta">2.92&nbsp;×&nbsp;10<sup>−4</sup></td>
+<td class="gt_row gt_right" headers="Esophagus-Mucosa">1.66&nbsp;×&nbsp;10<sup>−4</sup></td>
+<td class="gt_row gt_right" headers="Pancreas">5.60&nbsp;×&nbsp;10<sup>−3</sup></td>
+<td class="gt_row gt_right" headers="Esophagus-Muscularis">3.33&nbsp;×&nbsp;10<sup>−4</sup></td>
+<td class="gt_row gt_right" headers="Breast-MammaryTissue">5.20&nbsp;×&nbsp;10<sup>−4</sup></td>
+<td class="gt_row gt_right" headers="Artery-Coronary">1.11&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Stomach">6.37&nbsp;×&nbsp;10<sup>−3</sup></td>
+<td class="gt_row gt_right" headers="Adipose-Visceral_Omentum_">1.62&nbsp;×&nbsp;10<sup>−3</sup></td>
+<td class="gt_row gt_right" headers="Colon-Transverse">5.72&nbsp;×&nbsp;10<sup>−3</sup></td>
+<td class="gt_row gt_right" headers="Skin-NotSunExposed_Suprapubic_">3.90&nbsp;×&nbsp;10<sup>−3</sup></td>
+<td class="gt_row gt_right" headers="Adipose-Subcutaneous">2.20&nbsp;×&nbsp;10<sup>−3</sup></td>
+<td class="gt_row gt_right" headers="Skin-SunExposed_Lowerleg_">4.04&nbsp;×&nbsp;10<sup>−3</sup></td>
+<td class="gt_row gt_right" headers="Testis">1.05&nbsp;×&nbsp;10<sup>−3</sup></td>
+<td class="gt_row gt_right" headers="Esophagus-GastroesophagealJunction">2.63&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Brain-Hypothalamus">1.54&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Lung">1.01&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="WholeBlood">4.79&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Colon-Sigmoid">6.58&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Heart-AtrialAppendage">8.22&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Brain-Cerebellum">1.30&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Uterus">4.27&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-Nucleusaccumbens_basalganglia_">6.97&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Nerve-Tibial">7.42&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="SmallIntestine-TerminalIleum">8.58&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-Anteriorcingulatecortex_BA24_">9.58&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-FrontalCortex_BA9_">9.79&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-Cortex">9.52&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Prostate">8.85&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Vagina">8.33&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-Substantianigra">8.35&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Thyroid">5.41&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Ovary">4.76&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-CerebellarHemisphere">4.23&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Pituitary">3.57&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-Putamen_basalganglia_">3.12&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-Caudate_basalganglia_">2.34&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-Hippocampus">2.19&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Spleen">6.49&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Brain-Amygdala">1.02&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-Spinalcord_cervicalc-1_">7.13&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Liver">3.81&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Kidney-Cortex">6.85&nbsp;×&nbsp;10<sup>−2</sup></td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="type">PR</td>
+<td class="gt_row gt_right" headers="Cells-Culturedfibroblasts">3.35&nbsp;×&nbsp;10<sup>−3</sup></td>
+<td class="gt_row gt_right" headers="Cells-EBV-transformedlymphocytes">8.08&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Muscle-Skeletal">4.68&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="MinorSalivaryGland">9.07&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Heart-LeftVentricle">8.52&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="AdrenalGland">1.03&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Artery-Tibial">1.31&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Artery-Aorta">9.56&nbsp;×&nbsp;10<sup>−3</sup></td>
+<td class="gt_row gt_right" headers="Esophagus-Mucosa">6.69&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Pancreas">1.28&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Esophagus-Muscularis">1.51&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Breast-MammaryTissue">6.90&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Artery-Coronary">1.69&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Stomach">7.32&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Adipose-Visceral_Omentum_">8.99&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Colon-Transverse">1.09&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Skin-NotSunExposed_Suprapubic_">2.45&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Adipose-Subcutaneous">3.07&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Skin-SunExposed_Lowerleg_">4.06&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Testis">6.09&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Esophagus-GastroesophagealJunction">9.11&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-Hypothalamus">1.95&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Lung">4.32&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="WholeBlood">7.66&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Colon-Sigmoid">9.98&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Heart-AtrialAppendage">3.79&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-Cerebellum">7.52&nbsp;×&nbsp;10<sup>−4</sup></td>
+<td class="gt_row gt_right" headers="Uterus">2.53&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-Nucleusaccumbens_basalganglia_">3.41&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Nerve-Tibial">1.98&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="SmallIntestine-TerminalIleum">3.48&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-Anteriorcingulatecortex_BA24_">6.68&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-FrontalCortex_BA9_">2.88&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-Cortex">8.11&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Prostate">1.63&nbsp;×&nbsp;10<sup>−3</sup></td>
+<td class="gt_row gt_right" headers="Vagina">4.29&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-Substantianigra">8.78&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Thyroid">8.10&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Ovary">6.42&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Brain-CerebellarHemisphere">2.69&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Pituitary">2.97&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Brain-Putamen_basalganglia_">3.24&nbsp;×&nbsp;10<sup>−3</sup></td>
+<td class="gt_row gt_right" headers="Brain-Caudate_basalganglia_">2.95&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Brain-Hippocampus">9.37&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Spleen">7.48&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-Amygdala">2.96&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-Spinalcord_cervicalc-1_">1.57&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Liver">5.23&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Kidney-Cortex">9.26&nbsp;×&nbsp;10<sup>−1</sup></td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-corr-heatmap" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-corr-heatmap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="2024-07-25-heatmap-corr-beta-eqtl-sqtl.svg" class="img-fluid figure-img column-screen" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-corr-heatmap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Heatmap of correlation between eQTL and sQTL beta values (new pseudo count method)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="correlation-of-effect-sizes-eqtl-and-sqtl-old-pseudo-count" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="correlation-of-effect-sizes-eqtl-and-sqtl-old-pseudo-count">Correlation of effect sizes: eQTL and sQTL (old pseudo count)</h2>
+<div class="cell">
+<div id="tbl-corr-heatmap-data-table-old" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-corr-heatmap-data-table-old-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Correlation matrix of beta values between eQTL and sQTL (old pseudo count)
+</figcaption>
+<div aria-describedby="tbl-corr-heatmap-data-table-old-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div>
+<div id="isbinepwsk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#isbinepwsk table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#isbinepwsk thead, #isbinepwsk tbody, #isbinepwsk tfoot, #isbinepwsk tr, #isbinepwsk td, #isbinepwsk th {
+  border-style: none;
+}
+
+#isbinepwsk p {
+  margin: 0;
+  padding: 0;
+}
+
+#isbinepwsk .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#isbinepwsk .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#isbinepwsk .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#isbinepwsk .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#isbinepwsk .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#isbinepwsk .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#isbinepwsk .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#isbinepwsk .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#isbinepwsk .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#isbinepwsk .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#isbinepwsk .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#isbinepwsk .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#isbinepwsk .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#isbinepwsk .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#isbinepwsk .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#isbinepwsk .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#isbinepwsk .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#isbinepwsk .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#isbinepwsk .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#isbinepwsk .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#isbinepwsk .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#isbinepwsk .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#isbinepwsk .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#isbinepwsk .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#isbinepwsk .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#isbinepwsk .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#isbinepwsk .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#isbinepwsk .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#isbinepwsk .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#isbinepwsk .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#isbinepwsk .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#isbinepwsk .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#isbinepwsk .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#isbinepwsk .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#isbinepwsk .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#isbinepwsk .gt_left {
+  text-align: left;
+}
+
+#isbinepwsk .gt_center {
+  text-align: center;
+}
+
+#isbinepwsk .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#isbinepwsk .gt_font_normal {
+  font-weight: normal;
+}
+
+#isbinepwsk .gt_font_bold {
+  font-weight: bold;
+}
+
+#isbinepwsk .gt_font_italic {
+  font-style: italic;
+}
+
+#isbinepwsk .gt_super {
+  font-size: 65%;
+}
+
+#isbinepwsk .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#isbinepwsk .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#isbinepwsk .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#isbinepwsk .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#isbinepwsk .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#isbinepwsk .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#isbinepwsk .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#isbinepwsk .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#isbinepwsk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="type" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">type</th>
+<th id="Cells-Culturedfibroblasts" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Cells-Culturedfibroblasts</th>
+<th id="Cells-EBV-transformedlymphocytes" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Cells-EBV-transformedlymphocytes</th>
+<th id="Muscle-Skeletal" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Muscle-Skeletal</th>
+<th id="Heart-LeftVentricle" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Heart-LeftVentricle</th>
+<th id="Esophagus-Mucosa" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Esophagus-Mucosa</th>
+<th id="WholeBlood" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">WholeBlood</th>
+<th id="AdrenalGland" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">AdrenalGland</th>
+<th id="Heart-AtrialAppendage" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Heart-AtrialAppendage</th>
+<th id="Artery-Aorta" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Artery-Aorta</th>
+<th id="Pancreas" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Pancreas</th>
+<th id="Artery-Coronary" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Artery-Coronary</th>
+<th id="MinorSalivaryGland" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">MinorSalivaryGland</th>
+<th id="Artery-Tibial" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Artery-Tibial</th>
+<th id="Skin-NotSunExposed_Suprapubic_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Skin-NotSunExposed_Suprapubic_</th>
+<th id="Adipose-Subcutaneous" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Adipose-Subcutaneous</th>
+<th id="Adipose-Visceral_Omentum_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Adipose-Visceral_Omentum_</th>
+<th id="Stomach" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Stomach</th>
+<th id="Colon-Transverse" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Colon-Transverse</th>
+<th id="Esophagus-Muscularis" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Esophagus-Muscularis</th>
+<th id="Skin-SunExposed_Lowerleg_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Skin-SunExposed_Lowerleg_</th>
+<th id="Esophagus-GastroesophagealJunction" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Esophagus-GastroesophagealJunction</th>
+<th id="Breast-MammaryTissue" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Breast-MammaryTissue</th>
+<th id="Lung" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Lung</th>
+<th id="Brain-FrontalCortex_BA9_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-FrontalCortex_BA9_</th>
+<th id="Testis" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Testis</th>
+<th id="Colon-Sigmoid" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Colon-Sigmoid</th>
+<th id="Brain-Nucleusaccumbens_basalganglia_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Nucleusaccumbens_basalganglia_</th>
+<th id="Thyroid" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Thyroid</th>
+<th id="SmallIntestine-TerminalIleum" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">SmallIntestine-TerminalIleum</th>
+<th id="Nerve-Tibial" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Nerve-Tibial</th>
+<th id="Brain-Cerebellum" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Cerebellum</th>
+<th id="Uterus" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Uterus</th>
+<th id="Brain-Anteriorcingulatecortex_BA24_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Anteriorcingulatecortex_BA24_</th>
+<th id="Prostate" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Prostate</th>
+<th id="Brain-Cortex" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Cortex</th>
+<th id="Vagina" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Vagina</th>
+<th id="Liver" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Liver</th>
+<th id="Spleen" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Spleen</th>
+<th id="Brain-Hippocampus" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Hippocampus</th>
+<th id="Ovary" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Ovary</th>
+<th id="Brain-Caudate_basalganglia_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Caudate_basalganglia_</th>
+<th id="Brain-CerebellarHemisphere" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-CerebellarHemisphere</th>
+<th id="Pituitary" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Pituitary</th>
+<th id="Brain-Putamen_basalganglia_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Putamen_basalganglia_</th>
+<th id="Brain-Substantianigra" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Substantianigra</th>
+<th id="Brain-Amygdala" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Amygdala</th>
+<th id="Brain-Hypothalamus" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Hypothalamus</th>
+<th id="Brain-Spinalcord_cervicalc-1_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Spinalcord_cervicalc-1_</th>
+<th id="Kidney-Cortex" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Kidney-Cortex</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="type">UP</td>
+<td class="gt_row gt_right" headers="Cells-Culturedfibroblasts">−0.327</td>
+<td class="gt_row gt_right" headers="Cells-EBV-transformedlymphocytes">−0.306</td>
+<td class="gt_row gt_right" headers="Muscle-Skeletal">−0.304</td>
+<td class="gt_row gt_right" headers="Heart-LeftVentricle">−0.287</td>
+<td class="gt_row gt_right" headers="Esophagus-Mucosa">−0.232</td>
+<td class="gt_row gt_right" headers="WholeBlood">−0.225</td>
+<td class="gt_row gt_right" headers="AdrenalGland">−0.223</td>
+<td class="gt_row gt_right" headers="Heart-AtrialAppendage">−0.216</td>
+<td class="gt_row gt_right" headers="Artery-Aorta">−0.210</td>
+<td class="gt_row gt_right" headers="Pancreas">−0.206</td>
+<td class="gt_row gt_right" headers="Artery-Coronary">−0.204</td>
+<td class="gt_row gt_right" headers="MinorSalivaryGland">−0.198</td>
+<td class="gt_row gt_right" headers="Artery-Tibial">−0.198</td>
+<td class="gt_row gt_right" headers="Skin-NotSunExposed_Suprapubic_">−0.196</td>
+<td class="gt_row gt_right" headers="Adipose-Subcutaneous">−0.194</td>
+<td class="gt_row gt_right" headers="Adipose-Visceral_Omentum_">−0.191</td>
+<td class="gt_row gt_right" headers="Stomach">−0.191</td>
+<td class="gt_row gt_right" headers="Colon-Transverse">−0.182</td>
+<td class="gt_row gt_right" headers="Esophagus-Muscularis">−0.181</td>
+<td class="gt_row gt_right" headers="Skin-SunExposed_Lowerleg_">−0.178</td>
+<td class="gt_row gt_right" headers="Esophagus-GastroesophagealJunction">−0.172</td>
+<td class="gt_row gt_right" headers="Breast-MammaryTissue">−0.172</td>
+<td class="gt_row gt_right" headers="Lung">−0.164</td>
+<td class="gt_row gt_right" headers="Brain-FrontalCortex_BA9_">−0.136</td>
+<td class="gt_row gt_right" headers="Testis">−0.133</td>
+<td class="gt_row gt_right" headers="Colon-Sigmoid">−0.130</td>
+<td class="gt_row gt_right" headers="Brain-Nucleusaccumbens_basalganglia_">−0.126</td>
+<td class="gt_row gt_right" headers="Thyroid">−0.115</td>
+<td class="gt_row gt_right" headers="SmallIntestine-TerminalIleum">−0.114</td>
+<td class="gt_row gt_right" headers="Nerve-Tibial">−0.105</td>
+<td class="gt_row gt_right" headers="Brain-Cerebellum">−0.095</td>
+<td class="gt_row gt_right" headers="Uterus">−0.089</td>
+<td class="gt_row gt_right" headers="Brain-Anteriorcingulatecortex_BA24_">−0.083</td>
+<td class="gt_row gt_right" headers="Prostate">−0.081</td>
+<td class="gt_row gt_right" headers="Brain-Cortex">−0.071</td>
+<td class="gt_row gt_right" headers="Vagina">−0.069</td>
+<td class="gt_row gt_right" headers="Liver">−0.068</td>
+<td class="gt_row gt_right" headers="Spleen">−0.065</td>
+<td class="gt_row gt_right" headers="Brain-Hippocampus">−0.064</td>
+<td class="gt_row gt_right" headers="Ovary">−0.060</td>
+<td class="gt_row gt_right" headers="Brain-Caudate_basalganglia_">−0.059</td>
+<td class="gt_row gt_right" headers="Brain-CerebellarHemisphere">−0.050</td>
+<td class="gt_row gt_right" headers="Pituitary">−0.047</td>
+<td class="gt_row gt_right" headers="Brain-Putamen_basalganglia_">−0.031</td>
+<td class="gt_row gt_right" headers="Brain-Substantianigra">−0.025</td>
+<td class="gt_row gt_right" headers="Brain-Amygdala">−0.019</td>
+<td class="gt_row gt_right" headers="Brain-Hypothalamus">−0.016</td>
+<td class="gt_row gt_right" headers="Brain-Spinalcord_cervicalc-1_">0.003</td>
+<td class="gt_row gt_right" headers="Kidney-Cortex">0.020</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="type">PR</td>
+<td class="gt_row gt_right" headers="Cells-Culturedfibroblasts">−0.080</td>
+<td class="gt_row gt_right" headers="Cells-EBV-transformedlymphocytes">−0.055</td>
+<td class="gt_row gt_right" headers="Muscle-Skeletal">−0.171</td>
+<td class="gt_row gt_right" headers="Heart-LeftVentricle">−0.116</td>
+<td class="gt_row gt_right" headers="Esophagus-Mucosa">−0.097</td>
+<td class="gt_row gt_right" headers="WholeBlood">−0.190</td>
+<td class="gt_row gt_right" headers="AdrenalGland">−0.062</td>
+<td class="gt_row gt_right" headers="Heart-AtrialAppendage">−0.080</td>
+<td class="gt_row gt_right" headers="Artery-Aorta">−0.058</td>
+<td class="gt_row gt_right" headers="Pancreas">−0.110</td>
+<td class="gt_row gt_right" headers="Artery-Coronary">−0.063</td>
+<td class="gt_row gt_right" headers="MinorSalivaryGland">−0.067</td>
+<td class="gt_row gt_right" headers="Artery-Tibial">−0.080</td>
+<td class="gt_row gt_right" headers="Skin-NotSunExposed_Suprapubic_">−0.130</td>
+<td class="gt_row gt_right" headers="Adipose-Subcutaneous">−0.119</td>
+<td class="gt_row gt_right" headers="Adipose-Visceral_Omentum_">−0.106</td>
+<td class="gt_row gt_right" headers="Stomach">−0.045</td>
+<td class="gt_row gt_right" headers="Colon-Transverse">−0.128</td>
+<td class="gt_row gt_right" headers="Esophagus-Muscularis">−0.078</td>
+<td class="gt_row gt_right" headers="Skin-SunExposed_Lowerleg_">−0.110</td>
+<td class="gt_row gt_right" headers="Esophagus-GastroesophagealJunction">−0.131</td>
+<td class="gt_row gt_right" headers="Breast-MammaryTissue">−0.081</td>
+<td class="gt_row gt_right" headers="Lung">−0.100</td>
+<td class="gt_row gt_right" headers="Brain-FrontalCortex_BA9_">−0.074</td>
+<td class="gt_row gt_right" headers="Testis">−0.066</td>
+<td class="gt_row gt_right" headers="Colon-Sigmoid">−0.103</td>
+<td class="gt_row gt_right" headers="Brain-Nucleusaccumbens_basalganglia_">−0.039</td>
+<td class="gt_row gt_right" headers="Thyroid">−0.106</td>
+<td class="gt_row gt_right" headers="SmallIntestine-TerminalIleum">−0.062</td>
+<td class="gt_row gt_right" headers="Nerve-Tibial">−0.135</td>
+<td class="gt_row gt_right" headers="Brain-Cerebellum">0.000</td>
+<td class="gt_row gt_right" headers="Uterus">−0.101</td>
+<td class="gt_row gt_right" headers="Brain-Anteriorcingulatecortex_BA24_">−0.114</td>
+<td class="gt_row gt_right" headers="Prostate">−0.034</td>
+<td class="gt_row gt_right" headers="Brain-Cortex">−0.103</td>
+<td class="gt_row gt_right" headers="Vagina">−0.141</td>
+<td class="gt_row gt_right" headers="Liver">−0.267</td>
+<td class="gt_row gt_right" headers="Spleen">−0.099</td>
+<td class="gt_row gt_right" headers="Brain-Hippocampus">−0.119</td>
+<td class="gt_row gt_right" headers="Ovary">−0.165</td>
+<td class="gt_row gt_right" headers="Brain-Caudate_basalganglia_">−0.193</td>
+<td class="gt_row gt_right" headers="Brain-CerebellarHemisphere">−0.078</td>
+<td class="gt_row gt_right" headers="Pituitary">−0.044</td>
+<td class="gt_row gt_right" headers="Brain-Putamen_basalganglia_">−0.226</td>
+<td class="gt_row gt_right" headers="Brain-Substantianigra">−0.129</td>
+<td class="gt_row gt_right" headers="Brain-Amygdala">−0.197</td>
+<td class="gt_row gt_right" headers="Brain-Hypothalamus">−0.207</td>
+<td class="gt_row gt_right" headers="Brain-Spinalcord_cervicalc-1_">−0.144</td>
+<td class="gt_row gt_right" headers="Kidney-Cortex">−0.128</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-corr-heatmap-data-table-pval-old" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-corr-heatmap-data-table-pval-old-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: Correlation pval matrix of beta values between eQTL and sQTL (old pseudo count)
+</figcaption>
+<div aria-describedby="tbl-corr-heatmap-data-table-pval-old-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div>
+<div id="vfuganauuq" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#vfuganauuq table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#vfuganauuq thead, #vfuganauuq tbody, #vfuganauuq tfoot, #vfuganauuq tr, #vfuganauuq td, #vfuganauuq th {
+  border-style: none;
+}
+
+#vfuganauuq p {
+  margin: 0;
+  padding: 0;
+}
+
+#vfuganauuq .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#vfuganauuq .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#vfuganauuq .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#vfuganauuq .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#vfuganauuq .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#vfuganauuq .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vfuganauuq .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#vfuganauuq .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#vfuganauuq .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#vfuganauuq .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#vfuganauuq .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#vfuganauuq .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#vfuganauuq .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#vfuganauuq .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#vfuganauuq .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#vfuganauuq .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#vfuganauuq .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#vfuganauuq .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#vfuganauuq .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vfuganauuq .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#vfuganauuq .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#vfuganauuq .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#vfuganauuq .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vfuganauuq .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#vfuganauuq .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#vfuganauuq .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vfuganauuq .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vfuganauuq .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#vfuganauuq .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vfuganauuq .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#vfuganauuq .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vfuganauuq .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#vfuganauuq .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vfuganauuq .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#vfuganauuq .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vfuganauuq .gt_left {
+  text-align: left;
+}
+
+#vfuganauuq .gt_center {
+  text-align: center;
+}
+
+#vfuganauuq .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#vfuganauuq .gt_font_normal {
+  font-weight: normal;
+}
+
+#vfuganauuq .gt_font_bold {
+  font-weight: bold;
+}
+
+#vfuganauuq .gt_font_italic {
+  font-style: italic;
+}
+
+#vfuganauuq .gt_super {
+  font-size: 65%;
+}
+
+#vfuganauuq .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#vfuganauuq .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#vfuganauuq .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#vfuganauuq .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#vfuganauuq .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#vfuganauuq .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#vfuganauuq .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#vfuganauuq .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#vfuganauuq div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="type" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">type</th>
+<th id="Cells-Culturedfibroblasts" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Cells-Culturedfibroblasts</th>
+<th id="Cells-EBV-transformedlymphocytes" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Cells-EBV-transformedlymphocytes</th>
+<th id="Muscle-Skeletal" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Muscle-Skeletal</th>
+<th id="Heart-LeftVentricle" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Heart-LeftVentricle</th>
+<th id="Esophagus-Mucosa" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Esophagus-Mucosa</th>
+<th id="WholeBlood" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">WholeBlood</th>
+<th id="AdrenalGland" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">AdrenalGland</th>
+<th id="Heart-AtrialAppendage" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Heart-AtrialAppendage</th>
+<th id="Artery-Aorta" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Artery-Aorta</th>
+<th id="Pancreas" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Pancreas</th>
+<th id="Artery-Coronary" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Artery-Coronary</th>
+<th id="MinorSalivaryGland" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">MinorSalivaryGland</th>
+<th id="Artery-Tibial" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Artery-Tibial</th>
+<th id="Skin-NotSunExposed_Suprapubic_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Skin-NotSunExposed_Suprapubic_</th>
+<th id="Adipose-Subcutaneous" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Adipose-Subcutaneous</th>
+<th id="Adipose-Visceral_Omentum_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Adipose-Visceral_Omentum_</th>
+<th id="Stomach" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Stomach</th>
+<th id="Colon-Transverse" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Colon-Transverse</th>
+<th id="Esophagus-Muscularis" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Esophagus-Muscularis</th>
+<th id="Skin-SunExposed_Lowerleg_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Skin-SunExposed_Lowerleg_</th>
+<th id="Esophagus-GastroesophagealJunction" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Esophagus-GastroesophagealJunction</th>
+<th id="Breast-MammaryTissue" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Breast-MammaryTissue</th>
+<th id="Lung" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Lung</th>
+<th id="Brain-FrontalCortex_BA9_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-FrontalCortex_BA9_</th>
+<th id="Testis" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Testis</th>
+<th id="Colon-Sigmoid" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Colon-Sigmoid</th>
+<th id="Brain-Nucleusaccumbens_basalganglia_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Nucleusaccumbens_basalganglia_</th>
+<th id="Thyroid" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Thyroid</th>
+<th id="SmallIntestine-TerminalIleum" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">SmallIntestine-TerminalIleum</th>
+<th id="Nerve-Tibial" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Nerve-Tibial</th>
+<th id="Brain-Cerebellum" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Cerebellum</th>
+<th id="Uterus" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Uterus</th>
+<th id="Brain-Anteriorcingulatecortex_BA24_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Anteriorcingulatecortex_BA24_</th>
+<th id="Prostate" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Prostate</th>
+<th id="Brain-Cortex" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Cortex</th>
+<th id="Vagina" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Vagina</th>
+<th id="Liver" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Liver</th>
+<th id="Spleen" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Spleen</th>
+<th id="Brain-Hippocampus" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Hippocampus</th>
+<th id="Ovary" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Ovary</th>
+<th id="Brain-Caudate_basalganglia_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Caudate_basalganglia_</th>
+<th id="Brain-CerebellarHemisphere" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-CerebellarHemisphere</th>
+<th id="Pituitary" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Pituitary</th>
+<th id="Brain-Putamen_basalganglia_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Putamen_basalganglia_</th>
+<th id="Brain-Substantianigra" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Substantianigra</th>
+<th id="Brain-Amygdala" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Amygdala</th>
+<th id="Brain-Hypothalamus" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Hypothalamus</th>
+<th id="Brain-Spinalcord_cervicalc-1_" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Brain-Spinalcord_cervicalc-1_</th>
+<th id="Kidney-Cortex" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Kidney-Cortex</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="type">UP</td>
+<td class="gt_row gt_right" headers="Cells-Culturedfibroblasts">2.02&nbsp;×&nbsp;10<sup>−45</sup></td>
+<td class="gt_row gt_right" headers="Cells-EBV-transformedlymphocytes">1.54&nbsp;×&nbsp;10<sup>−19</sup></td>
+<td class="gt_row gt_right" headers="Muscle-Skeletal">2.67&nbsp;×&nbsp;10<sup>−38</sup></td>
+<td class="gt_row gt_right" headers="Heart-LeftVentricle">5.96&nbsp;×&nbsp;10<sup>−18</sup></td>
+<td class="gt_row gt_right" headers="Esophagus-Mucosa">4.72&nbsp;×&nbsp;10<sup>−21</sup></td>
+<td class="gt_row gt_right" headers="WholeBlood">2.28&nbsp;×&nbsp;10<sup>−18</sup></td>
+<td class="gt_row gt_right" headers="AdrenalGland">7.28&nbsp;×&nbsp;10<sup>−12</sup></td>
+<td class="gt_row gt_right" headers="Heart-AtrialAppendage">2.99&nbsp;×&nbsp;10<sup>−14</sup></td>
+<td class="gt_row gt_right" headers="Artery-Aorta">5.72&nbsp;×&nbsp;10<sup>−16</sup></td>
+<td class="gt_row gt_right" headers="Pancreas">1.85&nbsp;×&nbsp;10<sup>−10</sup></td>
+<td class="gt_row gt_right" headers="Artery-Coronary">1.21&nbsp;×&nbsp;10<sup>−9</sup></td>
+<td class="gt_row gt_right" headers="MinorSalivaryGland">2.61&nbsp;×&nbsp;10<sup>−7</sup></td>
+<td class="gt_row gt_right" headers="Artery-Tibial">6.93&nbsp;×&nbsp;10<sup>−19</sup></td>
+<td class="gt_row gt_right" headers="Skin-NotSunExposed_Suprapubic_">8.59&nbsp;×&nbsp;10<sup>−17</sup></td>
+<td class="gt_row gt_right" headers="Adipose-Subcutaneous">3.44&nbsp;×&nbsp;10<sup>−19</sup></td>
+<td class="gt_row gt_right" headers="Adipose-Visceral_Omentum_">8.99&nbsp;×&nbsp;10<sup>−16</sup></td>
+<td class="gt_row gt_right" headers="Stomach">1.91&nbsp;×&nbsp;10<sup>−10</sup></td>
+<td class="gt_row gt_right" headers="Colon-Transverse">5.48&nbsp;×&nbsp;10<sup>−12</sup></td>
+<td class="gt_row gt_right" headers="Esophagus-Muscularis">1.20&nbsp;×&nbsp;10<sup>−13</sup></td>
+<td class="gt_row gt_right" headers="Skin-SunExposed_Lowerleg_">4.08&nbsp;×&nbsp;10<sup>−16</sup></td>
+<td class="gt_row gt_right" headers="Esophagus-GastroesophagealJunction">6.68&nbsp;×&nbsp;10<sup>−10</sup></td>
+<td class="gt_row gt_right" headers="Breast-MammaryTissue">4.35&nbsp;×&nbsp;10<sup>−12</sup></td>
+<td class="gt_row gt_right" headers="Lung">4.05&nbsp;×&nbsp;10<sup>−13</sup></td>
+<td class="gt_row gt_right" headers="Brain-FrontalCortex_BA9_">7.80&nbsp;×&nbsp;10<sup>−4</sup></td>
+<td class="gt_row gt_right" headers="Testis">4.01&nbsp;×&nbsp;10<sup>−11</sup></td>
+<td class="gt_row gt_right" headers="Colon-Sigmoid">2.66&nbsp;×&nbsp;10<sup>−6</sup></td>
+<td class="gt_row gt_right" headers="Brain-Nucleusaccumbens_basalganglia_">8.20&nbsp;×&nbsp;10<sup>−4</sup></td>
+<td class="gt_row gt_right" headers="Thyroid">3.06&nbsp;×&nbsp;10<sup>−8</sup></td>
+<td class="gt_row gt_right" headers="SmallIntestine-TerminalIleum">1.10&nbsp;×&nbsp;10<sup>−3</sup></td>
+<td class="gt_row gt_right" headers="Nerve-Tibial">7.91&nbsp;×&nbsp;10<sup>−7</sup></td>
+<td class="gt_row gt_right" headers="Brain-Cerebellum">1.43&nbsp;×&nbsp;10<sup>−5</sup></td>
+<td class="gt_row gt_right" headers="Uterus">2.75&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Brain-Anteriorcingulatecortex_BA24_">4.70&nbsp;×&nbsp;10<sup>−3</sup></td>
+<td class="gt_row gt_right" headers="Prostate">1.03&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Brain-Cortex">4.68&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Vagina">1.51&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Liver">1.68&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Spleen">3.13&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Brain-Hippocampus">3.82&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Ovary">2.00&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Brain-Caudate_basalganglia_">2.10&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Brain-CerebellarHemisphere">1.29&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Pituitary">1.12&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-Putamen_basalganglia_">2.80&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-Substantianigra">5.10&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-Amygdala">5.91&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-Hypothalamus">5.79&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-Spinalcord_cervicalc-1_">9.24&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Kidney-Cortex">6.79&nbsp;×&nbsp;10<sup>−1</sup></td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="type">PR</td>
+<td class="gt_row gt_right" headers="Cells-Culturedfibroblasts">1.56&nbsp;×&nbsp;10<sup>−7</sup></td>
+<td class="gt_row gt_right" headers="Cells-EBV-transformedlymphocytes">1.72&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Muscle-Skeletal">2.12&nbsp;×&nbsp;10<sup>−27</sup></td>
+<td class="gt_row gt_right" headers="Heart-LeftVentricle">5.88&nbsp;×&nbsp;10<sup>−8</sup></td>
+<td class="gt_row gt_right" headers="Esophagus-Mucosa">9.73&nbsp;×&nbsp;10<sup>−9</sup></td>
+<td class="gt_row gt_right" headers="WholeBlood">1.95&nbsp;×&nbsp;10<sup>−25</sup></td>
+<td class="gt_row gt_right" headers="AdrenalGland">5.02&nbsp;×&nbsp;10<sup>−3</sup></td>
+<td class="gt_row gt_right" headers="Heart-AtrialAppendage">3.44&nbsp;×&nbsp;10<sup>−5</sup></td>
+<td class="gt_row gt_right" headers="Artery-Aorta">1.39&nbsp;×&nbsp;10<sup>−3</sup></td>
+<td class="gt_row gt_right" headers="Pancreas">1.43&nbsp;×&nbsp;10<sup>−6</sup></td>
+<td class="gt_row gt_right" headers="Artery-Coronary">8.71&nbsp;×&nbsp;10<sup>−3</sup></td>
+<td class="gt_row gt_right" headers="MinorSalivaryGland">1.54&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Artery-Tibial">3.64&nbsp;×&nbsp;10<sup>−7</sup></td>
+<td class="gt_row gt_right" headers="Skin-NotSunExposed_Suprapubic_">5.24&nbsp;×&nbsp;10<sup>−15</sup></td>
+<td class="gt_row gt_right" headers="Adipose-Subcutaneous">1.42&nbsp;×&nbsp;10<sup>−14</sup></td>
+<td class="gt_row gt_right" headers="Adipose-Visceral_Omentum_">4.02&nbsp;×&nbsp;10<sup>−10</sup></td>
+<td class="gt_row gt_right" headers="Stomach">3.19&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Colon-Transverse">9.31&nbsp;×&nbsp;10<sup>−12</sup></td>
+<td class="gt_row gt_right" headers="Esophagus-Muscularis">3.64&nbsp;×&nbsp;10<sup>−6</sup></td>
+<td class="gt_row gt_right" headers="Skin-SunExposed_Lowerleg_">1.20&nbsp;×&nbsp;10<sup>−12</sup></td>
+<td class="gt_row gt_right" headers="Esophagus-GastroesophagealJunction">6.42&nbsp;×&nbsp;10<sup>−12</sup></td>
+<td class="gt_row gt_right" headers="Breast-MammaryTissue">7.46&nbsp;×&nbsp;10<sup>−6</sup></td>
+<td class="gt_row gt_right" headers="Lung">7.76&nbsp;×&nbsp;10<sup>−10</sup></td>
+<td class="gt_row gt_right" headers="Brain-FrontalCortex_BA9_">5.55&nbsp;×&nbsp;10<sup>−3</sup></td>
+<td class="gt_row gt_right" headers="Testis">1.75&nbsp;×&nbsp;10<sup>−5</sup></td>
+<td class="gt_row gt_right" headers="Colon-Sigmoid">1.66&nbsp;×&nbsp;10<sup>−7</sup></td>
+<td class="gt_row gt_right" headers="Brain-Nucleusaccumbens_basalganglia_">1.24&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Thyroid">2.12&nbsp;×&nbsp;10<sup>−12</sup></td>
+<td class="gt_row gt_right" headers="SmallIntestine-TerminalIleum">1.47&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Nerve-Tibial">7.37&nbsp;×&nbsp;10<sup>−18</sup></td>
+<td class="gt_row gt_right" headers="Brain-Cerebellum">9.97&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Uterus">4.06&nbsp;×&nbsp;10<sup>−4</sup></td>
+<td class="gt_row gt_right" headers="Brain-Anteriorcingulatecortex_BA24_">1.72&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Prostate">1.41&nbsp;×&nbsp;10<sup>−1</sup></td>
+<td class="gt_row gt_right" headers="Brain-Cortex">1.66&nbsp;×&nbsp;10<sup>−5</sup></td>
+<td class="gt_row gt_right" headers="Vagina">3.69&nbsp;×&nbsp;10<sup>−4</sup></td>
+<td class="gt_row gt_right" headers="Liver">3.37&nbsp;×&nbsp;10<sup>−11</sup></td>
+<td class="gt_row gt_right" headers="Spleen">7.18&nbsp;×&nbsp;10<sup>−6</sup></td>
+<td class="gt_row gt_right" headers="Brain-Hippocampus">1.41&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Ovary">2.56&nbsp;×&nbsp;10<sup>−6</sup></td>
+<td class="gt_row gt_right" headers="Brain-Caudate_basalganglia_">9.59&nbsp;×&nbsp;10<sup>−7</sup></td>
+<td class="gt_row gt_right" headers="Brain-CerebellarHemisphere">1.02&nbsp;×&nbsp;10<sup>−3</sup></td>
+<td class="gt_row gt_right" headers="Pituitary">3.29&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Brain-Putamen_basalganglia_">3.33&nbsp;×&nbsp;10<sup>−7</sup></td>
+<td class="gt_row gt_right" headers="Brain-Substantianigra">3.77&nbsp;×&nbsp;10<sup>−2</sup></td>
+<td class="gt_row gt_right" headers="Brain-Amygdala">3.03&nbsp;×&nbsp;10<sup>−4</sup></td>
+<td class="gt_row gt_right" headers="Brain-Hypothalamus">1.23&nbsp;×&nbsp;10<sup>−6</sup></td>
+<td class="gt_row gt_right" headers="Brain-Spinalcord_cervicalc-1_">2.99&nbsp;×&nbsp;10<sup>−3</sup></td>
+<td class="gt_row gt_right" headers="Kidney-Cortex">7.92&nbsp;×&nbsp;10<sup>−2</sup></td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-corr-heatmap-old" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-corr-heatmap-old-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="2024-07-25-heatmap-corr-beta-eqtl-sqtl-old.svg" class="img-fluid figure-img column-screen" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-corr-heatmap-old-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Heatmap of correlation between eQTL and sQTL beta values (old pseudo count method)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

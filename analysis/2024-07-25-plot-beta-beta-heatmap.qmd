@@ -1,12 +1,12 @@
 ---
-title: "Plot heatmap of effect size correlation between eQTL and sQTL"
-date: 2024-7-25
+title: "Plot heatmap of effect size correlation between eQTL and sQTL (updated new vs. old pseudo count)"
+date: 2024-8-11
 format: html
 categories: ['beta']
 code-fold: true
 execute:
-  include: true
-  eval: true
+  include: false
+  eval: false
   cache: false
   echo: false
 ---
@@ -31,5 +31,321 @@ do this for each of the 49 tissues. Result is a 2x49 matrix where
 plot heatmap: 
 
 - split heatmap into 5 sub heatmaps, each is 2x10 (9) matrix
+
+
+
+
+```{r}
+#| label: libraries-funcs-setup
+#| eval: true
+
+suppressMessages(library(tidyverse))
+suppressMessages(library(data.table))
+suppressMessages(library(glue))
+suppressMessages(library(ComplexHeatmap))
+
+# functions
+grab_corr_matrix <- function(rds_file) {
+  data <- readRDS(rds_file)
+  corrDF <- data$corrDF
+  return(corrDF)
+}
+
+```
+
+
+# Plots
+
+## Correlation of effect sizes: eQTL and sQTL (updated pseudo count)
+
+```{r}
+#| label: files-params
+#| eval: true
+
+
+# rds files with correlation matrices (using new pseudo count method)
+rds_files = list.files("/project/yangili1/cdai/splice-pub/smk-plots/gtex-sqtl-enrichment-v4-C", pattern = "*.rds", full.names = TRUE)
+names(rds_files) <- rds_files %>%
+  str_split("/") %>%
+  map(pluck, 8) %>%
+  unlist() %>%
+  str_remove("\\.rds")
+
+
+rds_files.old = list.files("/project/yangili1/cdai/splice-pub/smk-plots/gtex-sqtl-enrichment-v4", pattern = "*.rds", full.names = TRUE)
+names(rds_files.old) <- rds_files.old %>%
+  str_split("/") %>%
+  map(pluck, 8) %>%
+  unlist() %>%
+  str_remove("\\.rds")
+
+
+# gtex tissue names coded
+gtex_tissue_code <- fread("/project/yangili1/cdai/splice-pub/analysis/gtex-tissue-code.csv", col.names = c("tissue", "code"), header = F)
+
+```
+
+
+```{r}
+#| label: get-corr-matrix
+#| eval: true
+#| cache: true
+corrDFs = map(rds_files, grab_corr_matrix)
+
+df = corrDFs %>%
+  map(select, estimate) %>%
+  map(rownames_to_column, "type") %>%
+  map(arrange, "type") %>%
+  map(column_to_rownames, "type") %>%
+  do.call(cbind, .)
+colnames(df) <- names(corrDFs)
+
+pval.df = corrDFs %>%
+  map(select, pval) %>%
+  map(rownames_to_column, "type") %>%
+  map(arrange, "type") %>%
+  map(column_to_rownames, "type") %>%
+  do.call(cbind, .)
+colnames(pval.df) <- names(corrDFs)
+
+# order column based on UP correlation estimates
+columnOrder <- df["UP", ] %>%
+  t() %>%
+  as.data.frame() %>%
+  rownames_to_column("tissue") %>%
+  mutate(order = rank(UP, ties.method = "first")) %>%
+  arrange(order) %>%
+  pull(tissue)
+```
+
+
+```{r}
+#| label: tbl-corr-heatmap-data-table
+#| eval: true
+#| include: true
+#| tbl-cap: Correlation matrix of beta values between eQTL and sQTL
+
+df[, columnOrder] %>%
+  as.data.frame() %>%
+  rownames_to_column("type") %>%
+  gt::gt() %>%
+  gt::fmt_number(decimals = 3)
+```
+
+
+```{r}
+#| label: tbl-corr-heatmap-data-table-pval
+#| eval: true
+#| include: true
+#| tbl-cap: Correlation pval matrix of beta values between eQTL and sQTL
+
+# use gt to display p-values in scientific notation, cell fill color based on p-values
+pval.df[, columnOrder] %>%
+  as.data.frame() %>%
+  rownames_to_column("type") %>%
+  gt::gt() %>%
+  gt::fmt_scientific(decimals = 2)
+
+```
+
+
+
+```{r}
+# not used
+# modified estimate based on p-value, used to plot heatmap differently for significant and non-significant correlations
+df2 <- corrDFs %>%
+  map(~ mutate(.x, estimate = if_else(pval < 0.01, estimate, 0))) %>%
+  map(select, estimate) %>%
+  map(rownames_to_column, "type") %>%
+  map(arrange, "type") %>%
+  map(column_to_rownames, "type") %>%
+  do.call(cbind, .)
+colnames(df2) <- names(rds_files)
+```
+
+
+```{r}
+#| label: heatmap color scale
+
+legendBreaks <- c(-.3, -.2, -.1, -0.0001, -0.00001, 0, 0.00001, 0.0001, 0.1)
+colors <- c("#085193", "#4292c6", "#c6d8ef", "white", "white", "white", "white", "white", "#fc8d59")
+colfunc <- circlize::colorRamp2(
+  breaks = legendBreaks,
+  colors = colors
+)
+
+```
+
+
+
+```{r}
+#| label: plot-heatmap
+
+set.seed(123)
+cluster_method <- "ward.D"
+svg("2024-07-25-heatmap-corr-beta-eqtl-sqtl.svg", width = 20, height = 2)
+df[, columnOrder] %>%
+  as.matrix() %>%
+  Heatmap(
+    col = colfunc,
+    show_parent_dend_line = FALSE,
+    use_raster = TRUE,
+    cluster_columns = FALSE, cluster_rows = F,
+    column_split = c(rep("G1", 10), rep("G2", 10), rep("G3", 10), rep("G4", 10), rep("G5", 9)),
+    column_labels = column_to_rownames(gtex_tissue_code, "tissue") %>% .[colnames(df[, columnOrder]),],
+    height = unit(2, "cm"),
+    heatmap_legend_param = list(title = "Correlation")
+  )
+dev.off()
+```
+
+
+```{r}
+#| label: fig-corr-heatmap
+#| column: screen
+#| eval: true
+#| include: true
+#| fig-cap: Heatmap of correlation between eQTL and sQTL beta values (new pseudo count method)
+#| out-width: 100%
+
+knitr::include_graphics("2024-07-25-heatmap-corr-beta-eqtl-sqtl.svg")
+```
+
+
+
+
+
+
+
+## Correlation of effect sizes: eQTL and sQTL (old pseudo count)
+
+
+```{r}
+#| label: get-corr-matrix-old
+#| eval: true
+#| cache: true
+corrDFs.old = map(rds_files.old, grab_corr_matrix)
+
+df.old = corrDFs.old %>%
+  map(select, estimate) %>%
+  map(rownames_to_column, "type") %>%
+  map(arrange, "type") %>%
+  map(column_to_rownames, "type") %>%
+  do.call(cbind, .)
+colnames(df.old) <- names(corrDFs.old)
+
+pval.df.old = corrDFs.old %>%
+  map(select, pval) %>%
+  map(rownames_to_column, "type") %>%
+  map(arrange, "type") %>%
+  map(column_to_rownames, "type") %>%
+  do.call(cbind, .)
+colnames(pval.df.old) <- names(corrDFs.old)
+
+# order column based on UP correlation estimates
+columnOrder <- df.old["UP", ] %>%
+  t() %>%
+  as.data.frame() %>%
+  rownames_to_column("tissue") %>%
+  mutate(order = rank(UP, ties.method = "first")) %>%
+  arrange(order) %>%
+  pull(tissue)
+```
+
+
+```{r}
+#| label: tbl-corr-heatmap-data-table-old
+#| eval: true
+#| include: true
+#| tbl-cap: Correlation matrix of beta values between eQTL and sQTL (old pseudo count)
+
+df.old[, columnOrder] %>%
+  as.data.frame() %>%
+  rownames_to_column("type") %>%
+  gt::gt() %>%
+  gt::fmt_number(decimals = 3)
+```
+
+
+```{r}
+#| label: tbl-corr-heatmap-data-table-pval-old
+#| eval: true
+#| include: true
+#| tbl-cap: Correlation pval matrix of beta values between eQTL and sQTL (old pseudo count)
+
+# use gt to display p-values in scientific notation, cell fill color based on p-values
+pval.df.old[, columnOrder] %>%
+  as.data.frame() %>%
+  rownames_to_column("type") %>%
+  gt::gt() %>%
+  gt::fmt_scientific(decimals = 2)
+
+```
+
+
+
+```{r}
+#| label: plot-heatmap-old
+
+set.seed(123)
+cluster_method <- "ward.D"
+svg("2024-07-25-heatmap-corr-beta-eqtl-sqtl-old.svg", width = 20, height = 2)
+df.old[, columnOrder] %>%
+  as.matrix() %>%
+  Heatmap(
+    col = colfunc,
+    show_parent_dend_line = FALSE,
+    use_raster = TRUE,
+    cluster_columns = FALSE, cluster_rows = F,
+    column_split = c(rep("G1", 10), rep("G2", 10), rep("G3", 10), rep("G4", 10), rep("G5", 9)),
+    column_labels = column_to_rownames(gtex_tissue_code, "tissue") %>% .[colnames(df.old[, columnOrder]),],
+    height = unit(2, "cm"),
+    heatmap_legend_param = list(title = "Correlation")
+  )
+dev.off()
+```
+
+
+
+```{r}
+#| label: fig-corr-heatmap-old
+#| column: screen
+#| eval: true
+#| include: true
+#| fig-cap: Heatmap of correlation between eQTL and sQTL beta values (old pseudo count method)
+#| out-width: 100%
+
+knitr::include_graphics("2024-07-25-heatmap-corr-beta-eqtl-sqtl-old.svg")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
