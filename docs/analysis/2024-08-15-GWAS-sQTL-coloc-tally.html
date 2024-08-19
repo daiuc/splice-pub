@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2024-08-07">
+<meta name="dcterms.date" content="2024-08-15">
 
-<title>mysite - Coloc GWAS - sQTL - eQTL</title>
+<title>mysite - Summarise coloc for GWAS eQTL sQTL</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,16 +113,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#procedure-introduction" id="toc-procedure-introduction" class="nav-link active" data-scroll-target="#procedure-introduction">Procedure introduction</a>
-  <ul class="collapse">
-  <li><a href="#data-prep-for-eqtl-and-sqtl" id="toc-data-prep-for-eqtl-and-sqtl" class="nav-link" data-scroll-target="#data-prep-for-eqtl-and-sqtl">Data prep for eQTL and sQTL</a></li>
-  <li><a href="#gwas-loci" id="toc-gwas-loci" class="nav-link" data-scroll-target="#gwas-loci">GWAS loci</a></li>
-  <li><a href="#gwas-eqtl-sqtl-coloc" id="toc-gwas-eqtl-sqtl-coloc" class="nav-link" data-scroll-target="#gwas-eqtl-sqtl-coloc">GWAS eQTL sQTL coloc</a></li>
-  </ul></li>
-  <li><a href="#data-description" id="toc-data-description" class="nav-link" data-scroll-target="#data-description">Data description</a>
-  <ul class="collapse">
-  <li><a href="#ad-gwas" id="toc-ad-gwas" class="nav-link" data-scroll-target="#ad-gwas">AD GWAS</a></li>
-  </ul></li>
+  <li><a href="#ad" id="toc-ad" class="nav-link active" data-scroll-target="#ad">AD</a></li>
+  <li><a href="#pd" id="toc-pd" class="nav-link" data-scroll-target="#pd">PD</a></li>
+  <li><a href="#height" id="toc-height" class="nav-link" data-scroll-target="#height">Height</a></li>
+  <li><a href="#t2d-type-2-diabetes" id="toc-t2d-type-2-diabetes" class="nav-link" data-scroll-target="#t2d-type-2-diabetes">T2D (Type 2 Diabetes)</a></li>
   </ul>
 </nav>
     </div>
@@ -131,7 +125,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Coloc GWAS - sQTL - eQTL</h1>
+<h1 class="title">Summarise coloc for GWAS eQTL sQTL</h1>
   <div class="quarto-categories">
     <div class="quarto-category">GWAS</div>
     <div class="quarto-category">coloc</div>
@@ -147,7 +141,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">August 7, 2024</p>
+      <p class="date">August 15, 2024</p>
     </div>
   </div>
   
@@ -159,49 +153,98 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="procedure-introduction" class="level1">
-<h1>Procedure introduction</h1>
-<ol type="1">
-<li>Data preparation</li>
-</ol>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <ul>
-<li>GWAS summary stats</li>
-<li>sQTL summary stats</li>
-<li>eQTL summary stats</li>
+<li>GES: GWAS eQTL sQTL</li>
+<li>GE: GWAS eQTL</li>
+<li>GS: GWAS sQTL</li>
 </ul>
-<section id="data-prep-for-eqtl-and-sqtl" class="level2">
-<h2 class="anchored" data-anchor-id="data-prep-for-eqtl-and-sqtl">Data prep for eQTL and sQTL</h2>
-<p>On a high level, eQTL or sQTL summary states are generated using qtltools nominal pass. To simplify procedure, just run 1mb cis window for all genes. Then tabix output. To reduce file size, select only phenotypes that has QTLs before running nominal pass.</p>
-<p>I used 1.5mb cis window to run per tissue, eqtl and sqtl nominal pass on phenotypes that have sqtl or eqtl in the repsective tissue.</p>
+<p>Coloc loci selected with PIP &gt; 0.75</p>
+<p>GWAS hit loci are constructed with 1MB window centering on the lead SNP (&lt; 1e-5)</p>
+</div>
+</div>
+<section id="ad" class="level1">
+<h1>AD</h1>
+<p>Number of AD, eQTL only coloc</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-AD-coloc" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-AD-coloc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2024-08-15-GWAS-sQTL-coloc-tally_files/figure-html/fig-AD-coloc-1.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-AD-coloc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: AD GWAS coloc with eQTL, sQTL
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="gwas-loci" class="level2">
-<h2 class="anchored" data-anchor-id="gwas-loci">GWAS loci</h2>
+<section id="pd" class="level1">
+<h1>PD</h1>
+<p>Number of PD, eQTL only coloc</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-PD-coloc" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-PD-coloc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2024-08-15-GWAS-sQTL-coloc-tally_files/figure-html/fig-PD-coloc-1.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-PD-coloc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: PD GWAS coloc with eQTL, sQTL
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="gwas-eqtl-sqtl-coloc" class="level2">
-<h2 class="anchored" data-anchor-id="gwas-eqtl-sqtl-coloc">GWAS eQTL sQTL coloc</h2>
-<p>For each GWAS hit locus, collect gwas_name, snp_id, beta, se, and:</p>
-<ul>
-<li>tabix all SNPs in the loci, then collect
-<ul>
-<li>gene_id, snp_id, beta, se for eqtl (possible to have multiple gene_ids)</li>
-<li>intron_id, snp_id, beta, se for sqtl (possible to have multiple intron_ids) (replace intron_id with concat of gene_id and intron_id)</li>
-</ul></li>
-<li>construct beta matrix, where columns are gwas trait, eqtl genes, sqtl introns</li>
-<li>same for SE matrix</li>
-<li>run hyprcoloc</li>
-</ul>
+<section id="height" class="level1">
+<h1>Height</h1>
+<p>Number of HT, eQTL only coloc</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-HT-coloc" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-HT-coloc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2024-08-15-GWAS-sQTL-coloc-tally_files/figure-html/fig-HT-coloc-1.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-HT-coloc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: HT GWAS coloc with eQTL, sQTL
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </section>
-</section>
-<section id="data-description" class="level1">
-<h1>Data description</h1>
-<section id="ad-gwas" class="level3">
-<h3 class="anchored" data-anchor-id="ad-gwas">AD GWAS</h3>
-<ol type="1">
-<li>formatted gwas summsary stats <a href="../analysis/2024-08-06-process-GWAS-summary-stats.html">description</a></li>
-</ol>
+<section id="t2d-type-2-diabetes" class="level1">
+<h1>T2D (Type 2 Diabetes)</h1>
+<p>Number of T2D, eQTL only coloc</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-T2D-coloc" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-T2D-coloc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2024-08-15-GWAS-sQTL-coloc-tally_files/figure-html/fig-T2D-coloc-1.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-T2D-coloc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: T2D GWAS coloc with eQTL, sQTL
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

@@ -1,0 +1,472 @@
+---
+title: "Summarise coloc for GWAS eQTL sQTL"
+date: 2024-8-15
+format: html
+categories: ['GWAS', 'coloc', 'sQTL']
+code-fold: true
+execute:
+  include: false
+  eval: false
+  cache: false
+  echo: false
+---
+
+
+::: {.callout-tip}
+## Note
+
+- GES: GWAS eQTL sQTL
+- GE: GWAS eQTL
+- GS: GWAS sQTL
+
+Coloc loci selected with PIP > 0.75
+
+GWAS hit loci are constructed with 1MB window centering on the lead SNP (< 1e-5) 
+
+:::
+
+```{r}
+#| include: false
+#| eval: true
+
+suppressMessages(library(tidyverse))
+suppressMessages(library(glue))
+suppressMessages(library(data.table))
+
+suppressMessages(library(cowplot))
+theme_set(theme_cowplot())
+```
+
+```{r}
+#| include: false
+#| eval: true
+
+tissues = dir("../code/results/coloc/gwas-eqtl-sqtl/GTEx/AD")
+tissue_code = fread("gtex-tissue-code.csv", col.names = c("tissue", "tissue_code"))
+minPIP = .75
+```
+
+```{r}
+httpgd::hgd(host = "10.50.250.200", port = 9696, token = F)
+```
+
+
+# AD
+
+
+
+```{r}
+#| include: false
+#| eval: true
+#| cache: true
+
+coloc_files = glue("../code/results/coloc/gwas-eqtl-sqtl/GTEx/AD/{tissues}/AD-eqtl-sqtl.coloc.tsv") 
+
+AD_coloc = map(coloc_files, fread)
+names(AD_coloc) = tissues
+AD_coloc = imap(AD_coloc, ~mutate(.x, tissue = .y))
+AD_coloc = bind_rows(AD_coloc)
+AD_coloc = inner_join(AD_coloc, tissue_code) %>% select(-tissue)
+
+col_split = str_split(AD_coloc$coloc_id, "\\|", simplify = T)
+colnames(col_split) = c("gwas", "locus", "gene_id")
+AD_coloc = cbind(AD_coloc, col_split)
+```
+
+
+```{r}
+#| label: AD-gwas-hit_loci
+#| eval: true
+hit_loci = fread("../code/resources/GWAS/hg38/AD_hitloci.bed")
+N_hit_loci = nrow(hit_loci)
+```
+
+
+```{r}
+#| eval: true
+#| label: Number of AD, eQTL, GWAS coloc
+dt = AD_coloc[str_detect(traits, "AD") & str_detect(traits, "ENSG") & str_detect(traits, "clu")
+  ][posterior_prob > minPIP, .(tissue = tissue_code, posterior_prob, coloc_id, traits, locus, gene_id)] %>% unique
+
+dt[, .(N = uniqueN(locus)), by = tissue]
+```
+
+Number of AD, eQTL only coloc
+
+```{r}
+#| eval: true
+#| label: Number of AD, eQTL only coloc 
+dt2 = AD_coloc[str_detect(traits, "AD") & str_detect(traits, "ENSG") & !str_detect(traits, "clu")
+  ][posterior_prob > minPIP, .(tissue = tissue_code, posterior_prob, coloc_id, traits, locus, gene_id)] %>% unique
+
+dt2[, .(N = uniqueN(locus)), by = tissue]
+```
+
+
+```{r}
+#| eval: true
+#| label: Number of AD, sQTL only coloc
+dt3 = AD_coloc[str_detect(traits, "AD") & !str_detect(traits, "ENSG") & str_detect(traits, "clu")
+  ][posterior_prob > minPIP, .(tissue = tissue_code, posterior_prob, coloc_id, traits, locus, gene_id)] %>% unique
+
+dt3[, .(N = uniqueN(locus)), by = tissue]
+```
+
+
+```{r}
+#| eval: true
+ad.tally1 = left_join(
+  tissue_code[, .(tissue = tissue_code)],
+  dt[, .(N_GES = uniqueN(locus)), by = tissue]
+  )
+ad.tally1 = left_join(
+  ad.tally1,
+  dt2[, .(N_GE = uniqueN(locus)), by = tissue]
+  )
+ad.tally1 = left_join(
+  ad.tally1,
+  dt3[, .(N_GS = uniqueN(locus)), by = tissue]
+  )
+ad.tally1 = ad.tally1[, nafill(.SD, fill = 0), .SDcols = 2:4, by = tissue]
+```
+
+```{r}
+#| include: true
+#| eval: true
+#| fig-width: 10
+#| out-width: 100%
+#| label: fig-AD-coloc
+#| fig-cap: AD GWAS coloc with eQTL, sQTL
+ad.tally1 %>% 
+  melt(id.vars = "tissue", variable.name = "type", value.name = "N") %>%
+  ggplot() + geom_point(aes(x = tissue, y = N, color = type)) +
+    labs(x = NULL, y = "Number of loci", color = NULL,
+         caption = glue("{N_hit_loci} hit GWAS loci")) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
+
+```
+
+
+
+
+
+# PD
+
+
+
+```{r}
+#| include: false
+#| eval: true
+#| cache: true
+
+coloc_files = glue("../code/results/coloc/gwas-eqtl-sqtl/GTEx/PD/{tissues}/PD-eqtl-sqtl.coloc.tsv") 
+
+PD_coloc = map(coloc_files, fread)
+names(PD_coloc) = tissues
+PD_coloc = imap(PD_coloc, ~mutate(.x, tissue = .y))
+PD_coloc = bind_rows(PD_coloc)
+PD_coloc = inner_join(PD_coloc, tissue_code) %>% select(-tissue)
+
+col_split = str_split(PD_coloc$coloc_id, "\\|", simplify = T)
+colnames(col_split) = c("gwas", "locus", "gene_id")
+PD_coloc = cbind(PD_coloc, col_split)
+```
+
+
+```{r}
+#| label: PD-gwas-hit_loci
+#| eval: true
+hit_loci = fread("../code/resources/GWAS/hg38/PD_hitloci.bed")
+N_hit_loci = nrow(hit_loci)
+```
+
+
+
+```{r}
+#| eval: true
+#| label: Number of PD, eQTL, GWAS coloc
+dt = PD_coloc[str_detect(traits, "PD") & str_detect(traits, "ENSG") & str_detect(traits, "clu")
+  ][posterior_prob > minPIP, .(tissue = tissue_code, posterior_prob, coloc_id, traits, locus, gene_id)] %>% unique
+
+dt[, .(N = uniqueN(locus)), by = tissue]
+```
+
+Number of PD, eQTL only coloc
+
+```{r}
+#| eval: true
+#| label: Number of PD, eQTL only coloc 
+dt2 = PD_coloc[str_detect(traits, "PD") & str_detect(traits, "ENSG") & !str_detect(traits, "clu")
+  ][posterior_prob > minPIP, .(tissue = tissue_code, posterior_prob, coloc_id, traits, locus, gene_id)] %>% unique
+
+dt2[, .(N = uniqueN(locus)), by = tissue]
+```
+
+
+```{r}
+#| eval: true
+#| label: Number of PD, sQTL only coloc
+dt3 = PD_coloc[str_detect(traits, "PD") & !str_detect(traits, "ENSG") & str_detect(traits, "clu")
+  ][posterior_prob > minPIP, .(tissue = tissue_code, posterior_prob, coloc_id, traits, locus, gene_id)] %>% unique
+
+dt3[, .(N = uniqueN(locus)), by = tissue]
+```
+
+
+```{r}
+#| eval: true
+ad.tally1 = left_join(
+  tissue_code[, .(tissue = tissue_code)],
+  dt[, .(N_GES = uniqueN(locus)), by = tissue]
+  )
+ad.tally1 = left_join(
+  ad.tally1,
+  dt2[, .(N_GE = uniqueN(locus)), by = tissue]
+  )
+ad.tally1 = left_join(
+  ad.tally1,
+  dt3[, .(N_GS = uniqueN(locus)), by = tissue]
+  )
+ad.tally1 = ad.tally1[, nafill(.SD, fill = 0), .SDcols = 2:4, by = tissue]
+```
+
+```{r}
+#| include: true
+#| eval: true
+#| fig-width: 10
+#| out-width: 100%
+#| label: fig-PD-coloc
+#| fig-cap: PD GWAS coloc with eQTL, sQTL
+ad.tally1 %>% 
+  melt(id.vars = "tissue", variable.name = "type", value.name = "N") %>%
+  ggplot() + geom_point(aes(x = tissue, y = N, color = type)) +
+    labs(x = NULL, y = "Number of loci", color = NULL,
+         caption = glue("{N_hit_loci} hit GWAS loci")) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
+
+```
+
+
+
+
+
+# Height
+
+
+```{r}
+#| include: false
+#| eval: true
+#| cache: true
+
+coloc_files = glue("../code/results/coloc/gwas-eqtl-sqtl/GTEx/HT/{tissues}/HT-eqtl-sqtl.coloc.tsv") 
+
+HT_coloc = map(coloc_files, fread)
+names(HT_coloc) = tissues
+HT_coloc = imap(HT_coloc, ~mutate(.x, tissue = .y))
+HT_coloc = bind_rows(HT_coloc)
+HT_coloc = inner_join(HT_coloc, tissue_code) %>% select(-tissue)
+
+col_split = str_split(HT_coloc$coloc_id, "\\|", simplify = T)
+colnames(col_split) = c("gwas", "locus", "gene_id")
+HT_coloc = cbind(HT_coloc, col_split)
+```
+
+
+```{r}
+#| label: HT-gwas-hit_loci
+#| eval: true
+hit_loci = fread("../code/resources/GWAS/hg38/HT_hitloci.bed")
+N_hit_loci = nrow(hit_loci)
+```
+
+
+
+```{r}
+#| eval: true
+#| label: Number of HT, eQTL, GWAS coloc
+dt = HT_coloc[str_detect(traits, "HT") & str_detect(traits, "ENSG") & str_detect(traits, "clu")
+  ][posterior_prob > minPIP, .(tissue = tissue_code, posterior_prob, coloc_id, traits, locus, gene_id)] %>% unique
+
+dt[, .(N = uniqueN(locus)), by = tissue]
+```
+
+Number of HT, eQTL only coloc
+
+```{r}
+#| eval: true
+#| label: Number of HT, eQTL only coloc 
+dt2 = HT_coloc[str_detect(traits, "HT") & str_detect(traits, "ENSG") & !str_detect(traits, "clu")
+  ][posterior_prob > minPIP, .(tissue = tissue_code, posterior_prob, coloc_id, traits, locus, gene_id)] %>% unique
+
+dt2[, .(N = uniqueN(locus)), by = tissue]
+```
+
+
+```{r}
+#| eval: true
+#| label: Number of HT, sQTL only coloc
+dt3 = HT_coloc[str_detect(traits, "HT") & !str_detect(traits, "ENSG") & str_detect(traits, "clu")
+  ][posterior_prob > minPIP, .(tissue = tissue_code, posterior_prob, coloc_id, traits, locus, gene_id)] %>% unique
+
+dt3[, .(N = uniqueN(locus)), by = tissue]
+```
+
+
+```{r}
+#| eval: true
+ad.tally1 = left_join(
+  tissue_code[, .(tissue = tissue_code)],
+  dt[, .(N_GES = uniqueN(locus)), by = tissue]
+  )
+ad.tally1 = left_join(
+  ad.tally1,
+  dt2[, .(N_GE = uniqueN(locus)), by = tissue]
+  )
+ad.tally1 = left_join(
+  ad.tally1,
+  dt3[, .(N_GS = uniqueN(locus)), by = tissue]
+  )
+ad.tally1 = ad.tally1[, nafill(.SD, fill = 0), .SDcols = 2:4, by = tissue]
+```
+
+```{r}
+#| include: true
+#| eval: true
+#| fig-width: 10
+#| out-width: 100%
+#| label: fig-HT-coloc
+#| fig-cap: HT GWAS coloc with eQTL, sQTL
+ad.tally1 %>% 
+  melt(id.vars = "tissue", variable.name = "type", value.name = "N") %>%
+  ggplot() + geom_point(aes(x = tissue, y = N, color = type)) +
+    labs(x = NULL, y = "Number of loci", color = NULL,
+         caption = glue("{N_hit_loci} hit GWAS loci")) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
+
+```
+
+
+
+
+
+
+# T2D (Type 2 Diabetes)
+
+```{r}
+#| include: false
+#| eval: true
+#| cache: true
+
+coloc_files = glue("../code/results/coloc/gwas-eqtl-sqtl/GTEx/T2D/{tissues}/T2D-eqtl-sqtl.coloc.tsv") 
+
+T2D_coloc = map(coloc_files, fread)
+names(T2D_coloc) = tissues
+T2D_coloc = imap(T2D_coloc, ~mutate(.x, tissue = .y))
+T2D_coloc = bind_rows(T2D_coloc)
+T2D_coloc = inner_join(T2D_coloc, tissue_code) %>% select(-tissue)
+
+col_split = str_split(T2D_coloc$coloc_id, "\\|", simplify = T)
+colnames(col_split) = c("gwas", "locus", "gene_id")
+T2D_coloc = cbind(T2D_coloc, col_split)
+```
+
+
+```{r}
+#| label: T2D-gwas-hit_loci
+#| eval: true
+hit_loci = fread("../code/resources/GWAS/hg38/T2D_hitloci.bed")
+N_hit_loci = nrow(hit_loci)
+```
+
+
+
+```{r}
+#| eval: true
+#| label: Number of T2D, eQTL, GWAS coloc
+dt = T2D_coloc[str_detect(traits, "T2D") & str_detect(traits, "ENSG") & str_detect(traits, "clu")
+  ][posterior_prob > minPIP, .(tissue = tissue_code, posterior_prob, coloc_id, traits, locus, gene_id)] %>% unique
+
+dt[, .(N = uniqueN(locus)), by = tissue]
+```
+
+Number of T2D, eQTL only coloc
+
+```{r}
+#| eval: true
+#| label: Number of T2D, eQTL only coloc 
+dt2 = T2D_coloc[str_detect(traits, "T2D") & str_detect(traits, "ENSG") & !str_detect(traits, "clu")
+  ][posterior_prob > minPIP, .(tissue = tissue_code, posterior_prob, coloc_id, traits, locus, gene_id)] %>% unique
+
+dt2[, .(N = uniqueN(locus)), by = tissue]
+```
+
+
+```{r}
+#| eval: true
+#| label: Number of T2D, sQTL only coloc
+dt3 = T2D_coloc[str_detect(traits, "T2D") & !str_detect(traits, "ENSG") & str_detect(traits, "clu")
+  ][posterior_prob > minPIP, .(tissue = tissue_code, posterior_prob, coloc_id, traits, locus, gene_id)] %>% unique
+
+dt3[, .(N = uniqueN(locus)), by = tissue]
+```
+
+
+```{r}
+#| eval: true
+ad.tally1 = left_join(
+  tissue_code[, .(tissue = tissue_code)],
+  dt[, .(N_GES = uniqueN(locus)), by = tissue]
+  )
+ad.tally1 = left_join(
+  ad.tally1,
+  dt2[, .(N_GE = uniqueN(locus)), by = tissue]
+  )
+ad.tally1 = left_join(
+  ad.tally1,
+  dt3[, .(N_GS = uniqueN(locus)), by = tissue]
+  )
+ad.tally1 = ad.tally1[, nafill(.SD, fill = 0), .SDcols = 2:4, by = tissue]
+```
+
+```{r}
+#| include: true
+#| eval: true
+#| fig-width: 10
+#| out-width: 100%
+#| label: fig-T2D-coloc
+#| fig-cap: T2D GWAS coloc with eQTL, sQTL
+ad.tally1 %>% 
+  melt(id.vars = "tissue", variable.name = "type", value.name = "N") %>%
+  ggplot() + geom_point(aes(x = tissue, y = N, color = type)) +
+    labs(x = NULL, y = "Number of loci", color = NULL,
+         caption = glue("{N_hit_loci} hit GWAS loci")) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

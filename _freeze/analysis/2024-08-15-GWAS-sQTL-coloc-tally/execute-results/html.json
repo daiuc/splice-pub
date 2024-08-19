@@ -1,0 +1,17 @@
+{
+  "hash": "e20d5e926c0f1f1e51551ad87140e350",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Summarise coloc for GWAS eQTL sQTL\"\ndate: 2024-8-15\nformat: html\ncategories: ['GWAS', 'coloc', 'sQTL']\ncode-fold: true\nexecute:\n  include: false\n  eval: false\n  cache: false\n  echo: false\n---\n\n\n\n::: {.callout-tip}\n## Note\n\n- GES: GWAS eQTL sQTL\n- GE: GWAS eQTL\n- GS: GWAS sQTL\n\nColoc loci selected with PIP > 0.75\n\nGWAS hit loci are constructed with 1MB window centering on the lead SNP (< 1e-5) \n\n:::\n\n\n\n\n\n\n\n\n\n\n# AD\n\n\n\n\n\n\n\n\n\n\n\nNumber of AD, eQTL only coloc\n\n\n\n\n\n\n\n\n::: {.cell}\n::: {.cell-output-display}\n![AD GWAS coloc with eQTL, sQTL](2024-08-15-GWAS-sQTL-coloc-tally_files/figure-html/fig-AD-coloc-1.png){#fig-AD-coloc width=100%}\n:::\n:::\n\n\n\n\n\n\n# PD\n\n\n\n\n\n\n\n\n\n\n\nNumber of PD, eQTL only coloc\n\n\n\n\n\n\n\n\n::: {.cell}\n::: {.cell-output-display}\n![PD GWAS coloc with eQTL, sQTL](2024-08-15-GWAS-sQTL-coloc-tally_files/figure-html/fig-PD-coloc-1.png){#fig-PD-coloc width=100%}\n:::\n:::\n\n\n\n\n\n\n# Height\n\n\n\n\n\n\n\n\n\n\nNumber of HT, eQTL only coloc\n\n\n\n\n\n\n\n\n::: {.cell}\n::: {.cell-output-display}\n![HT GWAS coloc with eQTL, sQTL](2024-08-15-GWAS-sQTL-coloc-tally_files/figure-html/fig-HT-coloc-1.png){#fig-HT-coloc width=100%}\n:::\n:::\n\n\n\n\n\n\n\n# T2D (Type 2 Diabetes)\n\n\n\n\n\n\n\n\n\nNumber of T2D, eQTL only coloc\n\n\n\n\n\n\n\n\n::: {.cell}\n::: {.cell-output-display}\n![T2D GWAS coloc with eQTL, sQTL](2024-08-15-GWAS-sQTL-coloc-tally_files/figure-html/fig-T2D-coloc-1.png){#fig-T2D-coloc width=100%}\n:::\n:::\n",
+    "supporting": [
+      "2024-08-15-GWAS-sQTL-coloc-tally_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

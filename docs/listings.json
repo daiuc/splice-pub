@@ -3,6 +3,7 @@
     "listing": "/index.html",
     "items": [
       "/analysis/2024-08-05-GTEx-sqtl-enrich.html",
+      "/analysis/2024-08-15-GWAS-sQTL-coloc-tally.html",
       "/analysis/2024-07-25-plot-beta-beta-heatmap.html",
       "/analysis/2024-08-07-GWAS-sQTL-coloc.html",
       "/analysis/2024-08-06-process-GWAS-summary-stats.html",

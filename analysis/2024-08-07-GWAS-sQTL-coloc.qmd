@@ -1,5 +1,5 @@
 ---
-title: "coloc with GWAS and sQTL"
+title: "Coloc GWAS - sQTL - eQTL"
 date: 2024-8-7
 format: html
 categories: ['GWAS', 'coloc', 'sQTL']
@@ -11,6 +11,36 @@ execute:
   echo: false
 ---
 
+
+
+
+# Procedure introduction
+
+1. Data preparation
+  - GWAS summary stats
+  - sQTL summary stats
+  - eQTL summary stats
+
+
+## Data prep for eQTL and sQTL
+
+On a high level, eQTL or sQTL summary states are generated using qtltools nominal pass. To simplify procedure, just run 1mb cis window for all genes. Then tabix output. To reduce file size, select only phenotypes that has QTLs before running nominal pass. 
+
+I used 1.5mb cis window to run per tissue, eqtl and sqtl nominal pass on phenotypes that have sqtl or eqtl in the repsective tissue.
+
+
+## GWAS loci
+
+## GWAS eQTL sQTL coloc
+
+For each GWAS hit locus, collect gwas_name, snp_id, beta, se, and:
+
+-  tabix all SNPs in the loci, then collect
+   -  gene_id, snp_id, beta, se for eqtl (possible to have multiple gene_ids)
+   -  intron_id, snp_id, beta, se for sqtl (possible to have multiple intron_ids) (replace intron_id with concat of gene_id and intron_id)
+- construct beta matrix, where columns are gwas trait, eqtl genes, sqtl introns
+- same for SE matrix
+- run hyprcoloc
 
 
 

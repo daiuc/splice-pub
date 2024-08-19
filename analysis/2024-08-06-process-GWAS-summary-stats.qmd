@@ -50,9 +50,9 @@ MinPVal = 1e-5
 #| include: true
 #| eval: true
 
-yml %>% pluck("GWAS") %>% 
-  map_chr(pluck, "trait") %>% 
-  enframe(name = "GWAS", value = "Trait")  %>% 
+yml %>% pluck("GWAS") %>%
+  map_chr(pluck, "trait") %>%
+  enframe(name = "GWAS", value = "Trait")  %>%
   gt::gt()
   
 
@@ -460,7 +460,7 @@ head(dt) %>% gt::gt(.)
 #| eval: true
 #| cache: true
 
-dt <- fread('../code/resources/GWAS/hg38/AD_sumstats_Jansenetal_hg19tohg38.tsv.gz', nrows = 10)
+dt <- fread('../code/resources/GWAS/hg38/AD.tsv.gz', nrows = 10)
 head(dt) %>% gt::gt(.)
 ```
 
@@ -470,7 +470,7 @@ head(dt) %>% gt::gt(.)
 #| eval: true
 #| cache: true
 
-dt <- fread('../code/resources/GWAS/hg38/PD_nallsEtAl2019.tsv.gz', nrows = 10)
+dt <- fread('../code/resources/GWAS/hg38/PD.tsv.gz', nrows = 10)
 head(dt) %>% gt::gt(.)
 ```
 
