@@ -54,6 +54,21 @@ httpgd::hgd(host = "10.50.250.200", port = 9696, token = F)
 # AD
 
 
+```{r}
+#| eval: true
+countSQTLs = function(trait) {
+  introns = str_extract_all(trait, "chr\\d+.+(PR|UP|NE)")
+  introns = str_split(introns, ",", simplify = F) %>% 
+    unlist %>%
+    str_trim
+  introns = str_split(introns, ":", simplify = T) %>% as.data.table
+  introns = introns[, .N, by = V5]
+  introns = c(PR = introns[V5 == "PR", N], UP = introns[V5 == "UP", N], NE = introns[V5 == "NE", N])
+
+  return(introns)
+}
+```
+
 
 ```{r}
 #| include: false
@@ -88,8 +103,10 @@ N_hit_loci = nrow(hit_loci)
 dt = AD_coloc[str_detect(traits, "AD") & str_detect(traits, "ENSG") & str_detect(traits, "clu")
   ][posterior_prob > minPIP, .(tissue = tissue_code, posterior_prob, coloc_id, traits, locus, gene_id)] %>% unique
 
-dt[, .(N = uniqueN(locus)), by = tissue]
+dt[, .(N = uniqueN(locus), N2 = uniqueN(coloc_id)), by = tissue]
 ```
+
+
 
 Number of AD, eQTL only coloc
 
@@ -130,6 +147,7 @@ ad.tally1 = left_join(
 ad.tally1 = ad.tally1[, nafill(.SD, fill = 0), .SDcols = 2:4, by = tissue]
 ```
 
+
 ```{r}
 #| include: true
 #| eval: true
@@ -141,6 +159,41 @@ ad.tally1 %>%
   melt(id.vars = "tissue", variable.name = "type", value.name = "N") %>%
   ggplot() + geom_point(aes(x = tissue, y = N, color = type)) +
     labs(x = NULL, y = "Number of loci", color = NULL,
+         caption = glue("{N_hit_loci} hit GWAS loci")) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
+
+```
+
+
+```{r}
+#| eval: true
+ad.tally2 = left_join(
+  tissue_code[, .(tissue = tissue_code)],
+  dt[, .(N_GES = uniqueN(gene_id)), by = tissue]
+  )
+ad.tally2 = left_join(
+  ad.tally2,
+  dt2[, .(N_GE = uniqueN(gene_id)), by = tissue]
+  )
+ad.tally2 = left_join(
+  ad.tally2,
+  dt3[, .(N_GS = uniqueN(gene_id)), by = tissue]
+  )
+ad.tally2 = ad.tally2[, nafill(.SD, fill = 0), .SDcols = 2:4, by = tissue]
+```
+
+
+```{r}
+#| include: true
+#| eval: true
+#| fig-width: 10
+#| out-width: 100%
+#| label: fig-AD-coloc2
+#| fig-cap: AD GWAS coloc with eQTL, sQTL - Number of genes
+ad.tally2 %>% 
+  melt(id.vars = "tissue", variable.name = "type", value.name = "N") %>%
+  ggplot() + geom_point(aes(x = tissue, y = N, color = type)) +
+    labs(x = NULL, y = "Number of coloc genes", color = NULL,
          caption = glue("{N_hit_loci} hit GWAS loci")) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
 
@@ -247,6 +300,42 @@ ad.tally1 %>%
 ```
 
 
+```{r}
+#| eval: true
+ad.tally2 = left_join(
+  tissue_code[, .(tissue = tissue_code)],
+  dt[, .(N_GES = uniqueN(gene_id)), by = tissue]
+  )
+ad.tally2 = left_join(
+  ad.tally2,
+  dt2[, .(N_GE = uniqueN(gene_id)), by = tissue]
+  )
+ad.tally2 = left_join(
+  ad.tally2,
+  dt3[, .(N_GS = uniqueN(gene_id)), by = tissue]
+  )
+ad.tally2 = ad.tally2[, nafill(.SD, fill = 0), .SDcols = 2:4, by = tissue]
+```
+
+
+```{r}
+#| include: true
+#| eval: true
+#| fig-width: 10
+#| out-width: 100%
+#| label: fig-PD-coloc2
+#| fig-cap: PD GWAS coloc with eQTL, sQTL - Number of genes
+ad.tally2 %>% 
+  melt(id.vars = "tissue", variable.name = "type", value.name = "N") %>%
+  ggplot() + geom_point(aes(x = tissue, y = N, color = type)) +
+    labs(x = NULL, y = "Number of coloc genes", color = NULL,
+         caption = glue("{N_hit_loci} hit GWAS loci")) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
+
+```
+
+
+
 
 
 
@@ -344,6 +433,42 @@ ad.tally1 %>%
     theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
 
 ```
+
+
+```{r}
+#| eval: true
+ad.tally2 = left_join(
+  tissue_code[, .(tissue = tissue_code)],
+  dt[, .(N_GES = uniqueN(gene_id)), by = tissue]
+  )
+ad.tally2 = left_join(
+  ad.tally2,
+  dt2[, .(N_GE = uniqueN(gene_id)), by = tissue]
+  )
+ad.tally2 = left_join(
+  ad.tally2,
+  dt3[, .(N_GS = uniqueN(gene_id)), by = tissue]
+  )
+ad.tally2 = ad.tally2[, nafill(.SD, fill = 0), .SDcols = 2:4, by = tissue]
+```
+
+
+```{r}
+#| include: true
+#| eval: true
+#| fig-width: 10
+#| out-width: 100%
+#| label: fig-HT-coloc2
+#| fig-cap: HT GWAS coloc with eQTL, sQTL - Number of genes
+ad.tally2 %>% 
+  melt(id.vars = "tissue", variable.name = "type", value.name = "N") %>%
+  ggplot() + geom_point(aes(x = tissue, y = N, color = type)) +
+    labs(x = NULL, y = "Number of coloc genes", color = NULL,
+         caption = glue("{N_hit_loci} hit GWAS loci")) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
+
+```
+
 
 
 
@@ -445,12 +570,58 @@ ad.tally1 %>%
 ```
 
 
+```{r}
+#| eval: true
+ad.tally2 = left_join(
+  tissue_code[, .(tissue = tissue_code)],
+  dt[, .(N_GES = uniqueN(gene_id)), by = tissue]
+  )
+ad.tally2 = left_join(
+  ad.tally2,
+  dt2[, .(N_GE = uniqueN(gene_id)), by = tissue]
+  )
+ad.tally2 = left_join(
+  ad.tally2,
+  dt3[, .(N_GS = uniqueN(gene_id)), by = tissue]
+  )
+ad.tally2 = ad.tally2[, nafill(.SD, fill = 0), .SDcols = 2:4, by = tissue]
+```
+
+
+```{r}
+#| include: true
+#| eval: true
+#| fig-width: 10
+#| out-width: 100%
+#| label: fig-T2D-coloc2
+#| fig-cap: T2D GWAS coloc with eQTL, sQTL - Number of genes
+ad.tally2 %>% 
+  melt(id.vars = "tissue", variable.name = "type", value.name = "N") %>%
+  ggplot() + geom_point(aes(x = tissue, y = N, color = type)) +
+    labs(x = NULL, y = "Number of coloc genes", color = NULL,
+         caption = glue("{N_hit_loci} hit GWAS loci")) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
+
+```
 
 
 
 
 
 
+
+
+# coloc result data example
+
+Relable unproductive s. productive sQTLs.
+
+```{r}
+#| include: true
+#| eval: true
+
+dt[1:20] %>% gt::gt()
+
+```
 
 
 
