@@ -1,0 +1,379 @@
+---
+title: Figure 1 - Unproductive splicing and gene features
+date: '2024-08-20'
+author: Chao Dai
+code-fold: true
+execute:
+  include: false
+  eval: false
+  echo: false
+  warning: false
+  message: false
+categories:
+  - figures
+  - manuscript
+---
+
+Plots for Figure 1
+
+::: {.callout-note}
+## Notes
+
+* Use Geuvadis dataset
+* Plot cluster and gene level
+* Use all protein coding transcripts, instead fo only APPRIS transcripts
+
+:::
+
+
+
+
+
+```{r}
+# never knit
+httpgd::hgd(host = "10.50.250.200", port = 9696, token = FALSE)
+```
+
+
+```{r}
+#| label: setup
+#| eval: true
+
+suppressMessages(library(tidyverse))
+suppressMessages(library(glue))
+suppressMessages(library(data.table))
+suppressMessages(library(patchwork))
+
+
+suppressMessages(library(cowplot))
+theme_set(theme_cowplot(font_size = 14, font_family = "Helvetica"))
+
+
+# functions
+getRPKM <- function(reads, lengths) {
+  # reads: numeric vector of read counts, each is for a gene
+  # lengths: numeric vector of gene lengths
+  reads = as.double(reads)
+  lengths = as.double(lengths)
+  total = sum(reads)
+  rpkm = map2_dbl(reads, lengths, ~ 1e9 * as.double(.x) / (total * .y))
+  return(rpkm)
+}
+
+```
+
+
+## Correlation between cluster level unproductive splicing vs best productive intron length
+
+
+```{r}
+#| label: load leafcutter output data
+#| eval: true
+#| cache: true
+
+#--- leafcutter 2 output (fractions)
+fracs = fread("../code/results/pheno/noisy/Geuvadis/EUR/wConst_perind.constcounts.noise_by_intron.gz")
+dataCols = colnames(fracs)[-c(1)]
+
+# extract numerators and denominators
+tictoc::tic()
+numers = fracs[,
+  map(.SD, \(x) {
+            s = str_split(x, "\\/", simplify = TRUE)
+            s = s[, 1] %>% as.integer
+            return(s)
+            }
+  ), .SDcols = dataCols]
+tictoc::toc()
+
+```
+
+```{r}
+#| label: get intron details
+#| eval: true
+#| cache: true
+
+#--- intron details
+introns = fracs[
+  , .(intron = chrom,
+      clu = str_extract(chrom, "clu_\\d+"),
+      itype = str_extract(chrom, "\\w{2}$"))
+  ]
+
+introns = introns[, .(intron, itype, ctype = paste0(sort(unique(itype)), collapse = ",")), by = clu]
+
+introns$intron_coords = str_split(introns$intron, "\\:", simplify = TRUE) %>% 
+  as.data.table() %>% 
+  glue_data(., "{V1}:{V2}-{V3}")
+
+introns$intron_len = str_split(introns$intron, ":", simplify = TRUE) %>%
+  as.data.table() %>%
+  .[, .(len = as.integer(V3) - as.integer(V2) + 1)] %>%
+  pull(len)
+
+# cut intron length into bins
+intron_length_breaks = c(0, 1000, 5000, 20000, 50000, Inf)
+intron_length_labels = c('<1kb', '1-5kb', '5-20kb', '20-50kb', '>50kb')
+introns$intron_len2 = cut(introns$intron_len, breaks = intron_length_breaks, labels = intron_length_labels)
+
+# intron-to-gene mapping, then get gene name
+i2g = fread("../code/results/pheno/noisy/Geuvadis/EUR/wConst_junction_classifications.txt")
+introns = left_join(
+  introns,
+  i2g[, .(intron_coords = Intron_coord, gene = Gene_name)],
+  by = "intron_coords",
+  multiple = "any" # select any gene if multiple gene mapped to the same intron
+)
+
+```
+
+
+```{r}
+#| label: compute unproductive ratio - per cluster
+#| eval: true
+#| cache: true
+
+#--- compute total cluster reads and total cluster unproductive reads
+
+if (!all(fracs$chrom == introns$intron)) stop("intron ids do not match")
+
+# compute total and unproductive reads by cluster
+total_by_clu = cbind(introns, numers)  %>% 
+  .[, map(.SD, sum), by = clu, .SDcols = dataCols]
+up_by_clu = cbind(introns, numers)  %>% 
+  .[itype %in% c("UP", "NE"), map(.SD, sum), by = clu, .SDcols = dataCols]
+
+# compute unproductive ratio (using mean counts)
+total_by_clu.mean = total_by_clu[, 
+  .(clu, m = rowMeans(.SD, na.rm = TRUE)), 
+  .SDcols = dataCols
+  ]
+up_by_clu.mean = up_by_clu[,
+  .(clu, m = rowMeans(.SD, na.rm = TRUE)),
+  .SDcols = dataCols
+  ]
+up_by_clu.ratio = inner_join(
+  up_by_clu.mean,
+  total_by_clu.mean,
+  by = "clu",
+  suffix = c(".up", ".total")
+) %>% 
+  .[, .(clu, ratio = m.up / m.total)]
+
+# use the most used productive intron in the cluster to prepresent the cluster intron length
+clu_info = cbind(introns, numers) %>% 
+  .[itype == "PR"] %>% 
+  .[, .(clu, intron, itype, m = rowMeans(.SD)), .SDcols = dataCols] %>% 
+  .[, .(intron, itype, m, rk = rank(-m, ties.method = "random")), by = clu] %>% 
+  .[rk ==1, .(intron)] %>% 
+  inner_join(
+    x = .,
+    y = introns,
+    by = "intron"
+  )
+
+# data frame ready for plotting unprodcutive ratio vs. best prod. intron length
+up_plot_dt = inner_join(
+  up_by_clu.ratio,
+  clu_info[, .(gene, clu, ctype, intron_len, intron_len2)] %>% unique,
+  by = "clu"
+)
+
+```
+
+
+Correlation test of cluster level unprodctive splicing vs. most used productive intron length
+
+```{r}
+#| label: correlation test of unproductive ratio vs. intron length
+#| eval: true
+#| cache: true
+#| include: true
+
+cortest1 = cor.test(up_plot_dt$intron_len, 
+                    up_plot_dt$ratio, 
+                    method = "spearman")
+
+print(cortest1)
+```
+
+
+```{r}
+p1 = up_plot_dt %>% 
+  ggplot() +
+  stat_ecdf(aes(x = ratio, color = intron_len2)) +
+  scale_color_brewer(type = 'qual', palette = 'Blues') +
+  scale_x_log10(breaks = c(0, .01, .1, 1),
+                labels = c("0%", "1%", "10%", "100%"),
+                n.breaks = 5) +
+  labs(x = "Intron length", 
+       y = "Unproductive splicing",
+       color = "Intron length",
+       title = 'Unproductive splicing vs. intron length', 
+       caption = glue('Spearman rho={round(cortest1$estimate, 2)} {ifelse(cortest1$p.value < .001, "***", "")}, N={uniqueN(up_plot_dt$clu)}'))
+
+# save plot to svg file
+ggsave("plot-fig1-cluster-unprod-vs-pr-intron-length.svg", p1, width = 7, height = 5)
+```
+
+
+Intron length takes the best productive intron of a cluster.
+
+```{r}
+#| label: fig-cluster-unprod-vs-pr-intron-length
+#| eval: true
+#| include: true
+#| out-width: 80%
+#| fig-cap: "Correlation of cluster unproductive reads vs. length most used productive intron"
+
+knitr::include_graphics("plot-fig1-cluster-unprod-vs-pr-intron-length.svg")
+```
+
+
+
+
+
+## Correlation between gene level unproductive splicing vs gene expression
+
+
+```{r}
+#| label: get gene annotation
+#| eval: true
+#| cache: true
+
+gtf = fread("../../annotations/hg38/gencode.v43.primary_assembly.annotation.csv.gz") %>%
+  .[feature %in% "gene" & str_detect(gene_type, "protein_coding"),
+    .(seqname, start, end, strand, gene_name)]
+gtf[, gene_len := (end - start + 1)]
+
+# remove duplicate gene names
+gtf[, rid := rowid(gene_name)]
+gtf = gtf[rid ==1, .(seqname, start, end, strand, gene_name, gene_len)]
+```
+
+
+```{r}
+#| label: compute gene rpkm and unproductive ratio
+#| eval: true
+#| cache: true
+
+if (!all(fracs$chrom == introns$intron)) stop("intron ids do not match")
+
+total_by_gene = cbind(introns, numers) %>% 
+  .[!is.na(gene), map(.SD, sum), by = gene, .SDcols = dataCols]
+total_by_gene.m = total_by_gene[,
+  .(gene, m = rowMeans(.SD, na.rm = TRUE)), .SDcols = dataCols]
+
+rpkm_by_gene = inner_join(
+  total_by_gene, 
+  gtf[, .(gene_name, gene_len)],
+  by = c("gene" = "gene_name"))
+rpkm_by_gene= rpkm_by_gene[
+  , c(list(gene = gene), map(.SD, getRPKM, gene_len)), 
+  .SDcols = dataCols
+  ]
+rpkm_by_gene.m = rpkm_by_gene[,
+  .(gene, m = rowMeans(.SD, na.rm = TRUE)), .SDcols = dataCols
+  ]
+
+# compute unproductive ratio
+up_by_gene = cbind(introns, numers) %>%
+  .[itype %in% c("UP", "NE"), map(.SD, sum), by = gene, .SDcols = dataCols]
+up_by_clu.m = up_by_gene[,
+  .(gene, m = rowMeans(.SD, na.rm = TRUE)), .SDcols = dataCols
+  ]
+up_by_gene.ratio = inner_join(
+  up_by_clu.m,
+  total_by_gene.m,
+  by = "gene",
+  suffix = c(".up", ".total")
+) %>% 
+  .[, .(gene, ratio = m.up / m.total)]
+
+# plot data frame for unproductive ratio vs. gene expression level
+up_plot_dt.gene = inner_join(
+  up_by_gene.ratio,
+  rpkm_by_gene.m[, .(gene, rpkm = m)],
+  by = "gene"
+)
+
+rpkm_breaks <- c(0, 0.02619, 0.18, 0.43, 2.6, Inf)
+rpkm_labels <- c("Q1 - lowly expressed", "Q2", "Q3", "Q4", "Q5 - highly expressed")
+
+up_plot_dt.gene$rpkm2 = cut(up_plot_dt.gene$rpkm, breaks = rpkm_breaks, labels = rpkm_labels)
+
+```
+
+
+```{r}
+#| label: correlation test of unproductive ratio vs. gene expression level
+#| eval: true
+#| cache: true
+#| include: true
+
+cortest2 = cor.test(up_plot_dt.gene$rpkm,
+                    up_plot_dt.gene$ratio,
+                    method = "spearman")
+
+print(cortest2)
+
+```
+
+```{r}
+# plot unproductive ratio vs. gene expression level
+p2 = up_plot_dt.gene %>% 
+  ggplot() +
+  stat_ecdf(aes(x = ratio, color = rpkm2)) +
+  scale_color_brewer(type = 'qual', palette = 'Blues') +
+  scale_x_log10(breaks = c(0, .01, .1, 1),
+                labels = c("0%", "1%", "10%", "100%"),
+                n.breaks = 5) +
+  labs(x = "Unproductive splicing", 
+       y = "Cumulative distribution",
+       color = "RPKM quantiles",
+       title = 'Unproductive splicing vs. expression level', 
+       caption = glue('Spearman rho={round(cortest2$estimate, 2)} {ifelse(cortest2$p.value < .001, "***", "")}, N={uniqueN(up_plot_dt.gene$gene)}'))
+
+# save plot to svg file
+ggsave("plot-fig1-gene-unprod-vs-rpkm.svg", p2, width = 7, height = 5)
+
+```
+
+
+```{r}
+#| label: fig-gene-unprod-vs-rpkm
+#| eval: true
+#| include: true
+#| out-width: 80%
+#| fig-cap: "Correlation of unproductive splicing vs. gene expression level"
+
+knitr::include_graphics("plot-fig1-gene-unprod-vs-rpkm.svg")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

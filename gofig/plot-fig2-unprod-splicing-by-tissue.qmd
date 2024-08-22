@@ -1,0 +1,205 @@
+---
+title: Figure w - Unproductive splicing by tissue (GTEx)
+date: '2024-08-20'
+author: Chao Dai
+code-fold: true
+execute:
+  include: false
+  eval: false
+  echo: false
+  warning: false
+  message: false
+categories:
+  - figures
+  - manuscript
+---
+
+Plots for Figure 2
+
+::: {.callout-note}
+## Notes
+
+* Use GTEx dataset
+
+:::
+
+
+
+
+
+```{r}
+# never knit
+httpgd::hgd(host = "10.50.250.200", port = 9696, token = FALSE)
+```
+
+
+```{r}
+#| label: setup
+#| eval: true
+
+suppressMessages(library(tidyverse))
+suppressMessages(library(glue))
+suppressMessages(library(data.table))
+suppressMessages(library(patchwork))
+
+
+suppressMessages(library(cowplot))
+theme_set(theme_cowplot(font_size = 14, font_family = "Helvetica"))
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
