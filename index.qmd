@@ -5,6 +5,7 @@ execute:
 listing:
   contents:
     - "/analysis/20*.qmd"
+    - "/gofig/plot*.qmd"
   sort: "date desc"
   type: table # default, grid
   page-size: 40

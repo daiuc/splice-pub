@@ -23,6 +23,11 @@ analysis/*gz
 analysis/*_cache/
 analysis/*_files/
 analysis/*html
+gofig/*rds
+gofig/*gz
+gofig/*_cache/
+gofig/*_files/
+gofig/*html
 **/*rds
 data
 plots

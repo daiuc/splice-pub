@@ -6,6 +6,7 @@ project:
     - "index.qmd"
     - "about.qmd"
     - "/analysis/2024*.qmd"
+    - "/gofig/plot*.qmd"
     - "!code/"
     - "!data/"
     - "!output"
