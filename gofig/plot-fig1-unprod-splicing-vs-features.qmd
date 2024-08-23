@@ -1,7 +1,6 @@
 ---
 title: Figure 1 - Unproductive splicing and gene features
 date: '2024-08-20'
-author: Chao Dai
 code-fold: true
 execute:
   include: false

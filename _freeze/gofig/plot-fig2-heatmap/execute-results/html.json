@@ -1,0 +1,15 @@
+{
+  "hash": "a7ccfb122b834e15e920ad80cc6fd5a4",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: Figure 2 - Heatmap of unprodoctive splicing by tissues\ndate: '2024-08-21'\ncode-fold: true\nexecute:\n  include: false\n  eval: false\n  echo: false\n  warning: false\n  message: false\ncategories:\n  - figures\n  - manuscript\n---\n\n\nHeatmap of PSI of unproductive splicing for introns that are commonly differentially spliced across tissues.\n\n::: {.callout-note}\n## Notes\n\n* Use GTEx dataset\n\n:::\n\n\n\n\n\n\n\n\n\n\n\n## Select a union set of unproductive intron clusters\n\nChoose introns based on the following criteria:\n1. ds FDR 0.001\n2. deltaPSI 0.2 \n3. dge FDR 0.05\n4. select the best unprod. intron from each cluster, then collect cluster ID\n\n\n\n\n\n\n\n\n::: {.cell}\n::: {.cell-output .cell-output-stdout}\n\n```\nNumber of clusters to plot: 1012\n```\n\n\n:::\n:::\n\n\n\n::: {.cell .column-page}\n::: {.cell-output-display}\n![Heatmap of unproductive splicing by tissues](plot-fig2-heatmap.svg){#fig-heatmap width=100%}\n:::\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

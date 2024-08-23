@@ -1,0 +1,238 @@
+---
+title: Figure 2 - Differential splicing vs. differential expression (GTEx)
+date: '2024-08-20'
+code-fold: true
+execute:
+  include: false
+  eval: false
+  echo: false
+  warning: false
+  message: false
+categories:
+  - figures
+  - manuscript
+---
+
+Differential splicing vs. differential expression in GTEx dataset
+
+::: {.callout-note}
+## Notes
+
+* Use GTEx dataset
+
+:::
+
+
+
+
+
+```{r}
+#| eval: false
+#| echo: false
+httpgd::hgd(host = "10.50.250.200", port = 9696, token = FALSE)
+```
+
+
+```{r}
+#| label: setup
+#| eval: true
+
+suppressMessages(library(tidyverse))
+suppressMessages(library(glue))
+suppressMessages(library(data.table))
+suppressMessages(library(ggpointdensity))
+
+suppressMessages(library(cowplot))
+theme_set(theme_cowplot(font_size = 14, font_family = "Helvetica"))
+
+suppressMessages(library(furrr))
+plan(multisession, workers = min(4, availableCores()))
+
+
+# functions
+read_contrast <- function(rds, contrast, FDR = 1e-5, selection = 'all', plot=FALSE) {
+  # rds: a single rds file, previousp rocessed in "../../SpliFi/prepdata.smk"
+  # contrast: a string, the contrast name
+  data <- readRDS(rds)
+  ds <- data$ds
+  dge <- data$dge
+  dge_dsc <- data$dge_dsc
+
+  joined_dt <- inner_join(
+    x = ds[abs(deltapsi) > .1 & `p.adjust` < FDR & ctype %in% c('PR', 'PR,UP'), 
+          .(gene_id, gene_name, intron, cluster, itype, ctype, deltapsi)],
+    y = dge[, .(gene_id, g_l2fc = log2FoldChange, g_z = stat, g_l2fcSE = lfcSE)],
+    by = 'gene_id'
+  )
+
+  if (selection == 'maxClu') {
+    joined_dt  <- joined_dt[
+      , .(intron, deltapsi, g_l2fc, g_z, g_l2fcSE, rk = rank(-abs(deltapsi), ties.method = "random")), 
+      by = .(gene_id, gene_name, cluster, itype, ctype)
+      ][rk == 1, -c('rk')]
+  } else if (selection == 'maxGene') {
+    joined_dt <- joined_dt[
+      , .(intron, deltapsi, g_l2fc, g_z, g_l2fcSE, rk = rank(-abs(deltapsi), ties.method = "random")), 
+      by = .(gene_id, gene_name, itype)
+      ][rk == 1, -c('rk')]
+  }
+
+  # run cor.test
+  cor_res <- joined_dt %>% 
+    split(by = 'itype') %>% 
+    map(~cor.test(x = .x$g_z, y = .x$deltapsi, method = 'pearson')) %>% 
+    imap_dfr(
+      \(x, y) {
+        data.table(
+          cor = x$estimate,
+          p = x$`p.value`,
+          itype = y,
+          contrast = contrast)
+      }
+    )
+
+    # plot scatter plot
+    if (plot) {
+      p  <- joined_dt %>% 
+              ggplot() + 
+              geom_pointdensity(aes(g_z, deltapsi), size = .5, alpha = .5) +
+              scale_color_viridis_c() + 
+              geom_smooth(
+                aes(g_z, deltapsi),
+                method = "lm",
+                formula = y~x,
+                se = FALSE, 
+                color = 'blue', 
+                lwd = 1) +
+              # geom_abline(aes(slope = 1, intercept = 0), data = cor_res) +
+              geom_text(aes(x = 0, y = 0.1, 
+                            label = paste("cor: ", round(cor, 3), ", ", "p. val: ", 
+                                          format(p, digits = 3, scientific = T), 
+                                          sep = "")
+                            ),
+                        data = cor_res, 
+                        color = 'blue',
+                        size = 4,
+                        vjust = 1) +
+              labs(x = "DGE: Z-score", 
+                   y = "DS: deltaPSI",
+                   color = "Num. points", 
+                   title = str_wrap(str_replace_all(contrast, '_', ' '), width = 40)
+                  ) +
+              facet_wrap(~itype)
+    
+    return(list(cor_res = cor_res, gg = p, joineddf = joined_dt))
+  } else {
+    return(list(cor_res = cor_res, joineddf = joined_dt))
+  }
+
+}
+
+```
+
+
+```{r}
+#| label: load all saved contrasts, run correlation of each contrast
+#| eval: true
+#| cache: true
+
+rds_list = dir('../../SpliFi/data/ds_v_dge', pattern = '.+_v_.+.rds', full.names = TRUE)
+contrast_list = str_split(rds_list, "/") %>% 
+  map(., last) %>%
+  unlist %>% 
+  str_remove_all('_data\\.rds')
+
+# read saved rds, then run correlation for each contrast
+if (!all(map2_lgl(rds_list, contrast_list, \(x,y) str_detect(x, y)))) {
+  stop("rds and contrast not match")
+}
+
+res3 <- future_map2(
+  rds_list,
+  contrast_list, 
+  read_contrast, 
+  FDR = 1e-5,
+  selection = 'all', 
+  .progress = T
+)
+
+df3 <- map_dfr(res3, ~.x[['cor_res']])
+rm(res3)
+```
+
+
+
+```{r}
+# plot vocano-like plot of correlation results for all contrast
+p1 = df3 %>% 
+  ggplot() +
+  geom_pointdensity(
+    aes(cor, -log10(p), color = itype),
+    size = .5, 
+    alpha = .9) +
+  geom_hline(yintercept = -log10(0.001), linetype = 2) +
+  annotate("text", x = -0.45, y = -log10(0.001), label = "p = 0.001", vjust = 1) +
+  scale_color_brewer(
+    type = "qual", 
+    palette = 1,
+    direction = 1,
+    label = c(PR="Productive", UP="Unproductive"), 
+    name = NULL) +
+  lims(x = c(-.5, .2), y = c(0, 30)) +
+  labs(
+    color = NULL, 
+    title = "correlation of DS and DGE", 
+    x = "Correlation",
+    y = "-log10(p)"
+  )
+
+ggsave("plot-fig2-correlation-volcano.svg", p1, width = 6, height = 5)
+```
+
+
+```{r}
+#| label: fig-corr-ds-dge-volcano
+#| eval: true
+#| include: true
+#| fig-cap: Correlation of differential splicing and differential gene expression
+#| out-width: 80%
+
+knitr::include_graphics("plot-fig2-correlation-volcano.svg")
+```
+
+
+```{r}
+i = which(contrast_list == 'Brain-Cortex_v_Kidney-Cortex')
+res = read_contrast(rds_list[i], contrast_list[i], plot = TRUE)
+ggsave("plot-fig2-brain-cortex-v-kidney-cortex.svg", res$gg, width = 7, height = 5)
+```
+
+
+```{r}
+#| label: fig-brain-cortex-v-kidney-cortex
+#| eval: true
+#| include: true
+#| fig-cap: "Correlation of DS and DGE: Brain-Cortex vs. Kidney-Cortex"
+#| out-width: 80%
+
+knitr::include_graphics("plot-fig2-brain-cortex-v-kidney-cortex.svg")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,79 @@
+---
+title: "Figure 3 - sQTL tally, correlation heatmap"
+date: '2024-08-21'
+code-fold: true
+execute:
+  include: false
+  eval: false
+  echo: false
+  warning: false
+  message: false
+categories:
+  - figures
+  - manuscript
+---
+
+::: {.callout-note}
+
+-  sQTL top SNPs enrichment in eQTL are plotted on [this page](../analysis/2024-08-05-GTEx-sqtl-enrich.qmd)
+
+-  sQTL top SNPs eQTL beta vs. sQTL beta per tissue comparison are also on [this page](../analysis/2024-08-05-GTEx-sqtl-enrich.qmd)
+
+- sQTL top SNPs eQTL beta vs. sQTL beta summarised heatmap is on [this page](../analysis/2024-07-25-plot-beta-beta-heatmap.html)
+:::
+
+
+
+```{r}
+#| label: setup
+#| eval: true
+suppressMessages(library(tidyverse))
+```
+
+
+
+## sQTL tally (GTEx)
+
+```{r}
+#| include: true
+#| eval: true
+#| out-width: 100%
+#| fig-cap: "GTEx sQTL tally"
+
+knitr::include_graphics("../analysis/2024-06-10-gtex-sqtl-tally-by-tissue.svg")
+```
+
+
+## Heatmap of eQTL sQTL beta correlation
+
+
+```{r}
+#| include: true
+#| eval: true
+#| out-width: 100%
+#| fig-cap: "Heatmap of eQTL sQTL beta correlation"
+#| column: screen
+
+knitr::include_graphics("../analysis/2024-07-25-heatmap-corr-beta-eqtl-sqtl.svg")
+```
+
+## sQTL pvalue enrichment in eQTL (selected tissues)
+
+
+```{r}
+#| include: true
+#| eval: true
+#| layout-ncol: 3
+#| out-width: 100%
+
+svg_files = dir('../smk-plots/gtex-sqtl-enrichment-v4', 
+                pattern = 'qqplot\\.svg',
+                full.names = TRUE)
+svg_files = svg_files[str_detect(svg_files, "EBV|Artery.Tib|Testis")]
+
+knitr::include_graphics(svg_files)
+
+```
+
+
+ 

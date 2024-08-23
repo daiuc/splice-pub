@@ -167,8 +167,8 @@ colnames(df2) <- names(rds_files)
 ```{r}
 #| label: heatmap color scale
 
-legendBreaks <- c(-.3, -.2, -.1, -0.0001, -0.00001, 0, 0.00001, 0.0001, 0.1)
-colors <- c("#085193", "#4292c6", "#c6d8ef", "white", "white", "white", "white", "white", "#fc8d59")
+legendBreaks <- c(-.3, -.2, -.1, -0.0001, -0.00001, 0, 0.00001, 0.0001, 0.1, 0.2, 0.3)
+colors <- c("#085193", "#4292c6", "#c6d8ef", "white", "white", "white", "white", "white", "#ffd9b6", "#ffb169", "#ff891d")
 colfunc <- circlize::colorRamp2(
   breaks = legendBreaks,
   colors = colors

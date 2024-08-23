@@ -2,7 +2,10 @@
   {
     "listing": "/index.html",
     "items": [
+      "/gofig/plot-fig2-heatmap.html",
+      "/gofig/plot-fig3-pval-enrich-beta-beta.html",
       "/gofig/plot-fig1-unprod-splicing-vs-features.html",
+      "/gofig/plot-fig2-ds-vs-dge.html",
       "/gofig/plot-fig2-unprod-splicing-by-tissue.html",
       "/analysis/2024-08-05-GTEx-sqtl-enrich.html",
       "/analysis/2024-08-15-GWAS-sQTL-coloc-tally.html",

@@ -1,7 +1,6 @@
 ---
-title: Figure w - Unproductive splicing by tissue (GTEx)
+title: Figure 2 - Unproductive splicing by tissue (GTEx)
 date: '2024-08-20'
-author: Chao Dai
 code-fold: true
 execute:
   include: false
@@ -14,7 +13,7 @@ categories:
   - manuscript
 ---
 
-Plots for Figure 2
+Unproductive splicing by tissue (GTEx)
 
 ::: {.callout-note}
 ## Notes
@@ -28,7 +27,9 @@ Plots for Figure 2
 
 
 ```{r}
-# never knit
+#| include: false
+#| eval: false
+#| echo: false
 httpgd::hgd(host = "10.50.250.200", port = 9696, token = FALSE)
 ```
 
@@ -40,164 +41,192 @@ httpgd::hgd(host = "10.50.250.200", port = 9696, token = FALSE)
 suppressMessages(library(tidyverse))
 suppressMessages(library(glue))
 suppressMessages(library(data.table))
-suppressMessages(library(patchwork))
-
 
 suppressMessages(library(cowplot))
 theme_set(theme_cowplot(font_size = 14, font_family = "Helvetica"))
+
+# functions
+computeUnprodRatio <- function(tissue_rds) {
+
+    introns <- readRDS(tissue_rds)
+    datacols <- names(introns)[5:ncol(introns)]
+    # remove clu_type == N, clusters with only unproductive introns
+    introns  <- introns[str_detect(clu_type, 'PR')]
+    # total reads (by sample)
+    totals <- colSums(introns[, ..datacols])
+    # unproudctive reads (by sample)
+    unprod <- introns[intron_type == 'UP', ..datacols] %>% colSums
+    # unproductive reads / total reads
+    if (all(names(totals) == names(unprod))) {
+        unprod_ratio <- round(unprod / totals, 5)
+    } else {
+        stop('samples of totals and unprod are not the same')
+    }
+
+    return(unprod_ratio)
+
+}
+
+point_scale <- function(x, newmin, newmax) {
+  newmax  <- max(newmax)
+  newmin  <- min(newmin)
+  new_range <- abs(newmax - newmin) 
+  old_range <- abs(max(x) - min(x))
+
+  # Normalize the values between 0 and 1
+  normalized_x <- (x - min(x)) / old_range
+
+  # Scale the normalized values to the new range and offset by 0.5
+  scaled_x <- normalized_x * new_range + newmin
+
+  return(scaled_x)
+}
+
+```
+
+
+
+## Plot box plot of unproductive splicing by tissue
+
+
+
+```{r}
+#| label: load data
+#| eval: true
+#| cache: true
+
+# tissue name codes
+tissue_code = fread("../analysis/gtex-tissue-code.csv", 
+  sep = ",", 
+  header = FALSE,
+  col.names = c("tissue", "tissue_code"))
+
+# pre-processed data, details see "../../SpliFi/prepdata.smk"
+tissues_rds = dir("../../SpliFi/data/ExtractFractions/GTEx", "*.numerators_constcounts.noise_by_intron.rds", full.names = TRUE)
+tissues = str_split(tissues_rds, "\\/", simplify = TRUE) %>%
+  .[, 7] %>%
+  str_split(., "\\.", simplify = TRUE) %>% 
+  .[, 1]
+names(tissues_rds) = tissues
+
+# load data from rds
+ratios = map(tissues_rds, computeUnprodRatio, .progress = TRUE) 
+ratios = imap_dfr(ratios, ~enframe(.x, "sample", "unprodRatio") %>% add_column(tissue = .y))
+ratios = as.data.table(ratios) %>% 
+  .[, .(sample, unprodRatio, nsample = uniqueN(sample)), by = tissue]
+ratios = left_join(ratios, tissue_code, by = "tissue")
+
+```
+
+
+
+```{r}
+#| label:: plot data table
+#| eval: true
+#| cache: true
+
+plot_dt = ratios[
+  , .(sample, unprodRatio, nsample, med = median(unprodRatio), rk = rank(unprodRatio, ties.method = "first")), by = tissue_code
+  ][, .(sample, unprodRatio, nsample, med, tissue = forcats::fct_reorder(tissue_code, -med), rk)
+  ][, .(sample, unprodRatio, nsample, med, tissuei = as.integer(tissue), tissue, rk)
+  ][, .(sample, unprodRatio, nsample, med, tissuei, rk, pointx = point_scale(rk, tissuei - .5, tissuei + .5)), by = tissue
+  ][order(tissuei, rk)]
+
+```
+
+
+```{r}
+#| label: plot functions
+#| eval: true
+#| cache: true
+label_x1 <- function(ids) {
+    labels[tid == ids, tissue] %>% 
+        str_replace_all("[\\-]|(_.+_)", " ") %>% 
+        str_wrap(25)
+}
+
+label_x2 <- function(ids) {
+    labels[tid == ids, nsample] 
+}
+
+
+labels = ratios[, .(nsample, med = median(unprodRatio)), by = tissue_code] %>% unique %>% 
+    .[, .(tissue = tissue_code, nsample, med, tid = forcats::fct_reorder(tissue_code, -med) %>% as.integer)] %>% 
+    .[order(tid)]
+
+```
+
+```{r}
+# plot figure
+
+p1 = plot_dt %>%
+  ggplot() +
+  geom_point(aes(x = pointx, y = unprodRatio), color = 'midnightblue', alpha = .1) +
+  geom_tile(aes(x = tissuei, y = med), color = 'firebrick', fill= 'firebrick', height = 5e-5, width = .9) +
+  scale_x_continuous(
+      breaks = unique(plot_dt$tissuei), labels = label_x1, expand = c(0, .5),
+      sec.axis = sec_axis(~., breaks = unique(plot_dt$tissuei), labels = label_x2,
+                      guide = guide_axis(angle = 0)
+                      )
+      ) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  labs(x = "Tissue / Number of Samples",
+      y = "Fraction of unproductive reads"
+      ) +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90, hjust = 1)
+        )
+
+ggsave("./plot-fig2-unprod-splicing-by-tissue-gtex.svg", p1, width = 17, height = 5)
 
 ```
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```{r}
+#| label: fig-unprod-splicing-by-tissue
+#| include: true
+#| eval: true
+#| column: page
+#| out-width: 100%
+#| fig-cap: Unproductive splicing by tissue
+
+knitr::include_graphics("plot-fig2-unprod-splicing-by-tissue-gtex.svg")
+
+```
+
+
+
+```{r}
+#| label: tbl-tissue-code-lookup
+#| tbl-cap: Tissue code lookup
+#| eval: true
+#| include: true
+#| cache: false
+
+# tissue_code %>%  data.table::transpose() %>% gt::gt()
+ratios[, .(tissue, med = median(unprodRatio)), by = tissue_code
+  ][order(-med)] %>% 
+  unique %>% 
+  .[, .(tissue, tissue_code)] %>% 
+  transpose %>% 
+  gt::gt()
+```
+
+
+
+```{r}
+#| label: tbl-median-unprod-ratio-by-tissue
+#| tbl-cap: Median unproductive splicing ratio by tissue
+#| eval: true
+#| include: true
+
+ratios[, .(med = median(unprodRatio)), by = tissue_code][order(-med)] %>%
+  transpose %>% 
+  gt::gt() %>%
+  gt::fmt_percent(decimals = 2)
+```
 
 
 

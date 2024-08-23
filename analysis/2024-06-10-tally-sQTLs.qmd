@@ -144,7 +144,7 @@ readGTExSQTL <- function(tissue) {
 ```{r}
 #| include: false
 #| eval: false
-gtex.sqls <- map(Tissues, ~ readGTExSQTL(.x) %>% addLabels)
+gtex.sqls <- map(Tissues, ~ readGTExSQTL(.x) %>% addLabels, .progress = TRUE)
 ```
 
 ```{r}
@@ -229,9 +229,13 @@ gtex.plot2.dt %>%
     theme(axis.text.x = element_text(angle = 90, hjust = 1),
           legend.position = "top"
          )
+
 ```
 
 
+```{r}
+ggsave("2024-06-10-gtex-sqtl-tally-by-tissue.svg", width = 8, height = 4)
+```
 
 ```{r}
 #| label: tbl-gtex-sqtl-by-cluster
