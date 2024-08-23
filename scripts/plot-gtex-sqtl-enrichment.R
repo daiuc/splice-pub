@@ -245,7 +245,7 @@ if (!dir.exists(out_prefix)) {
 }
 
 print("save qqplot")
-ggsave(glue("{out_prefix}/{tissue}-qqplot.png"), qqplot, width = 7, height = 5, dpi = 200)
+ggsave(glue("{out_prefix}/{tissue}-qqplot.svg"), qqplot, width = 7, height = 5)
 
 #---- plot enrichment ----
 
@@ -293,7 +293,7 @@ scatter <- plotDF[, .(slope_sqtl, slope_eqtl, ctype)] %>%
     theme(strip.background = element_rect(fill = "white"))
 
 print("save scatter")
-ggsave(glue("{out_prefix}/{tissue}-scatter.png"), scatter, width = 7, height = 5, dpi = 200)
+ggsave(glue("{out_prefix}/{tissue}-scatter.svg"), scatter, width = 7, height = 5)
 
 #---- save data ----
 outobj <- list(
