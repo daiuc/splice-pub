@@ -1,24 +1,66 @@
 [
   {
-    "objectID": "gofig/plot-fig2-unprod-splicing-by-tissue.html",
-    "href": "gofig/plot-fig2-unprod-splicing-by-tissue.html",
-    "title": "Figure 2 - Unproductive splicing by tissue (GTEx)",
+    "objectID": "gofig/plot-fig3-pval-enrich-beta-beta.html",
+    "href": "gofig/plot-fig3-pval-enrich-beta-beta.html",
+    "title": "Figure 3 - sQTL tally, correlation heatmap",
     "section": "",
-    "text": "Unproductive splicing by tissue (GTEx)"
+    "text": "Note\n\n\n\n\nsQTL top SNPs enrichment in eQTL are plotted on this page\nsQTL top SNPs eQTL beta vs. sQTL beta per tissue comparison are also on this page\nsQTL top SNPs eQTL beta vs. sQTL beta summarised heatmap is on this page"
   },
   {
-    "objectID": "gofig/plot-fig2-unprod-splicing-by-tissue.html#plot-box-plot-of-unproductive-splicing-by-tissue",
-    "href": "gofig/plot-fig2-unprod-splicing-by-tissue.html#plot-box-plot-of-unproductive-splicing-by-tissue",
-    "title": "Figure 2 - Unproductive splicing by tissue (GTEx)",
-    "section": "Plot box plot of unproductive splicing by tissue",
-    "text": "Plot box plot of unproductive splicing by tissue\n\n\n\n\n\n\n\n\nFigure 1: Unproductive splicing by tissue\n\n\n\n\n\n\n\n\n\nTable 1: Tissue code lookup\n\n\n\n\n\n\n\n\n\n\nV1\nV2\nV3\nV4\nV5\nV6\nV7\nV8\nV9\nV10\nV11\nV12\nV13\nV14\nV15\nV16\nV17\nV18\nV19\nV20\nV21\nV22\nV23\nV24\nV25\nV26\nV27\nV28\nV29\nV30\nV31\nV32\nV33\nV34\nV35\nV36\nV37\nV38\nV39\nV40\nV41\nV42\nV43\nV44\nV45\nV46\nV47\nV48\nV49\n\n\n\n\nTestis\nBrain-Cerebellum\nBrain-CerebellarHemisphere\nBrain-Spinalcord_cervicalc-1_\nThyroid\nProstate\nNerve-Tibial\nSpleen\nPituitary\nBrain-Substantianigra\nOvary\nLung\nKidney-Cortex\nBrain-Hippocampus\nSmallIntestine-TerminalIleum\nBreast-MammaryTissue\nUterus\nBrain-Hypothalamus\nSkin-NotSunExposed_Suprapubic_\nBrain-Cortex\nVagina\nAdipose-Subcutaneous\nBrain-Amygdala\nBrain-Putamen_basalganglia_\nSkin-SunExposed_Lowerleg_\nColon-Sigmoid\nBrain-Caudate_basalganglia_\nBrain-Nucleusaccumbens_basalganglia_\nAdipose-Visceral_Omentum_\nColon-Transverse\nEsophagus-GastroesophagealJunction\nBrain-Anteriorcingulatecortex_BA24_\nBrain-FrontalCortex_BA9_\nWholeBlood\nMinorSalivaryGland\nEsophagus-Muscularis\nArtery-Tibial\nArtery-Coronary\nStomach\nArtery-Aorta\nAdrenalGland\nHeart-AtrialAppendage\nLiver\nCells-EBV-transformedlymphocytes\nEsophagus-Mucosa\nHeart-LeftVentricle\nPancreas\nMuscle-Skeletal\nCells-Culturedfibroblasts\n\n\nTESTIS\nBRNCB\nBRNCBH\nBRNSPC\nTHYROID\nPRSTTE\nNERVET\nSPLEEN\nPTTARY\nBRNSNG\nOVARY\nLUNG\nKDNCTX\nBRNHPC\nSNTTRM\nBREAST\nUTERUS\nBRNHPT\nSKINNS\nBRNCT\nVAGINA\nADPSBO\nBRNAGD\nBRNPBG\nSKINS\nCLNSGM\nBRNCDB\nBRNNAB\nADPVSC\nCLNTRN\nESPGEL\nBRNATG\nBRNFCT\nWHLBLD\nSLVRYG\nESPMSL\nARTTBL\nARTCRN\nSTMACH\nARTAOT\nADNGLD\nHRTAA\nLIVER\nLCL\nESPMCS\nHRTLV\nPNCREAS\nMUSCLSK\nFIBRBLS\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTable 2: Median unproductive splicing ratio by tissue\n\n\n\n\n\n\n\n\n\n\nV1\nV2\nV3\nV4\nV5\nV6\nV7\nV8\nV9\nV10\nV11\nV12\nV13\nV14\nV15\nV16\nV17\nV18\nV19\nV20\nV21\nV22\nV23\nV24\nV25\nV26\nV27\nV28\nV29\nV30\nV31\nV32\nV33\nV34\nV35\nV36\nV37\nV38\nV39\nV40\nV41\nV42\nV43\nV44\nV45\nV46\nV47\nV48\nV49\n\n\n\n\nTESTIS\nBRNCB\nBRNCBH\nBRNSPC\nTHYROID\nPRSTTE\nNERVET\nSPLEEN\nPTTARY\nBRNSNG\nOVARY\nLUNG\nKDNCTX\nBRNHPC\nSNTTRM\nBREAST\nUTERUS\nBRNHPT\nSKINNS\nBRNCT\nVAGINA\nADPSBO\nBRNAGD\nBRNPBG\nSKINS\nCLNSGM\nBRNCDB\nBRNNAB\nADPVSC\nCLNTRN\nESPGEL\nBRNATG\nBRNFCT\nWHLBLD\nSLVRYG\nESPMSL\nARTTBL\nARTCRN\nSTMACH\nARTAOT\nADNGLD\nHRTAA\nLIVER\nLCL\nESPMCS\nHRTLV\nPNCREAS\nMUSCLSK\nFIBRBLS\n\n\n0.00914\n0.00723\n0.00674\n0.00615\n0.00565\n0.00563\n0.00536\n0.00523\n0.00497\n0.00482\n0.00478\n0.004705\n0.00465\n0.00463\n0.00463\n0.00454\n0.004515\n0.00445\n0.00431\n0.00429\n0.00429\n0.00422\n0.00416\n0.00415\n0.00414\n0.00411\n0.00407\n0.004065\n0.00401\n0.003955\n0.00391\n0.00389\n0.00382\n0.00373\n0.003705\n0.00369\n0.00357\n0.00352\n0.00345\n0.00344\n0.003435\n0.0034\n0.00316\n0.00311\n0.00296\n0.00265\n0.00246\n0.00245\n0.00186"
+    "objectID": "gofig/plot-fig3-pval-enrich-beta-beta.html#sqtl-tally-gtex",
+    "href": "gofig/plot-fig3-pval-enrich-beta-beta.html#sqtl-tally-gtex",
+    "title": "Figure 3 - sQTL tally, correlation heatmap",
+    "section": "sQTL tally (GTEx)",
+    "text": "sQTL tally (GTEx)\n\n\n\n\n\nGTEx sQTL tally"
   },
   {
-    "objectID": "gofig/plot-fig2-ds-vs-dge.html",
-    "href": "gofig/plot-fig2-ds-vs-dge.html",
-    "title": "Figure 2 - Differential splicing vs. differential expression (GTEx)",
+    "objectID": "gofig/plot-fig3-pval-enrich-beta-beta.html#heatmap-of-eqtl-sqtl-beta-correlation",
+    "href": "gofig/plot-fig3-pval-enrich-beta-beta.html#heatmap-of-eqtl-sqtl-beta-correlation",
+    "title": "Figure 3 - sQTL tally, correlation heatmap",
+    "section": "Heatmap of eQTL sQTL beta correlation",
+    "text": "Heatmap of eQTL sQTL beta correlation\n\n\n\n\n\nHeatmap of eQTL sQTL beta correlation"
+  },
+  {
+    "objectID": "gofig/plot-fig3-pval-enrich-beta-beta.html#sqtl-pvalue-enrichment-in-eqtl-selected-tissues",
+    "href": "gofig/plot-fig3-pval-enrich-beta-beta.html#sqtl-pvalue-enrichment-in-eqtl-selected-tissues",
+    "title": "Figure 3 - sQTL tally, correlation heatmap",
+    "section": "sQTL pvalue enrichment in eQTL (selected tissues)",
+    "text": "sQTL pvalue enrichment in eQTL (selected tissues)"
+  },
+  {
+    "objectID": "gofig/plot-fig2-heatmap.html",
+    "href": "gofig/plot-fig2-heatmap.html",
+    "title": "Figure 2 - Heatmap of unprodoctive splicing by tissues",
     "section": "",
-    "text": "Differential splicing vs. differential expression in GTEx dataset\n\n\n\n\n\n\nNotes\n\n\n\n\nUse GTEx dataset\n\n\n\n\n\n\n\n\n\n\n\nFigure 1: Correlation of differential splicing and differential gene expression\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigure 2: Correlation of DS and DGE: Brain-Cortex vs. Kidney-Cortex"
+    "text": "Heatmap of PSI of unproductive splicing for introns that are commonly differentially spliced across tissues."
+  },
+  {
+    "objectID": "gofig/plot-fig2-heatmap.html#select-a-union-set-of-unproductive-intron-clusters",
+    "href": "gofig/plot-fig2-heatmap.html#select-a-union-set-of-unproductive-intron-clusters",
+    "title": "Figure 2 - Heatmap of unprodoctive splicing by tissues",
+    "section": "Select a union set of unproductive intron clusters",
+    "text": "Select a union set of unproductive intron clusters\nChoose introns based on the following criteria: 1. ds FDR 0.001 2. deltaPSI 0.2 3. dge FDR 0.05 4. select the best unprod. intron from each cluster, then collect cluster ID\n\n\nNumber of clusters to plot: 1012\n\n\n\n\n\n\n\n\n\n\nFigure 1: Heatmap of unproductive splicing by tissues"
+  },
+  {
+    "objectID": "gofig/plot-fig1-unprod-splicing-vs-features.html",
+    "href": "gofig/plot-fig1-unprod-splicing-vs-features.html",
+    "title": "Figure 1 - Unproductive splicing and gene features",
+    "section": "",
+    "text": "Plots for Figure 1"
+  },
+  {
+    "objectID": "gofig/plot-fig1-unprod-splicing-vs-features.html#correlation-between-cluster-level-unproductive-splicing-vs-best-productive-intron-length",
+    "href": "gofig/plot-fig1-unprod-splicing-vs-features.html#correlation-between-cluster-level-unproductive-splicing-vs-best-productive-intron-length",
+    "title": "Figure 1 - Unproductive splicing and gene features",
+    "section": "Correlation between cluster level unproductive splicing vs best productive intron length",
+    "text": "Correlation between cluster level unproductive splicing vs best productive intron length\nCorrelation test of cluster level unprodctive splicing vs. most used productive intron length\n\n\n\n    Spearman's rank correlation rho\n\ndata:  up_plot_dt$intron_len and up_plot_dt$ratio\nS = 9.9617e+11, p-value &lt; 2.2e-16\nalternative hypothesis: true rho is not equal to 0\nsample estimates:\n     rho \n0.161058 \n\n\nIntron length takes the best productive intron of a cluster.\n\n\n\n\n\n\n\n\nFigure 1: Correlation of cluster unproductive reads vs. length most used productive intron"
+  },
+  {
+    "objectID": "gofig/plot-fig1-unprod-splicing-vs-features.html#correlation-between-gene-level-unproductive-splicing-vs-gene-expression",
+    "href": "gofig/plot-fig1-unprod-splicing-vs-features.html#correlation-between-gene-level-unproductive-splicing-vs-gene-expression",
+    "title": "Figure 1 - Unproductive splicing and gene features",
+    "section": "Correlation between gene level unproductive splicing vs gene expression",
+    "text": "Correlation between gene level unproductive splicing vs gene expression\n\n\n\n    Spearman's rank correlation rho\n\ndata:  up_plot_dt.gene$rpkm and up_plot_dt.gene$ratio\nS = 2.1375e+11, p-value &lt; 2.2e-16\nalternative hypothesis: true rho is not equal to 0\nsample estimates:\n       rho \n-0.5710244 \n\n\n\n\n\n\n\n\n\n\nFigure 2: Correlation of unproductive splicing vs. gene expression level"
   },
   {
     "objectID": "analysis/2024-08-15-GWAS-sQTL-coloc-tally.html",
@@ -385,73 +427,31 @@
     "text": "For each GWAS hit locus, collect gwas_name, snp_id, beta, se, and:\n\ntabix all SNPs in the loci, then collect\n\ngene_id, snp_id, beta, se for eqtl (possible to have multiple gene_ids)\nintron_id, snp_id, beta, se for sqtl (possible to have multiple intron_ids) (replace intron_id with concat of gene_id and intron_id)\n\nconstruct beta matrix, where columns are gwas trait, eqtl genes, sqtl introns\nsame for SE matrix\nrun hyprcoloc"
   },
   {
-    "objectID": "gofig/plot-fig1-unprod-splicing-vs-features.html",
-    "href": "gofig/plot-fig1-unprod-splicing-vs-features.html",
-    "title": "Figure 1 - Unproductive splicing and gene features",
-    "section": "",
-    "text": "Plots for Figure 1"
-  },
-  {
-    "objectID": "gofig/plot-fig1-unprod-splicing-vs-features.html#correlation-between-cluster-level-unproductive-splicing-vs-best-productive-intron-length",
-    "href": "gofig/plot-fig1-unprod-splicing-vs-features.html#correlation-between-cluster-level-unproductive-splicing-vs-best-productive-intron-length",
-    "title": "Figure 1 - Unproductive splicing and gene features",
-    "section": "Correlation between cluster level unproductive splicing vs best productive intron length",
-    "text": "Correlation between cluster level unproductive splicing vs best productive intron length\nCorrelation test of cluster level unprodctive splicing vs. most used productive intron length\n\n\n\n    Spearman's rank correlation rho\n\ndata:  up_plot_dt$intron_len and up_plot_dt$ratio\nS = 9.9617e+11, p-value &lt; 2.2e-16\nalternative hypothesis: true rho is not equal to 0\nsample estimates:\n     rho \n0.161058 \n\n\nIntron length takes the best productive intron of a cluster.\n\n\n\n\n\n\n\n\nFigure 1: Correlation of cluster unproductive reads vs. length most used productive intron"
-  },
-  {
-    "objectID": "gofig/plot-fig1-unprod-splicing-vs-features.html#correlation-between-gene-level-unproductive-splicing-vs-gene-expression",
-    "href": "gofig/plot-fig1-unprod-splicing-vs-features.html#correlation-between-gene-level-unproductive-splicing-vs-gene-expression",
-    "title": "Figure 1 - Unproductive splicing and gene features",
-    "section": "Correlation between gene level unproductive splicing vs gene expression",
-    "text": "Correlation between gene level unproductive splicing vs gene expression\n\n\n\n    Spearman's rank correlation rho\n\ndata:  up_plot_dt.gene$rpkm and up_plot_dt.gene$ratio\nS = 2.1375e+11, p-value &lt; 2.2e-16\nalternative hypothesis: true rho is not equal to 0\nsample estimates:\n       rho \n-0.5710244 \n\n\n\n\n\n\n\n\n\n\nFigure 2: Correlation of unproductive splicing vs. gene expression level"
-  },
-  {
-    "objectID": "gofig/plot-fig2-heatmap.html",
-    "href": "gofig/plot-fig2-heatmap.html",
-    "title": "Figure 2 - Heatmap of unprodoctive splicing by tissues",
-    "section": "",
-    "text": "Heatmap of PSI of unproductive splicing for introns that are commonly differentially spliced across tissues."
-  },
-  {
-    "objectID": "gofig/plot-fig2-heatmap.html#select-a-union-set-of-unproductive-intron-clusters",
-    "href": "gofig/plot-fig2-heatmap.html#select-a-union-set-of-unproductive-intron-clusters",
-    "title": "Figure 2 - Heatmap of unprodoctive splicing by tissues",
-    "section": "Select a union set of unproductive intron clusters",
-    "text": "Select a union set of unproductive intron clusters\nChoose introns based on the following criteria: 1. ds FDR 0.001 2. deltaPSI 0.2 3. dge FDR 0.05 4. select the best unprod. intron from each cluster, then collect cluster ID\n\n\nNumber of clusters to plot: 1012\n\n\n\n\n\n\n\n\n\n\nFigure 1: Heatmap of unproductive splicing by tissues"
-  },
-  {
-    "objectID": "gofig/plot-fig3-pval-enrich-beta-beta.html",
-    "href": "gofig/plot-fig3-pval-enrich-beta-beta.html",
-    "title": "Figure 3 - sQTL tally, correlation heatmap",
-    "section": "",
-    "text": "Note\n\n\n\n\nsQTL top SNPs enrichment in eQTL are plotted on this page\nsQTL top SNPs eQTL beta vs. sQTL beta per tissue comparison are also on this page\nsQTL top SNPs eQTL beta vs. sQTL beta summarised heatmap is on this page"
-  },
-  {
-    "objectID": "gofig/plot-fig3-pval-enrich-beta-beta.html#heatmap-of-eqtl-sqtl-beta-correlation",
-    "href": "gofig/plot-fig3-pval-enrich-beta-beta.html#heatmap-of-eqtl-sqtl-beta-correlation",
-    "title": "Figure 3 - sQTL tally, correlation heatmap",
-    "section": "Heatmap of eQTL sQTL beta correlation",
-    "text": "Heatmap of eQTL sQTL beta correlation\n\n\n\n\n\nHeatmap of eQTL sQTL beta correlation"
-  },
-  {
-    "objectID": "gofig/plot-fig3-pval-enrich-beta-beta.html#sqtl-tally-gtex",
-    "href": "gofig/plot-fig3-pval-enrich-beta-beta.html#sqtl-tally-gtex",
-    "title": "Figure 3 - sQTL tally, correlation heatmap",
-    "section": "sQTL tally (GTEx)",
-    "text": "sQTL tally (GTEx)\n\n\n\n\n\nGTEx sQTL tally"
-  },
-  {
-    "objectID": "gofig/plot-fig3-pval-enrich-beta-beta.html#sqtl-pvalue-enrichment-in-eqtl-selected-tissues",
-    "href": "gofig/plot-fig3-pval-enrich-beta-beta.html#sqtl-pvalue-enrichment-in-eqtl-selected-tissues",
-    "title": "Figure 3 - sQTL tally, correlation heatmap",
-    "section": "sQTL pvalue enrichment in eQTL (selected tissues)",
-    "text": "sQTL pvalue enrichment in eQTL (selected tissues)"
-  },
-  {
     "objectID": "analysis/2024-08-29-HyprColoc-input-data-explained.html",
     "href": "analysis/2024-08-29-HyprColoc-input-data-explained.html",
     "title": "Shared HyprColoc GTEx input data",
     "section": "",
-    "text": "Introduction\nI shared the following data set under /share/forGaoLab/GTEx_eqtl_sqtl_input_for_hyprcoloc/. Box link sent separately.\nYou will find the following folders/files:\n\nWholeBlood\nBrain-Anteriorcingulatecortex_BA24_\nGenotype\nHyprColoc_gwas_eQTL_sQTL.R\n\n\n\nWholeBoold & Brain-Anteriorcingulatecortex_BA24_\nThe summary stats are these files, for each chromosome. They are indexed with snp chrom, start, end, so you can use tabix to extract by locus. There are also \\*coloc\\* that you can ignore. These are my coloc results.\n\n\n../code/results/coloc/sqtl-eqtl/GTEx/WholeBlood/chr22.eqtl_nominal.txt.gz\n../code/results/coloc/sqtl-eqtl/GTEx/WholeBlood/chr22.eqtl_nominal.txt.gz.tbi\n../code/results/coloc/sqtl-eqtl/GTEx/WholeBlood/chr22.sqtl_nominal.txt.gz\n../code/results/coloc/sqtl-eqtl/GTEx/WholeBlood/chr22.sqtl_nominal.txt.gz.tbi\n\n\n\n\nGenotype\nI had extracted Genotype vcfs for each tissue. So in this folder you will find GTEx genotype vcf files for each tissue separetely. They are subset from a larger VCF file, containing only GT info for relevant samples. I must have uploaded the original VCF file to /share/forGaoLab/GTEx_Genotype/ previously. So you can use either the subset smaller VCFs or the large one.\nI also included my Rscript on how I run the coloc for your reference. Mainly, I a list of eqtl-sqtl (Gene - intronID) to subset molecular traits first. Then extract summary stats for correponding locus.\nRscript workflow/scripts/HyprColoc_gwas_eQTL_sQTL.R \\\n    resources/GWAS/hg38/AD_hitloci_1en5.bed \\\n    resources/GWAS/hg38/AD.tsv.gz  \\\n    /project/yangili1/cdai/annotations/hg38/gencode.v26.GRCh38.genes.csv \\\n    results/coloc/sqtl-eqtl/GTEx/WholeBlood \\\n    results/coloc/gwas-eqtl-sqtl/GTEx/AD/WholeBlood"
+    "text": "Introduction\nI shared the following data set under /share/forGaoLab/GTEx_eqtl_sqtl_input_for_hyprcoloc/. Box link sent separately.\nYou will find the following folders/files:\n\nWholeBlood\nBrain-Anteriorcingulatecortex_BA24_\nGenotype\nGWAS\nPhenotype_sqtl\nHyprColoc_gwas_eQTL_sQTL.R\n\n\n\nWholeBoold & Brain-Anteriorcingulatecortex_BA24_\nThe summary stats are these files, for each chromosome. They are indexed with snp chrom, start, end, so you can use tabix to extract by locus. There are also \\*coloc\\* that you can ignore. These are my coloc results.\n\n\n../code/results/coloc/sqtl-eqtl/GTEx/WholeBlood/chr22.eqtl_nominal.txt.gz\n../code/results/coloc/sqtl-eqtl/GTEx/WholeBlood/chr22.eqtl_nominal.txt.gz.tbi\n../code/results/coloc/sqtl-eqtl/GTEx/WholeBlood/chr22.sqtl_nominal.txt.gz\n../code/results/coloc/sqtl-eqtl/GTEx/WholeBlood/chr22.sqtl_nominal.txt.gz.tbi\n\n\n\n\nGenotype\nI had extracted Genotype vcfs for each tissue. So in this folder you will find GTEx genotype vcf files for each tissue separetely. They are subset from a larger VCF file, containing only GT info for relevant samples. I must have uploaded the original VCF file to /share/forGaoLab/GTEx_Genotype/ previously. So you can use either the subset smaller VCFs or the large one.\nI also included my Rscript on how I run the coloc for your reference. Mainly, I a list of eqtl-sqtl (Gene - intronID) to subset molecular traits first. Then extract summary stats for correponding locus.\nRscript workflow/scripts/HyprColoc_gwas_eQTL_sQTL.R \\\n    resources/GWAS/hg38/AD_hitloci_1en5.bed \\\n    resources/GWAS/hg38/AD.tsv.gz  \\\n    /project/yangili1/cdai/annotations/hg38/gencode.v26.GRCh38.genes.csv \\\n    results/coloc/sqtl-eqtl/GTEx/WholeBlood \\\n    results/coloc/gwas-eqtl-sqtl/GTEx/AD/WholeBlood\n\n\n\nGWAS\nThe hg38 includes lifted and cleaned up GWAS summary stats for 4 GWAS, AD, PD, Height, and Type2 diabetes, link.\n\n*tsv.gz files are lifted and cleaned full summary stats. Indexed, so can retrieve by locus with tabix.\n*hitloci_1en5.bed are constructed 1Mb (or I may have used 1.5Mb) region flanking lead SNP. Lead snps are all &lt; 1e-5 pval.\n\n\n\nPhenotype_sqtl\nThis folder house qqnormalized files. I just copied everything from my directory. So there are files you don’t need. The ones you need are like these files:\n\n\n../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr10.gz\n../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr11.gz\n../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr12.gz\n../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr13.gz\n../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr14.gz\n../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr15.gz\n../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr16.gz\n../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr17.gz\n../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr18.gz\n../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr19.gz\n../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr1.gz\n../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr20.gz\n../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr21.gz\n../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr22.gz\n../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr2.gz\n../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr3.gz\n../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr4.gz\n../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr5.gz\n../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr6.gz\n../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr7.gz\n../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr8.gz\n../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr9.gz"
+  },
+  {
+    "objectID": "gofig/plot-fig2-ds-vs-dge.html",
+    "href": "gofig/plot-fig2-ds-vs-dge.html",
+    "title": "Figure 2 - Differential splicing vs. differential expression (GTEx)",
+    "section": "",
+    "text": "Differential splicing vs. differential expression in GTEx dataset\n\n\n\n\n\n\nNotes\n\n\n\n\nUse GTEx dataset\n\n\n\n\n\n\n\n\n\n\n\nFigure 1: Correlation of differential splicing and differential gene expression\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigure 2: Correlation of DS and DGE: Brain-Cortex vs. Kidney-Cortex"
+  },
+  {
+    "objectID": "gofig/plot-fig2-unprod-splicing-by-tissue.html",
+    "href": "gofig/plot-fig2-unprod-splicing-by-tissue.html",
+    "title": "Figure 2 - Unproductive splicing by tissue (GTEx)",
+    "section": "",
+    "text": "Unproductive splicing by tissue (GTEx)"
+  },
+  {
+    "objectID": "gofig/plot-fig2-unprod-splicing-by-tissue.html#plot-box-plot-of-unproductive-splicing-by-tissue",
+    "href": "gofig/plot-fig2-unprod-splicing-by-tissue.html#plot-box-plot-of-unproductive-splicing-by-tissue",
+    "title": "Figure 2 - Unproductive splicing by tissue (GTEx)",
+    "section": "Plot box plot of unproductive splicing by tissue",
+    "text": "Plot box plot of unproductive splicing by tissue\n\n\n\n\n\n\n\n\nFigure 1: Unproductive splicing by tissue\n\n\n\n\n\n\n\n\n\nTable 1: Tissue code lookup\n\n\n\n\n\n\n\n\n\n\nV1\nV2\nV3\nV4\nV5\nV6\nV7\nV8\nV9\nV10\nV11\nV12\nV13\nV14\nV15\nV16\nV17\nV18\nV19\nV20\nV21\nV22\nV23\nV24\nV25\nV26\nV27\nV28\nV29\nV30\nV31\nV32\nV33\nV34\nV35\nV36\nV37\nV38\nV39\nV40\nV41\nV42\nV43\nV44\nV45\nV46\nV47\nV48\nV49\n\n\n\n\nTestis\nBrain-Cerebellum\nBrain-CerebellarHemisphere\nBrain-Spinalcord_cervicalc-1_\nThyroid\nProstate\nNerve-Tibial\nSpleen\nPituitary\nBrain-Substantianigra\nOvary\nLung\nKidney-Cortex\nBrain-Hippocampus\nSmallIntestine-TerminalIleum\nBreast-MammaryTissue\nUterus\nBrain-Hypothalamus\nSkin-NotSunExposed_Suprapubic_\nBrain-Cortex\nVagina\nAdipose-Subcutaneous\nBrain-Amygdala\nBrain-Putamen_basalganglia_\nSkin-SunExposed_Lowerleg_\nColon-Sigmoid\nBrain-Caudate_basalganglia_\nBrain-Nucleusaccumbens_basalganglia_\nAdipose-Visceral_Omentum_\nColon-Transverse\nEsophagus-GastroesophagealJunction\nBrain-Anteriorcingulatecortex_BA24_\nBrain-FrontalCortex_BA9_\nWholeBlood\nMinorSalivaryGland\nEsophagus-Muscularis\nArtery-Tibial\nArtery-Coronary\nStomach\nArtery-Aorta\nAdrenalGland\nHeart-AtrialAppendage\nLiver\nCells-EBV-transformedlymphocytes\nEsophagus-Mucosa\nHeart-LeftVentricle\nPancreas\nMuscle-Skeletal\nCells-Culturedfibroblasts\n\n\nTESTIS\nBRNCB\nBRNCBH\nBRNSPC\nTHYROID\nPRSTTE\nNERVET\nSPLEEN\nPTTARY\nBRNSNG\nOVARY\nLUNG\nKDNCTX\nBRNHPC\nSNTTRM\nBREAST\nUTERUS\nBRNHPT\nSKINNS\nBRNCT\nVAGINA\nADPSBO\nBRNAGD\nBRNPBG\nSKINS\nCLNSGM\nBRNCDB\nBRNNAB\nADPVSC\nCLNTRN\nESPGEL\nBRNATG\nBRNFCT\nWHLBLD\nSLVRYG\nESPMSL\nARTTBL\nARTCRN\nSTMACH\nARTAOT\nADNGLD\nHRTAA\nLIVER\nLCL\nESPMCS\nHRTLV\nPNCREAS\nMUSCLSK\nFIBRBLS\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTable 2: Median unproductive splicing ratio by tissue\n\n\n\n\n\n\n\n\n\n\nV1\nV2\nV3\nV4\nV5\nV6\nV7\nV8\nV9\nV10\nV11\nV12\nV13\nV14\nV15\nV16\nV17\nV18\nV19\nV20\nV21\nV22\nV23\nV24\nV25\nV26\nV27\nV28\nV29\nV30\nV31\nV32\nV33\nV34\nV35\nV36\nV37\nV38\nV39\nV40\nV41\nV42\nV43\nV44\nV45\nV46\nV47\nV48\nV49\n\n\n\n\nTESTIS\nBRNCB\nBRNCBH\nBRNSPC\nTHYROID\nPRSTTE\nNERVET\nSPLEEN\nPTTARY\nBRNSNG\nOVARY\nLUNG\nKDNCTX\nBRNHPC\nSNTTRM\nBREAST\nUTERUS\nBRNHPT\nSKINNS\nBRNCT\nVAGINA\nADPSBO\nBRNAGD\nBRNPBG\nSKINS\nCLNSGM\nBRNCDB\nBRNNAB\nADPVSC\nCLNTRN\nESPGEL\nBRNATG\nBRNFCT\nWHLBLD\nSLVRYG\nESPMSL\nARTTBL\nARTCRN\nSTMACH\nARTAOT\nADNGLD\nHRTAA\nLIVER\nLCL\nESPMCS\nHRTLV\nPNCREAS\nMUSCLSK\nFIBRBLS\n\n\n0.00914\n0.00723\n0.00674\n0.00615\n0.00565\n0.00563\n0.00536\n0.00523\n0.00497\n0.00482\n0.00478\n0.004705\n0.00465\n0.00463\n0.00463\n0.00454\n0.004515\n0.00445\n0.00431\n0.00429\n0.00429\n0.00422\n0.00416\n0.00415\n0.00414\n0.00411\n0.00407\n0.004065\n0.00401\n0.003955\n0.00391\n0.00389\n0.00382\n0.00373\n0.003705\n0.00369\n0.00357\n0.00352\n0.00345\n0.00344\n0.003435\n0.0034\n0.00316\n0.00311\n0.00296\n0.00265\n0.00246\n0.00245\n0.00186"
   }
 ]

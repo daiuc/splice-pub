@@ -22,6 +22,8 @@ You will find the following folders/files:
   - `WholeBlood`
   - `Brain-Anteriorcingulatecortex_BA24_`
   - `Genotype`
+  - `GWAS`
+  - `Phenotype_sqtl`
   - `HyprColoc_gwas_eQTL_sQTL.R`
 
 
@@ -56,5 +58,21 @@ Rscript workflow/scripts/HyprColoc_gwas_eQTL_sQTL.R \
 ```
 
 
+# GWAS
+
+The hg38 includes lifted and cleaned up GWAS summary stats for 4 GWAS, AD, PD, Height, and Type2 diabetes, [link](2024-06-15-GWAS-list.qmd). 
+
+- `*tsv.gz` files are lifted and cleaned full summary stats. Indexed, so can retrieve by locus with tabix.
+- `*hitloci_1en5.bed` are constructed 1Mb (or I may have used 1.5Mb) region flanking lead SNP. Lead snps are all < 1e-5 pval.
+
+
+# Phenotype_sqtl
+
+This folder house qqnormalized files. I just copied everything from my directory. So there are files you don't need. The ones you need are
+like these files:
+
+```{bash}
+ls -1 ../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr*.gz
+```
 
 

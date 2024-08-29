@@ -116,6 +116,8 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#wholeboold-brain-anteriorcingulatecortex_ba24_" id="toc-wholeboold-brain-anteriorcingulatecortex_ba24_" class="nav-link" data-scroll-target="#wholeboold-brain-anteriorcingulatecortex_ba24_">WholeBoold &amp; Brain-Anteriorcingulatecortex_BA24_</a></li>
   <li><a href="#genotype" id="toc-genotype" class="nav-link" data-scroll-target="#genotype">Genotype</a></li>
+  <li><a href="#gwas" id="toc-gwas" class="nav-link" data-scroll-target="#gwas">GWAS</a></li>
+  <li><a href="#phenotype_sqtl" id="toc-phenotype_sqtl" class="nav-link" data-scroll-target="#phenotype_sqtl">Phenotype_sqtl</a></li>
   </ul>
 </nav>
     </div>
@@ -158,13 +160,15 @@ ul.task-list li input[type="checkbox"] {
 <li><code>WholeBlood</code></li>
 <li><code>Brain-Anteriorcingulatecortex_BA24_</code></li>
 <li><code>Genotype</code></li>
+<li><code>GWAS</code></li>
+<li><code>Phenotype_sqtl</code></li>
 <li><code>HyprColoc_gwas_eQTL_sQTL.R</code></li>
 </ul>
 </section>
 <section id="wholeboold-brain-anteriorcingulatecortex_ba24_" class="level1">
 <h1>WholeBoold &amp; Brain-Anteriorcingulatecortex_BA24_</h1>
 <p>The summary stats are these files, for each chromosome. They are indexed with snp chrom, start, end, so you can use tabix to extract by locus. There are also <code>\*coloc\*</code> that you can ignore. These are my coloc results.</p>
-<div id="0459af00" class="cell" data-execution_count="1">
+<div id="d97fc7b6" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-stdout">
 <pre><code>../code/results/coloc/sqtl-eqtl/GTEx/WholeBlood/chr22.eqtl_nominal.txt.gz
 ../code/results/coloc/sqtl-eqtl/GTEx/WholeBlood/chr22.eqtl_nominal.txt.gz.tbi
@@ -184,6 +188,44 @@ ul.task-list li input[type="checkbox"] {
     results/coloc/sqtl-eqtl/GTEx/WholeBlood \
     results/coloc/gwas-eqtl-sqtl/GTEx/AD/WholeBlood
 </code></pre>
+</section>
+<section id="gwas" class="level1">
+<h1>GWAS</h1>
+<p>The hg38 includes lifted and cleaned up GWAS summary stats for 4 GWAS, AD, PD, Height, and Type2 diabetes, <a href="../analysis/2024-06-15-GWAS-list.html">link</a>.</p>
+<ul>
+<li><code>*tsv.gz</code> files are lifted and cleaned full summary stats. Indexed, so can retrieve by locus with tabix.</li>
+<li><code>*hitloci_1en5.bed</code> are constructed 1Mb (or I may have used 1.5Mb) region flanking lead SNP. Lead snps are all &lt; 1e-5 pval.</li>
+</ul>
+</section>
+<section id="phenotype_sqtl" class="level1">
+<h1>Phenotype_sqtl</h1>
+<p>This folder house qqnormalized files. I just copied everything from my directory. So there are files you don’t need. The ones you need are like these files:</p>
+<div id="75fe8c66" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-stdout">
+<pre><code>../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr10.gz
+../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr11.gz
+../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr12.gz
+../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr13.gz
+../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr14.gz
+../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr15.gz
+../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr16.gz
+../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr17.gz
+../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr18.gz
+../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr19.gz
+../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr1.gz
+../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr20.gz
+../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr21.gz
+../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr22.gz
+../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr2.gz
+../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr3.gz
+../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr4.gz
+../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr5.gz
+../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr6.gz
+../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr7.gz
+../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr8.gz
+../code/results/pheno/noisy/GTEx/WholeBlood/separateNoise/leafcutter.qqnorm_chr9.gz</code></pre>
+</div>
+</div>
 
 
 </section>
