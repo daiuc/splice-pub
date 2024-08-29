@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/analysis/2024-08-29-HyprColoc-input-data-explained.html",
       "/gofig/plot-fig2-heatmap.html",
       "/gofig/plot-fig3-pval-enrich-beta-beta.html",
       "/gofig/plot-fig1-unprod-splicing-vs-features.html",

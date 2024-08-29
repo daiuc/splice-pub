@@ -1,0 +1,60 @@
+
+---
+title: "Shared HyprColoc GTEx input data"
+date: 2024-8-29
+format: html
+categories: ['datasharing']
+execute:
+  include: true
+  eval: true
+  cache: false
+  echo: false
+---
+
+
+# Introduction
+
+
+I shared the following data set under `/share/forGaoLab/GTEx_eqtl_sqtl_input_for_hyprcoloc/`. Box link sent separately.
+
+You will find the following folders/files:
+
+  - `WholeBlood`
+  - `Brain-Anteriorcingulatecortex_BA24_`
+  - `Genotype`
+  - `HyprColoc_gwas_eQTL_sQTL.R`
+
+
+# WholeBoold & Brain-Anteriorcingulatecortex_BA24_
+
+The summary stats are these files, for each chromosome. They are indexed with snp chrom, start, end, so you can use tabix to extract by locus.
+There are also `\*coloc\*` that you can ignore. These are my coloc results.
+
+```{bash}
+ls -1 ../code/results/coloc/sqtl-eqtl/GTEx/WholeBlood/chr22*nominal*
+```
+
+
+# Genotype
+
+I had extracted Genotype vcfs for each tissue. So in this folder you will find GTEx genotype vcf files for each tissue separetely. They are subset from
+a larger VCF file, containing only GT info for relevant samples. I must have uploaded the original VCF file to `/share/forGaoLab/GTEx_Genotype/` previously.
+So you can use either the subset smaller VCFs or the large one.
+
+
+I also included my Rscript on how I run the coloc for your reference. Mainly, I a list of eqtl-sqtl (Gene - intronID) to subset molecular traits first.
+Then extract summary stats for correponding locus.
+
+```
+Rscript workflow/scripts/HyprColoc_gwas_eQTL_sQTL.R \
+    resources/GWAS/hg38/AD_hitloci_1en5.bed \
+    resources/GWAS/hg38/AD.tsv.gz  \
+    /project/yangili1/cdai/annotations/hg38/gencode.v26.GRCh38.genes.csv \
+    results/coloc/sqtl-eqtl/GTEx/WholeBlood \
+    results/coloc/gwas-eqtl-sqtl/GTEx/AD/WholeBlood
+
+```
+
+
+
+

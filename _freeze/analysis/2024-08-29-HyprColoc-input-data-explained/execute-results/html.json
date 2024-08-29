@@ -1,0 +1,12 @@
+{
+  "hash": "a60d7a59e7b5be74353e577c7896054d",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"Shared HyprColoc GTEx input data\"\ndate: 2024-8-29\nformat: html\ncategories: ['datasharing']\nexecute:\n  include: true\n  eval: true\n  cache: false\n  echo: false\n---\n\n# Introduction\n\n\nI shared the following data set under `/share/forGaoLab/GTEx_eqtl_sqtl_input_for_hyprcoloc/`. Box link sent separately.\n\nYou will find the following folders/files:\n\n  - `WholeBlood`\n  - `Brain-Anteriorcingulatecortex_BA24_`\n  - `Genotype`\n  - `HyprColoc_gwas_eQTL_sQTL.R`\n\n\n# WholeBoold & Brain-Anteriorcingulatecortex_BA24_\n\nThe summary stats are these files, for each chromosome. They are indexed with snp chrom, start, end, so you can use tabix to extract by locus.\nThere are also `\\*coloc\\*` that you can ignore. These are my coloc results.\n\n::: {#0459af00 .cell execution_count=1}\n\n::: {.cell-output .cell-output-stdout}\n```\n../code/results/coloc/sqtl-eqtl/GTEx/WholeBlood/chr22.eqtl_nominal.txt.gz\n../code/results/coloc/sqtl-eqtl/GTEx/WholeBlood/chr22.eqtl_nominal.txt.gz.tbi\n../code/results/coloc/sqtl-eqtl/GTEx/WholeBlood/chr22.sqtl_nominal.txt.gz\n../code/results/coloc/sqtl-eqtl/GTEx/WholeBlood/chr22.sqtl_nominal.txt.gz.tbi\n```\n:::\n:::\n\n\n# Genotype\n\nI had extracted Genotype vcfs for each tissue. So in this folder you will find GTEx genotype vcf files for each tissue separetely. They are subset from\na larger VCF file, containing only GT info for relevant samples. I must have uploaded the original VCF file to `/share/forGaoLab/GTEx_Genotype/` previously.\nSo you can use either the subset smaller VCFs or the large one.\n\n\nI also included my Rscript on how I run the coloc for your reference. Mainly, I a list of eqtl-sqtl (Gene - intronID) to subset molecular traits first.\nThen extract summary stats for correponding locus.\n\n```\nRscript workflow/scripts/HyprColoc_gwas_eQTL_sQTL.R \\\n    resources/GWAS/hg38/AD_hitloci_1en5.bed \\\n    resources/GWAS/hg38/AD.tsv.gz  \\\n    /project/yangili1/cdai/annotations/hg38/gencode.v26.GRCh38.genes.csv \\\n    results/coloc/sqtl-eqtl/GTEx/WholeBlood \\\n    results/coloc/gwas-eqtl-sqtl/GTEx/AD/WholeBlood\n\n```\n\n",
+    "supporting": [
+      "2024-08-29-HyprColoc-input-data-explained_files/figure-html"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}

@@ -41,6 +41,7 @@ httpgd::hgd(host = "10.50.250.200", port = 9696, token = FALSE)
 suppressMessages(library(tidyverse))
 suppressMessages(library(glue))
 suppressMessages(library(data.table))
+suppressMessages(library(ggrastr))
 
 suppressMessages(library(cowplot))
 theme_set(theme_cowplot(font_size = 14, font_family = "Helvetica"))
@@ -177,7 +178,14 @@ p1 = plot_dt %>%
         axis.text.x = element_text(angle = 90, hjust = 1)
         )
 
+
+# rasterize geom_point
+p2 = rasterize(p1, layers = "point", dpi = 300)
+
+# save completely vectorized and partially rasterized versions
 ggsave("./plot-fig2-unprod-splicing-by-tissue-gtex.svg", p1, width = 17, height = 5)
+ggsave("./plot-fig2-unprod-splicing-by-tissue-gtex-rasterized.svg", p2, width = 17, height = 5)
+
 
 ```
 
