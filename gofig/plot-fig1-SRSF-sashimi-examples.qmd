@@ -1,0 +1,124 @@
+---
+title: Figure 1 - Unproductive splicing in SRSF genes
+date: '2024-09-05'
+code-fold: true
+execute:
+  include: false
+  eval: false
+  echo: false
+  warning: false
+  message: false
+categories:
+  - figures
+  - manuscript
+---
+
+Plots for Figure 1
+
+- Find unproductive splicing examples in SRSF genes. 
+- SRSF genes are with gene names `SRSF[1-12]`
+
+
+
+
+```{r}
+# never knit
+httpgd::hgd(host = "10.50.250.200", port = 9696, token = FALSE)
+```
+
+
+```{r}
+#| label: setup
+#| eval: true
+
+suppressMessages(library(tidyverse))
+suppressMessages(library(glue))
+suppressMessages(library(data.table))
+suppressMessages(library(bedtoolsr))
+
+```
+
+
+
+
+```{r}
+#| label: load-data
+#| eval: true
+#| cache: true
+
+lf2 = fread("../code/results/pheno/noisy/Geuvadis/EUR/leafcutter_perind_numers.counts.noise_by_intron.gz")
+dcols = colnames(lf2)[2:ncol(lf2)]
+lf2 = lf2 %>% 
+    separate("chrom", c("chr", "start", "end", "clu", "itype"), ":") %>%
+    mutate(start = as.integer(start),
+           end = as.integer(end),
+           strand = str_sub(clu, -1, -1)) %>%
+    mutate(clu = str_remove(clu, "_[\\+\\-]$")) %>% 
+    as.data.table
+lf2 = lf2[, c("chr", "start", "end", "strand", "clu", "itype", dcols), with = FALSE]
+lf2$id = glue("{lf2$chr}:{lf2$start}-{lf2$end}:{lf2$strand}:{lf2$clu}")
+
+gtf = fread("../../annotations/hg38/gencode.v43.primary_assembly.annotation.csv.gz") %>%
+    .[feature == "gene" & gene_type == "protein_coding", 1:11]
+SRSF_genes = gtf[str_detect(gene_name, "SRSF\\d+"), .(seqname, start, end, strand, gene_name)]
+rm(gtf)
+
+```
+
+
+
+```{r}
+#| include: true
+#| eval: true
+
+hits = bt.intersect(
+    a = lf2[, .(chr, start, end, clu, itype, strand, id)],
+    b = SRSF_genes[, .(seqname, start, end, gene_name, score = 999, strand)],
+    wa = TRUE, wb = TRUE, s = TRUE, f = 0.99
+)
+hits = as.data.table(hits) %>% 
+    .[V2 >= V9 & V3 <= V10,
+      .(chr = V1, start = V2, end = V3, clu = V4, itype = V5, strand = V6, id = V7, gene_name = V11)
+    ] %>% 
+    .[ itype %in% c("UP", "PR")]
+
+```
+
+Make sashimi plots of these intron ids
+```{r}
+#| include: true
+#| eval: true
+hits$chrom = glue("{hits$chr}:{hits$start}:{hits$end}:{hits$clu}_{hits$strand}:{hits$itype}")
+hits[order(clu, chrom), -c("id")] %>%
+    DT::datatable()
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

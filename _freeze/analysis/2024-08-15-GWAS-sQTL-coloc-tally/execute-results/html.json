@@ -1,5 +1,5 @@
 {
-  "hash": "de499735551e9eda3798ffbe194f64bc",
+  "hash": "db5db259f94f8ae55be79b36aab72c36",
   "result": {
     "engine": "knitr",
     "markdown": "---\ntitle: \"Summarise coloc for GWAS eQTL sQTL\"\ndate: 2024-8-15\nparams:\n  pip: 0.5\nformat: html\ncategories: ['GWAS', 'coloc', 'sQTL']\ncode-fold: true\nexecute:\n  include: false\n  eval: false\n  cache: false\n  echo: false\n---\n\n\n\n::: {.callout-tip}\n## Note\n\n- GES: GWAS eQTL sQTL\n- GE: GWAS eQTL\n- GS: GWAS sQTL\n\nColoc loci selected with PIP > 0.5\n\nGWAS hit loci are constructed with 1MB window centering on the lead SNP (< 1e-5) \n\n:::\n\n\n\n\n\n\n\n\n\n\n# AD\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNumber of AD, eQTL only coloc\n\n\n\n\n\n\n\n\n\n\n\n\n\n# PD\n\n\n\n\n\n\n\n\n\n\n\nNumber of PD, eQTL only coloc\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n# Height\n\n\n\n\n\n\n\n\n\n\nNumber of HT, eQTL only coloc\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n# T2D (Type 2 Diabetes)\n\n\n\n\n\n\n\n\n\nNumber of T2D, eQTL only coloc\n\n\n\n\n\n\n\n\n\n\n::: {.cell}\n::: {.cell-output-display}\n![Percentage of loci with GWAS, eQTL, sQTL coloc](2024-08-15-GWAS-sQTL-coloc-tally_files/figure-html/fig-coloc-percent-1.png){#fig-coloc-percent width=100%}\n:::\n:::\n",

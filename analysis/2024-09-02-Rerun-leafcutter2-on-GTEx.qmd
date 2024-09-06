@@ -1,0 +1,217 @@
+---
+title: "Check rerun of leafcutter2 on select GTEx tissues and Geuvadis"
+date: 2024-9-2
+format: html
+categories: ['test', 'leafcutter2']
+code-fold: true
+execute:
+  include: false
+  eval: false
+  cache: false
+  echo: false
+---
+
+
+```{r}
+#| label: functions
+#| eval: true
+
+suppressMessages(library(dplyr))
+suppressMessages(library(tidyr))
+suppressMessages(library(stringr))
+suppressMessages(library(purrr))
+suppressMessages(library(data.table))
+suppressMessages(library(glue))
+
+lf2 = function(f) {
+    df = fread(f)
+    dcols = colnames(df)[2:ncol(df)]
+    m = df[, .(m = rowMeans(.SD)), .SDcols = dcols]
+    df = separate(df[, .(chrom)], "chrom", c("chr", "start", "end", "clu", "itype"), sep = ":") %>% 
+        mutate(strand = str_sub(clu, -1, -1)) %>% 
+        mutate(clu = str_remove(clu, "_[\\+\\-]$")) %>%
+        as.data.table
+    df = cbind(df, m)
+    return(df)
+}
+
+sqtl = function(folder, pattern) {
+    files = dir(folder, pattern, full.names = TRUE)
+    df = map_dfr(files, fread)
+    df$itype = str_sub(df$phenotype_id, -2, -1)
+    df = df[, .N, by = itype][, .(itype, N, P = round(N/sum(N), 3))]
+
+    return(df)
+}
+
+
+```
+
+
+# Introduction
+
+
+A quick check of the leafcutter2 rerun on select GTEx tissues and Geuvadis. 
+
+What's being compared: 
+
+- leafcutter output
+- mapped sqtls
+
+GTEx: Kidney-Cortex, about 90 smaples. Geuvadis, EUR 300-400 samples.
+
+
+# Leafcutter2 output
+
+
+```{r}
+#| eval: true
+#| cache: true
+lf.geu = lf2("../code/results/pheno/noisy/Geuvadis/EUR/leafcutter_perind_numers.counts.noise_by_intron.gz")
+
+lf.geu.o = lf2("../code/results/pheno/noisy/Geuvadis/EUR-run-Jun-2024/leafcutter_perind_numers.counts.noise_by_intron.gz")
+
+lf.gtx = lf2("../code/results/pheno/noisy/GTEx/Kidney-Cortex/leafcutter_perind_numers.counts.noise_by_intron.gz")
+lf.gtx.o = lf2("../code/results/pheno/noisy/GTEx/Kidney-Cortex-run-may-2024/leafcutter_perind_numers.counts.noise_by_intron.gz")
+
+```
+
+
+## Geuvadis
+
+```{r}
+#| eval: true
+#| include: true
+
+lf.geu %>% head
+lf.geu %>% dim
+```
+
+```{r}
+#| eval: true
+#| include: true
+
+lf.geu.o %>% head
+lf.geu.o %>% dim
+```
+
+
+Does the mean reads match for each intron?
+
+```{r}
+#| eval: true
+#| include: true
+full_join(
+    lf.geu[, -c("clu")],
+    lf.geu.o[, -c("clu")],
+    by = c("chr", "start", "end", "strand"),
+    suffix = c(".new", ".old")
+) %>% 
+    .[, .(.N), by = .(Match_m = m.new == m.old)]
+```
+
+Does the itypes match for each intron?
+
+```{r}
+#| eval: true
+#| include: true
+full_join(
+    lf.geu[, -c("clu")],
+    lf.geu.o[, -c("clu")],
+    by = c("chr", "start", "end", "strand"),
+    suffix = c(".new", ".old")
+) %>% 
+    .[, .(.N), by = .(Match_itype = itype.new == itype.old, itype.new, itype.old)] %>% 
+    .[, .(Match_itype, itype.new, itype.old, N, P = round(N/sum(N), 3))] %>% 
+    .[order(Match_itype, -P)]
+```
+
+## GTEx
+
+```{r}
+#| eval: true
+#| include: true
+
+lf.gtx %>% head
+lf.gtx %>% dim
+```
+
+```{r}
+#| eval: true
+#| include: true
+
+lf.gtx.o %>% head
+lf.gtx.o %>% dim
+```
+
+
+Does the mean reads match for each intron?
+
+```{r}
+#| eval: true
+#| include: true
+full_join(
+    lf.gtx[, -c("clu")],
+    lf.gtx.o[, -c("clu")],
+    by = c("chr", "start", "end", "strand"),
+    suffix = c(".new", ".old")
+) %>% 
+    .[, .(.N), by = .(Match_m = m.new == m.old)]
+```
+
+Does the itypes match for each intron?
+
+```{r}
+#| eval: true
+#| include: true
+full_join(
+    lf.gtx[, -c("clu")],
+    lf.gtx.o[, -c("clu")],
+    by = c("chr", "start", "end", "strand"),
+    suffix = c(".new", ".old")
+) %>% 
+    .[, .(.N), by = .(Match_itype = itype.new == itype.old, itype.new, itype.old)] %>% 
+    .[, .(Match_itype, itype.new, itype.old, N, P = round(N/sum(N), 3))] %>% 
+    .[order(Match_itype, -P)]
+```
+
+
+
+# sQTLs
+
+ 
+```{r}
+#| eval: true
+#| cache: true
+
+sqtls.geu = sqtl("../code/results/qtl/noisy/Geuvadis/EUR/separateNoise/cis_100000/perm/", "*.addQval.txt.gz")
+sqtls.geu.o = sqtl("../code/results/qtl/noisy/Geuvadis/EUR-run-may-2024/separateNoise/cis_100000/perm/", "*.addQval.txt.gz")
+
+sqtls.gtx = sqtl("../code/results/qtl/noisy/GTEx/Kidney-Cortex/separateNoise/cis_100000/perm/", "*.addQval.txt.gz")
+sqtls.gtx.o = sqtl("../code/results/qtl/noisy/GTEx/Kidney-Cortex-run-aug-2024/separateNoise/cis_100000/perm/", "*.addQval.txt.gz")
+```
+
+## Geuvadis
+
+```{r}
+#| eval: true
+#| include: true
+sqtls.geu[order(itype)]
+
+sqtls.geu.o[order(itype)]
+```
+
+
+## GTEx
+
+```{r}
+#| eval: true
+#| include: true
+sqtls.gtx[order(itype)]
+
+sqtls.gtx.o[order(itype)]
+```
+
+
+
+
