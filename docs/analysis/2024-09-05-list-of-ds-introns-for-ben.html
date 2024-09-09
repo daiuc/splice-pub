@@ -8,7 +8,7 @@
 
 <meta name="dcterms.date" content="2024-09-05">
 
-<title>mysite - Figure 1 - Unproductive splicing in SRSF genes</title>
+<title>mysite - List of differentially spliced junctions</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -67,16 +101,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<link href="../site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
-<script src="../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
-<link href="../site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
-<script src="../site_libs/datatables-binding-0.33/datatables.js"></script>
-<script src="../site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-<link href="../site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
-<link href="../site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
-<script src="../site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
-<link href="../site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
-<script src="../site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
 
 
 <link rel="stylesheet" href="../styles.css">
@@ -123,7 +147,12 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#available-gtex-bigwig-files" id="toc-available-gtex-bigwig-files" class="nav-link active" data-scroll-target="#available-gtex-bigwig-files">Available GTEx bigwig files</a></li>
+  <li><a href="#list-of-differentially-spliced-junctions" id="toc-list-of-differentially-spliced-junctions" class="nav-link active" data-scroll-target="#list-of-differentially-spliced-junctions">List of differentially spliced junctions</a></li>
+  <li><a href="#join-differentially-expressed-genes-and-differentially-spliced-junctions" id="toc-join-differentially-expressed-genes-and-differentially-spliced-junctions" class="nav-link" data-scroll-target="#join-differentially-expressed-genes-and-differentially-spliced-junctions">Join differentially expressed genes and differentially spliced junctions</a></li>
+  <li><a href="#other-previously-prepared-data" id="toc-other-previously-prepared-data" class="nav-link" data-scroll-target="#other-previously-prepared-data">Other previously prepared data</a>
+  <ul class="collapse">
+  <li><a href="#clusters-selected-for-plotting-heatmaps" id="toc-clusters-selected-for-plotting-heatmaps" class="nav-link" data-scroll-target="#clusters-selected-for-plotting-heatmaps">Clusters selected for plotting heatmaps</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -132,12 +161,8 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Figure 1 - Unproductive splicing in SRSF genes</h1>
-  <div class="quarto-categories">
-    <div class="quarto-category">figures</div>
-    <div class="quarto-category">manuscript</div>
-  </div>
-  </div>
+<h1 class="title">List of differentially spliced junctions</h1>
+</div>
 
 
 
@@ -159,36 +184,97 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Plots for Figure 1</p>
+<blockquote class="blockquote">
+<p>im making good progress on re-analyzing that comprative rna-seq data leafcutter2 style… but after discussing a little with yang today, we have an idea for a figure panel that would involve identifying a nice example of a conserved unproductive splice event that is also present in your GTEx cross-tissue differential splicing analysis. Can you share a list of junctions that are differentially spliced any pair of GTEx tissues that you looked at. Like, ideal would be a text file of human junction coordinates, and the tissue pairs from which the differential splicing was done, and a beta (so I can see if the direction of the effect is same in other other species).</p>
+</blockquote>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Notes
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <ul>
-<li>Find unproductive splicing examples in SRSF genes.</li>
-<li>SRSF genes are with gene names <code>SRSF[1-12]</code></li>
+<li>Results here are before the recent implementation of foward splicing junction classifer and bug fixes.</li>
 </ul>
-<p>Make sashimi plots of these intron ids</p>
-<div class="cell">
-<div class="cell-output-display">
-<div class="datatables html-widget html-fill-item" id="htmlwidget-dd3475104d37f3ffa11f" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-dd3475104d37f3ffa11f">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121"],["chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr6","chr6","chr6","chr6","chr6","chr6","chr6","chr6","chr6","chr6","chr6","chr11","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr1","chr12","chr12","chr12","chr12","chr12","chr12","chr14","chr14","chr14","chr14","chr14","chr14","chr14","chr14","chr14","chr14","chr14","chr14","chr14","chr14","chr14","chr14","chr17","chr17","chr17","chr17","chr17","chr17","chr17","chr17","chr17","chr17","chr17","chr17","chr17","chr17","chr17","chr17","chr17","chr17","chr17","chr17","chr20","chr20","chr20","chr20","chr20","chr20","chr20","chr20","chr20","chr2","chr2","chr2","chr2","chr2","chr2","chr2","chr2","chr2","chr2","chr2","chr2","chr2","chr2"],[70205780,70205780,70221400,70228555,70228555,70228555,70228555,70228555,70230050,70230618,70231203,70231203,70231975,70244815,70244827,70246907,70246907,70246907,70247149,70250503,70250503,36594481,36596968,36596968,36596968,36597679,36598526,36598983,36598983,36600276,89105260,89107258,95068183,23967723,23967723,23967723,23967956,23967956,23971439,23971620,23971623,23971626,23975051,23975070,23975080,23977453,29149226,29149226,29149244,29150192,29160517,29160517,29160795,29165357,29168638,29168638,120464107,120464122,120464122,120464122,120464154,120464822,69727191,69767251,69767255,69767380,69767987,69768282,69768282,69768674,69768896,69769251,69769251,69769847,69770042,69771105,69771105,69771544,58003718,58004001,58005041,58005041,58005041,58005041,58005600,58005600,58005617,58006527,58006527,76734562,76735158,76735158,76735158,76735875,76736443,76736443,76736464,76736464,43458509,43458509,43459317,43459420,43460598,43460598,43460598,43460598,43460852,38745187,38745187,38746179,38746199,38746747,38746747,38746747,38746747,38747130,38748653,38748653,38748653,38749173,38749346],[70221611,70221614,70221614,70229209,70230556,70231094,70231858,70232267,70230556,70231094,70231858,70232267,70232267,70246817,70246817,70247116,70249930,70249951,70249951,70250607,70250610,36596760,36597556,36598428,36598848,36598848,36598848,36599820,36601151,36601151,89105426,89117822,95068654,23971337,23971572,23971849,23971337,23971572,23971572,23971849,23971849,23971849,23977910,23977910,23977910,23977910,29150102,29154695,29150102,29154695,29165889,29181645,29165889,29165889,29170422,29181645,120465626,120464732,120465626,120465755,120465626,120465626,69766113,69768137,69768137,69768137,69768137,69768603,69768612,69770466,69770466,69769510,69770466,69770466,69770466,69771193,69771196,69771916,58004922,58004922,58005397,58005413,58005800,58005919,58005731,58005800,58005800,58006906,58006943,76735060,76735617,76735771,76736153,76736153,76736798,76736834,76736798,76736834,43459152,43459770,43459770,43459770,43460702,43460708,43463343,43465854,43463343,38746143,38746693,38746693,38746693,38747061,38748046,38748055,38748079,38748046,38748897,38749239,38749528,38749528,38749528],["clu_1272","clu_1272","clu_1272","clu_1273","clu_1273","clu_1273","clu_1273","clu_1273","clu_1273","clu_1273","clu_1273","clu_1273","clu_1273","clu_1274","clu_1274","clu_1275","clu_1275","clu_1275","clu_1275","clu_1276","clu_1276","clu_20540","clu_20541","clu_20541","clu_20541","clu_20541","clu_20541","clu_20542","clu_20542","clu_20542","clu_22565","clu_22566","clu_35041","clu_3851","clu_3851","clu_3851","clu_3851","clu_3851","clu_3851","clu_3851","clu_3851","clu_3851","clu_3852","clu_3852","clu_3852","clu_3852","clu_3946","clu_3946","clu_3946","clu_3946","clu_3947","clu_3947","clu_3947","clu_3947","clu_3947","clu_3947","clu_40425","clu_40425","clu_40425","clu_40425","clu_40425","clu_40425","clu_42403","clu_42404","clu_42404","clu_42404","clu_42404","clu_42405","clu_42405","clu_42406","clu_42406","clu_42406","clu_42406","clu_42406","clu_42406","clu_42407","clu_42407","clu_42408","clu_52598","clu_52598","clu_52599","clu_52599","clu_52599","clu_52599","clu_52599","clu_52599","clu_52599","clu_52601","clu_52601","clu_53074","clu_53075","clu_53075","clu_53075","clu_53075","clu_53077","clu_53077","clu_53077","clu_53077","clu_58409","clu_58409","clu_58409","clu_58409","clu_58410","clu_58410","clu_58410","clu_58410","clu_58410","clu_9165","clu_9165","clu_9165","clu_9165","clu_9166","clu_9166","clu_9166","clu_9166","clu_9166","clu_9167","clu_9167","clu_9167","clu_9167","clu_9167"],["PR","PR","PR","UP","UP","UP","UP","PR","UP","UP","UP","UP","UP","PR","PR","UP","PR","PR","UP","PR","PR","PR","UP","UP","PR","UP","UP","UP","PR","UP","PR","PR","PR","PR","PR","PR","PR","PR","PR","PR","PR","PR","UP","UP","UP","UP","PR","PR","PR","PR","UP","PR","UP","UP","UP","UP","PR","UP","PR","PR","UP","UP","PR","PR","PR","PR","PR","PR","PR","UP","UP","PR","PR","UP","PR","PR","PR","PR","PR","PR","PR","PR","PR","PR","UP","PR","PR","UP","PR","PR","PR","PR","PR","PR","PR","PR","PR","PR","UP","PR","UP","UP","PR","PR","PR","PR","PR","PR","PR","PR","PR","UP","PR","PR","PR","UP","UP","UP","PR","PR","PR"],["+","+","+","+","+","+","+","+","+","+","+","+","+","+","+","+","+","+","+","+","+","+","+","+","+","+","+","+","+","+","-","-","+","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","+","+","+","+","+","+","+","+","+","+","+","+","+","+","+","+","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","+","+","+","+","+","+","+","+","+","-","-","-","-","-","-","-","-","-","-","-","-","-","-"],["SRSF11","SRSF11","SRSF11","SRSF11","SRSF11","SRSF11","SRSF11","SRSF11","SRSF11","SRSF11","SRSF11","SRSF11","SRSF11","SRSF11","SRSF11","SRSF11","SRSF11","SRSF11","SRSF11","SRSF11","SRSF11","SRSF3","SRSF3","SRSF3","SRSF3","SRSF3","SRSF3","SRSF3","SRSF3","SRSF3","SRSF12","SRSF12","SRSF8","SRSF10","SRSF10","SRSF10","SRSF10","SRSF10","SRSF10","SRSF10","SRSF10","SRSF10","SRSF10","SRSF10","SRSF10","SRSF10","SRSF4","SRSF4","SRSF4","SRSF4","SRSF4","SRSF4","SRSF4","SRSF4","SRSF4","SRSF4","SRSF9","SRSF9","SRSF9","SRSF9","SRSF9","SRSF9","SRSF5","SRSF5","SRSF5","SRSF5","SRSF5","SRSF5","SRSF5","SRSF5","SRSF5","SRSF5","SRSF5","SRSF5","SRSF5","SRSF5","SRSF5","SRSF5","SRSF1","SRSF1","SRSF1","SRSF1","SRSF1","SRSF1","SRSF1","SRSF1","SRSF1","SRSF1","SRSF1","SRSF2","SRSF2","SRSF2","SRSF2","SRSF2","SRSF2","SRSF2","SRSF2","SRSF2","SRSF6","SRSF6","SRSF6","SRSF6","SRSF6","SRSF6","SRSF6","SRSF6","SRSF6","SRSF7","SRSF7","SRSF7","SRSF7","SRSF7","SRSF7","SRSF7","SRSF7","SRSF7","SRSF7","SRSF7","SRSF7","SRSF7","SRSF7"],["chr1:70205780:70221611:clu_1272_+:PR","chr1:70205780:70221614:clu_1272_+:PR","chr1:70221400:70221614:clu_1272_+:PR","chr1:70228555:70229209:clu_1273_+:UP","chr1:70228555:70230556:clu_1273_+:UP","chr1:70228555:70231094:clu_1273_+:UP","chr1:70228555:70231858:clu_1273_+:UP","chr1:70228555:70232267:clu_1273_+:PR","chr1:70230050:70230556:clu_1273_+:UP","chr1:70230618:70231094:clu_1273_+:UP","chr1:70231203:70231858:clu_1273_+:UP","chr1:70231203:70232267:clu_1273_+:UP","chr1:70231975:70232267:clu_1273_+:UP","chr1:70244815:70246817:clu_1274_+:PR","chr1:70244827:70246817:clu_1274_+:PR","chr1:70246907:70247116:clu_1275_+:UP","chr1:70246907:70249930:clu_1275_+:PR","chr1:70246907:70249951:clu_1275_+:PR","chr1:70247149:70249951:clu_1275_+:UP","chr1:70250503:70250607:clu_1276_+:PR","chr1:70250503:70250610:clu_1276_+:PR","chr6:36594481:36596760:clu_20540_+:PR","chr6:36596968:36597556:clu_20541_+:UP","chr6:36596968:36598428:clu_20541_+:UP","chr6:36596968:36598848:clu_20541_+:PR","chr6:36597679:36598848:clu_20541_+:UP","chr6:36598526:36598848:clu_20541_+:UP","chr6:36598983:36599820:clu_20542_+:UP","chr6:36598983:36601151:clu_20542_+:PR","chr6:36600276:36601151:clu_20542_+:UP","chr6:89105260:89105426:clu_22565_-:PR","chr6:89107258:89117822:clu_22566_-:PR","chr11:95068183:95068654:clu_35041_+:PR","chr1:23967723:23971337:clu_3851_-:PR","chr1:23967723:23971572:clu_3851_-:PR","chr1:23967723:23971849:clu_3851_-:PR","chr1:23967956:23971337:clu_3851_-:PR","chr1:23967956:23971572:clu_3851_-:PR","chr1:23971439:23971572:clu_3851_-:PR","chr1:23971620:23971849:clu_3851_-:PR","chr1:23971623:23971849:clu_3851_-:PR","chr1:23971626:23971849:clu_3851_-:PR","chr1:23975051:23977910:clu_3852_-:UP","chr1:23975070:23977910:clu_3852_-:UP","chr1:23975080:23977910:clu_3852_-:UP","chr1:23977453:23977910:clu_3852_-:UP","chr1:29149226:29150102:clu_3946_-:PR","chr1:29149226:29154695:clu_3946_-:PR","chr1:29149244:29150102:clu_3946_-:PR","chr1:29150192:29154695:clu_3946_-:PR","chr1:29160517:29165889:clu_3947_-:UP","chr1:29160517:29181645:clu_3947_-:PR","chr1:29160795:29165889:clu_3947_-:UP","chr1:29165357:29165889:clu_3947_-:UP","chr1:29168638:29170422:clu_3947_-:UP","chr1:29168638:29181645:clu_3947_-:UP","chr12:120464107:120465626:clu_40425_-:PR","chr12:120464122:120464732:clu_40425_-:UP","chr12:120464122:120465626:clu_40425_-:PR","chr12:120464122:120465755:clu_40425_-:PR","chr12:120464154:120465626:clu_40425_-:UP","chr12:120464822:120465626:clu_40425_-:UP","chr14:69727191:69766113:clu_42403_+:PR","chr14:69767251:69768137:clu_42404_+:PR","chr14:69767255:69768137:clu_42404_+:PR","chr14:69767380:69768137:clu_42404_+:PR","chr14:69767987:69768137:clu_42404_+:PR","chr14:69768282:69768603:clu_42405_+:PR","chr14:69768282:69768612:clu_42405_+:PR","chr14:69768674:69770466:clu_42406_+:UP","chr14:69768896:69770466:clu_42406_+:UP","chr14:69769251:69769510:clu_42406_+:PR","chr14:69769251:69770466:clu_42406_+:PR","chr14:69769847:69770466:clu_42406_+:UP","chr14:69770042:69770466:clu_42406_+:PR","chr14:69771105:69771193:clu_42407_+:PR","chr14:69771105:69771196:clu_42407_+:PR","chr14:69771544:69771916:clu_42408_+:PR","chr17:58003718:58004922:clu_52598_-:PR","chr17:58004001:58004922:clu_52598_-:PR","chr17:58005041:58005397:clu_52599_-:PR","chr17:58005041:58005413:clu_52599_-:PR","chr17:58005041:58005800:clu_52599_-:PR","chr17:58005041:58005919:clu_52599_-:PR","chr17:58005600:58005731:clu_52599_-:UP","chr17:58005600:58005800:clu_52599_-:PR","chr17:58005617:58005800:clu_52599_-:PR","chr17:58006527:58006906:clu_52601_-:UP","chr17:58006527:58006943:clu_52601_-:PR","chr17:76734562:76735060:clu_53074_-:PR","chr17:76735158:76735617:clu_53075_-:PR","chr17:76735158:76735771:clu_53075_-:PR","chr17:76735158:76736153:clu_53075_-:PR","chr17:76735875:76736153:clu_53075_-:PR","chr17:76736443:76736798:clu_53077_-:PR","chr17:76736443:76736834:clu_53077_-:PR","chr17:76736464:76736798:clu_53077_-:PR","chr17:76736464:76736834:clu_53077_-:PR","chr20:43458509:43459152:clu_58409_+:UP","chr20:43458509:43459770:clu_58409_+:PR","chr20:43459317:43459770:clu_58409_+:UP","chr20:43459420:43459770:clu_58409_+:UP","chr20:43460598:43460702:clu_58410_+:PR","chr20:43460598:43460708:clu_58410_+:PR","chr20:43460598:43463343:clu_58410_+:PR","chr20:43460598:43465854:clu_58410_+:PR","chr20:43460852:43463343:clu_58410_+:PR","chr2:38745187:38746143:clu_9165_-:PR","chr2:38745187:38746693:clu_9165_-:PR","chr2:38746179:38746693:clu_9165_-:PR","chr2:38746199:38746693:clu_9165_-:PR","chr2:38746747:38747061:clu_9166_-:UP","chr2:38746747:38748046:clu_9166_-:PR","chr2:38746747:38748055:clu_9166_-:PR","chr2:38746747:38748079:clu_9166_-:PR","chr2:38747130:38748046:clu_9166_-:UP","chr2:38748653:38748897:clu_9167_-:UP","chr2:38748653:38749239:clu_9167_-:UP","chr2:38748653:38749528:clu_9167_-:PR","chr2:38749173:38749528:clu_9167_-:PR","chr2:38749346:38749528:clu_9167_-:PR"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>chr<\/th>\n      <th>start<\/th>\n      <th>end<\/th>\n      <th>clu<\/th>\n      <th>itype<\/th>\n      <th>strand<\/th>\n      <th>gene_name<\/th>\n      <th>chrom<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"chr","targets":1},{"name":"start","targets":2},{"name":"end","targets":3},{"name":"clu","targets":4},{"name":"itype","targets":5},{"name":"strand","targets":6},{"name":"gene_name","targets":7},{"name":"chrom","targets":8}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
-<section id="available-gtex-bigwig-files" class="level2">
-<h2 class="anchored" data-anchor-id="available-gtex-bigwig-files">Available GTEx bigwig files</h2>
+<section id="list-of-differentially-spliced-junctions" class="level1">
+<h1>List of differentially spliced junctions</h1>
+<p>List of differentialy spliced junctions are here:</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>Brain-Anteriorcingulatecortex_BA24_
-Brain-Cortex
-Brain-FrontalCortex_BA9_
-Brain-Putamen_basalganglia_
-Heart-AtrialAppendage
-Liver
-Lung
-Muscle-Skeletal
-Skin-NotSunExposed_Suprapubic_
-WholeBlood</code></pre>
+<pre><code>/project/yangili1/cdai/SpliFi/data/ds_v_dge/Adipose-Visceral_Omentum__v_AdrenalGland_data.rds
+/project/yangili1/cdai/SpliFi/data/ds_v_dge/Adipose-Visceral_Omentum__v_Artery-Coronary_data.rds
+/project/yangili1/cdai/SpliFi/data/ds_v_dge/Adipose-Visceral_Omentum__v_Brain-Amygdala_data.rds
+/project/yangili1/cdai/SpliFi/data/ds_v_dge/Adipose-Visceral_Omentum__v_Brain-Anteriorcingulatecortex_BA24__data.rds
+/project/yangili1/cdai/SpliFi/data/ds_v_dge/Adipose-Visceral_Omentum__v_Brain-Caudate_basalganglia__data.rds
+/project/yangili1/cdai/SpliFi/data/ds_v_dge/Adipose-Visceral_Omentum__v_Brain-CerebellarHemisphere_data.rds
+/project/yangili1/cdai/SpliFi/data/ds_v_dge/Adipose-Visceral_Omentum__v_Brain-Cerebellum_data.rds
+/project/yangili1/cdai/SpliFi/data/ds_v_dge/Adipose-Visceral_Omentum__v_Brain-Cortex_data.rds
+/project/yangili1/cdai/SpliFi/data/ds_v_dge/Adipose-Visceral_Omentum__v_Brain-FrontalCortex_BA9__data.rds
+/project/yangili1/cdai/SpliFi/data/ds_v_dge/Adipose-Visceral_Omentum__v_Brain-Hippocampus_data.rds
+Total number of pairs of comparisons
+702</code></pre>
+</div>
+</div>
+</section>
+<section id="join-differentially-expressed-genes-and-differentially-spliced-junctions" class="level1">
+<h1>Join differentially expressed genes and differentially spliced junctions</h1>
+<p>You can use this funciton to get the table of differentially spliced junctions and differentially expressed genes.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>get_DS_DGE_table <span class="ot">&lt;-</span> <span class="cf">function</span>(rds, contrast, <span class="at">FDR =</span> <span class="fl">1e-5</span>, <span class="at">selection =</span> <span class="st">'all'</span>, <span class="at">plot=</span><span class="cn">FALSE</span>) {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># rds: a single rds file, previousp rocessed in "../../SpliFi/prepdata.smk"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># contrast: a string, the contrast name</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># return a joined table (on gene_names) of differential spliced junctions and diffenetially expressed genes</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(rds)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    ds <span class="ot">&lt;-</span> data<span class="sc">$</span>ds</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    dge <span class="ot">&lt;-</span> data<span class="sc">$</span>dge</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    dge_dsc <span class="ot">&lt;-</span> data<span class="sc">$</span>dge_dsc</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    joined_dt <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> ds[<span class="fu">abs</span>(deltapsi) <span class="sc">&gt;</span> .<span class="dv">1</span> <span class="sc">&amp;</span> <span class="st">`</span><span class="at">p.adjust</span><span class="st">`</span> <span class="sc">&lt;</span> FDR <span class="sc">&amp;</span> ctype <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'PR'</span>, <span class="st">'PR,UP'</span>), </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        .(gene_id, gene_name, intron, cluster, itype, ctype, deltapsi)],</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> dge[, .(gene_id, <span class="at">g_l2fc =</span> log2FoldChange, <span class="at">g_z =</span> stat, <span class="at">g_l2fcSE =</span> lfcSE)],</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">by =</span> <span class="st">'gene_id'</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (selection <span class="sc">==</span> <span class="st">'maxClu'</span>) {</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        joined_dt  <span class="ot">&lt;-</span> joined_dt[</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>            , .(intron, deltapsi, g_l2fc, g_z, g_l2fcSE, <span class="at">rk =</span> <span class="fu">rank</span>(<span class="sc">-</span><span class="fu">abs</span>(deltapsi), <span class="at">ties.method =</span> <span class="st">"random"</span>)), </span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>            by <span class="ot">=</span> .(gene_id, gene_name, cluster, itype, ctype)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>            ][rk <span class="sc">==</span> <span class="dv">1</span>, <span class="sc">-</span><span class="fu">c</span>(<span class="st">'rk'</span>)]</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> <span class="cf">if</span> (selection <span class="sc">==</span> <span class="st">'maxGene'</span>) {</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        joined_dt <span class="ot">&lt;-</span> joined_dt[</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>            , .(intron, deltapsi, g_l2fc, g_z, g_l2fcSE, <span class="at">rk =</span> <span class="fu">rank</span>(<span class="sc">-</span><span class="fu">abs</span>(deltapsi), <span class="at">ties.method =</span> <span class="st">"random"</span>)), </span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>            by <span class="ot">=</span> .(gene_id, gene_name, itype)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>            ][rk <span class="sc">==</span> <span class="dv">1</span>, <span class="sc">-</span><span class="fu">c</span>(<span class="st">'rk'</span>)]</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(joined_dt)</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="other-previously-prepared-data" class="level1">
+<h1>Other previously prepared data</h1>
+<section id="clusters-selected-for-plotting-heatmaps" class="level2">
+<h2 class="anchored" data-anchor-id="clusters-selected-for-plotting-heatmaps">Clusters selected for plotting heatmaps</h2>
+<p>The Heatmap in Figure 2 is a common set of clusters across tissues. These clusters are selected because in at least some tissues (vs.&nbsp;others), they showed differential splicing and differential gene expression.</p>
+<p>Here’s a set of chosen clusters. If a cluster has multiple UP introns, only the best one is selected (largest deltaPSI). Introns are also selected if deltaPSI and expression L2FC has different signs.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>/project/yangili1/cdai/SpliFi/data/ds_v_dge/chosen_clusters_dpsi_0_2.rds</code></pre>
 </div>
 </div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

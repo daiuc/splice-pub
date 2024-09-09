@@ -42,9 +42,8 @@ suppressMessages(library(bedtoolsr))
 
 
 ```{r}
-#| label: load-data
-#| eval: true
-#| cache: true
+#| eval: false
+#| cache: false
 
 lf2 = fread("../code/results/pheno/noisy/Geuvadis/EUR/leafcutter_perind_numers.counts.noise_by_intron.gz")
 dcols = colnames(lf2)[2:ncol(lf2)]
@@ -63,13 +62,6 @@ gtf = fread("../../annotations/hg38/gencode.v43.primary_assembly.annotation.csv.
 SRSF_genes = gtf[str_detect(gene_name, "SRSF\\d+"), .(seqname, start, end, strand, gene_name)]
 rm(gtf)
 
-```
-
-
-
-```{r}
-#| include: true
-#| eval: true
 
 hits = bt.intersect(
     a = lf2[, .(chr, start, end, clu, itype, strand, id)],
@@ -84,15 +76,16 @@ hits = as.data.table(hits) %>%
 
 ```
 
-Make sashimi plots of these intron ids
-```{r}
+
+
+## Available GTEx bigwig files
+
+```{bash}
 #| include: true
 #| eval: true
-hits$chrom = glue("{hits$chr}:{hits$start}:{hits$end}:{hits$clu}_{hits$strand}:{hits$itype}")
-hits[order(clu, chrom), -c("id")] %>%
-    DT::datatable()
-```
 
+ls "../code/resources/GTEx/BigWig/"
+```
 
 
 

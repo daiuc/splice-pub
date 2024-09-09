@@ -1,0 +1,230 @@
+---
+title: "List of differentially spliced junctions"
+date: 2024-9-5
+format: html
+code-fold: true
+execute:
+  include: false
+  eval: false
+  cache: false
+  echo: false
+---
+
+>im making good progress on re-analyzing that comprative rna-seq data leafcutter2 style… but after discussing a little with yang today, we have an idea for a figure panel that would involve identifying a nice example of a conserved unproductive splice event that is also present in your GTEx cross-tissue differential splicing analysis. Can you share a list of junctions that are differentially spliced any pair of GTEx tissues that you looked at. Like, ideal would be a text file of human junction coordinates, and the tissue pairs from which the differential splicing was done, and a beta (so I can see if the direction of the effect is same in other other species).
+
+
+
+
+::: {.callout-note}
+
+## Notes
+
+
+- Results here are before the recent implementation of foward splicing junction classifer and bug fixes.
+:::
+
+
+# List of differentially spliced junctions
+
+
+List of differentialy spliced junctions are here: 
+
+
+```{bash}
+#| echo: false
+#| eval: true
+#| include: true
+
+ls -1 /project/yangili1/cdai/SpliFi/data/ds_v_dge/*_v_*_data.rds | head
+echo "Total number of pairs of comparisons"
+ls -1 /project/yangili1/cdai/SpliFi/data/ds_v_dge/*_v_*_data.rds | wc -l
+
+```
+
+
+
+
+```{r}
+#| label: setup
+#| eval: true
+
+suppressMessages(library(dplyr))
+suppressMessages(library(tidyr))
+suppressMessages(library(stringr))
+suppressMessages(library(readr))
+suppressMessages(library(purrr))
+suppressMessages(library(data.table))
+suppressMessages(library(glue))
+
+
+FDR = 0.1
+minPSI = 0.1
+
+```
+
+
+# Join differentially expressed genes and differentially spliced junctions
+
+You can use this funciton to get the table of differentially spliced junctions and differentially expressed genes. 
+
+```{r}
+#| label: functions
+#| eval: false
+#| include: true
+#| echo: true
+
+
+get_DS_DGE_table <- function(rds, contrast, FDR = 1e-5, selection = 'all', plot=FALSE) {
+    # rds: a single rds file, previousp rocessed in "../../SpliFi/prepdata.smk"
+    # contrast: a string, the contrast name
+    # return a joined table (on gene_names) of differential spliced junctions and diffenetially expressed genes
+    data <- readRDS(rds)
+    ds <- data$ds
+    dge <- data$dge
+    dge_dsc <- data$dge_dsc
+
+    joined_dt <- inner_join(
+        x = ds[abs(deltapsi) > .1 & `p.adjust` < FDR & ctype %in% c('PR', 'PR,UP'), 
+        .(gene_id, gene_name, intron, cluster, itype, ctype, deltapsi)],
+        y = dge[, .(gene_id, g_l2fc = log2FoldChange, g_z = stat, g_l2fcSE = lfcSE)],
+        by = 'gene_id'
+    )
+
+    if (selection == 'maxClu') {
+        joined_dt  <- joined_dt[
+            , .(intron, deltapsi, g_l2fc, g_z, g_l2fcSE, rk = rank(-abs(deltapsi), ties.method = "random")), 
+            by = .(gene_id, gene_name, cluster, itype, ctype)
+            ][rk == 1, -c('rk')]
+    } else if (selection == 'maxGene') {
+        joined_dt <- joined_dt[
+            , .(intron, deltapsi, g_l2fc, g_z, g_l2fcSE, rk = rank(-abs(deltapsi), ties.method = "random")), 
+            by = .(gene_id, gene_name, itype)
+            ][rk == 1, -c('rk')]
+    }
+
+    return(joined_dt)
+}
+```
+
+
+# Other previously prepared data
+
+
+## Clusters selected for plotting heatmaps
+
+The Heatmap in Figure 2 is a common set of clusters across tissues. These clusters are selected because in at least some tissues (vs. others), they showed differential splicing and differential gene expression. 
+
+Here's a set of chosen clusters. If a cluster has multiple UP introns, only the best one is selected (largest deltaPSI). Introns are also selected if deltaPSI and expression L2FC has different signs.
+
+
+```{bash}
+#| include: true
+#| eval: true
+
+ls -1 "/project/yangili1/cdai/SpliFi/data/ds_v_dge/chosen_clusters_dpsi_0_2.rds"
+
+```
+
+```{r}
+#| include: true
+#| eval: false
+
+GetTopUpIntrons <- function(data, FDR_ds, FDR_dge, dPSI) {
+  dge <- data$dge
+  ds <- data$ds
+
+  # if a cluster has multiple UP introns, only select the best 1
+  ds <- ds[itype == 'UP' & ctype == 'PR,UP'][, rk := rank(-abs(deltapsi), ties.method = "first"), by = cluster][rk ==1][, rk := NULL][]
+  ds <- ds[`p.adjust` < FDR_ds & abs(deltapsi) > dPSI,]
+
+  dge <- dge[padj < FDR_dge,]
+  
+  ds_excl_cols <- c('itype', 'ctype', 'df', 'p', 'p.adjust','logef', 'loglr', 'status')
+  dge_excl_cols <- c('baseMean', 'lfcSE', 'stat', 'pvalue', 'padj')
+  chosen <- inner_join(
+      x = ds[, -ds_excl_cols, with = FALSE],
+      y = dge[, -dge_excl_cols, with = FALSE],
+      by = "gene_id",
+      suffix = c("_ds", "_dge")
+    ) %>%
+    .[deltapsi * log2FoldChange < 0, ]
+
+  return(chosen)
+}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
