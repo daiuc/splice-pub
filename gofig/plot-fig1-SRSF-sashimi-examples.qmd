@@ -356,14 +356,14 @@ create_ini_file <- function(
 
 ```{r}
 # Example usage of the function
-create_ini_file(
-  template_path = "../data/SRSF/template-sashimi.ini",        # Path to your template file
-  output_path = "../data/SRSF/plot_config.ini",     # Path where the output should be saved
-  lf2_pr_link = "SRSF_PR.links",        # Actual values for placeholders
-  lf2_up_link = "SRSF_UP.links",
-  gc_pr_link = "SRSF.introns_by_transcript.pc.links",
-  gc_up_link = "SRSF.introns_by_transcript.nmd.links"
-)
+# create_ini_file(
+#   template_path = "../data/SRSF/template-sashimi.ini",        # Path to your template file
+#   output_path = "../data/SRSF/plot_config.ini",     # Path where the output should be saved
+#   lf2_pr_link = "SRSF_PR.links",        # Actual values for placeholders
+#   lf2_up_link = "SRSF_UP.links",
+#   gc_pr_link = "SRSF.introns_by_transcript.pc.links",
+#   gc_up_link = "SRSF.introns_by_transcript.nmd.links"
+# )
 ```
 
 
