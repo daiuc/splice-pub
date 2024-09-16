@@ -1,5 +1,5 @@
 ---
-title: Figure 1 - Unproductive splicing in SRSF genes
+title: Figure 1 - Annotation of Splicing (GenomeTracks)
 date: '2024-09-05'
 code-fold: true
 execute:
@@ -13,105 +13,444 @@ categories:
   - manuscript
 ---
 
-Plots for Figure 1
 
-- Find unproductive splicing examples in SRSF genes. 
+
+# Overview
+Plots for Figure 1C
+
+Purpose: illustrate leafcutter2 can annotate productive and unproductive introns, without the need for gencode annotation. Particularly show concordance with annotations, and additional unproductive annotations.
+
+
+
+Data:
+
+- leafcutter 2 output
+- Gencode annotations
 - SRSF genes are with gene names `SRSF[1-12]`
 
 
+Using Geuvadis EUR results, I found 6 SRSF genes ahving both UP and PR introns.
+I will plot sashimi plots to illustrate the annotations from leafcutter 2 and gencode.
+
+Plotted genes: SRSF11, SRSF10, SRSF7, SRSF3, SRSF1, SRSF6
+
+
+
+# Sashimi annnotation plots
 
 
 ```{r}
-# never knit
-httpgd::hgd(host = "10.50.250.200", port = 9696, token = FALSE)
+#| label: fig-srsf1
+#| include: true
+#| eval: true
+#| fig-cap: SRSF1
+#| fig-cap-location: margin
+#| out-width: 95%
+
+knitr::include_graphics("SRSF1_tracks.svg")
+```
+
+```{r}
+#| label: fig-srsf3
+#| include: true
+#| eval: true
+#| fig-cap: SRSF3
+#| fig-cap-location: margin
+#| out-width: 95%
+
+knitr::include_graphics("SRSF3_tracks.svg")
+```
+
+```{r}
+#| label: fig-srsf6
+#| include: true
+#| eval: true
+#| fig-cap: SRSF6
+#| fig-cap-location: margin
+#| out-width: 95%
+
+knitr::include_graphics("SRSF6_tracks.svg")
+```
+
+```{r}
+#| label: fig-srsf7
+#| include: true
+#| eval: true
+#| fig-cap: SRSF7
+#| fig-cap-location: margin
+#| out-width: 95%
+
+knitr::include_graphics("SRSF7_tracks.svg")
+```
+
+```{r}
+#| label: fig-srsf10
+#| include: true
+#| eval: true
+#| fig-cap: SRSF10
+#| fig-cap-location: margin
+#| out-width: 95%
+
+knitr::include_graphics("SRSF10_tracks.svg")
+```
+
+```{r}
+#| label: fig-srsf11
+#| include: true
+#| eval: true
+#| fig-cap: SRSF11
+#| fig-cap-location: margin
+#| out-width: 95%
+
+knitr::include_graphics("SRSF11_tracks.svg")
+```
+
+
+<!--
+USE BELOW CODE TO PREPARE AND GENERATE PLOTS
+
+-->
+
+```{python}
+# | include: true
+# | eval: true
+import os
+import pandas as pd
+import pybedtools as pb
+
+
+# NOTE: this chunk and all subsequent chunks are not knitted in html output.
 ```
 
 
 ```{r}
-#| label: setup
-#| eval: true
-
 suppressMessages(library(tidyverse))
 suppressMessages(library(glue))
 suppressMessages(library(data.table))
 suppressMessages(library(bedtoolsr))
+suppressMessages(library(jinjar))
+```
 
+```{bash}
+echo "tis works"
+echo "second row"
+```
+
+```{bash}
+
+#conda activate gtftk
+
+# first extract SRSF gtf form gencode
+GTF="../../annotations/hg38/gencode.v43.primary_assembly.annotation.gtf.gz"
+gtftk select_by_regexp -i $GTF -k gene_name -r "SRSF\d+$" -o ../data/SRSF/SRSF.gtf
+
+# extract genes to BED
+gtftk select_by_key -i ../data/SRSF/SRSF.gtf -g -b -m gene_name,gene_id \
+  > ../data/SRSF/SRSF.genes.bed
+
+# extract introns by transcript
+gtftk intronic -i ../data/SRSF/SRSF.gtf \
+  -o ../data/SRSF/SRSF.introns_by_transcript.bed \
+  -b -n gene_name,transcript_id,transcript_type
+
+# extract introns, merbed by gene (can overlap exons)
+gtftk intronic -i ../data/SRSF/SRSF.gtf -o ../data/SRSF/SRSF.introns_by_gene.bed
+
+# extract splice sites
+gtftk splicing_site -i ../data/SRSF/SRSF.gtf \
+  -o ../data/SRSF/SRSF.ss_by_transcript.bed \
+  -n gene_name,transcript_id,exon_number,transcript_type
+
+```
+
+
+```{bash}
+
+# extract protein coding introns
+awk 'BEGIN {OFS="\t"};
+     $4 ~ /protein_coding/ {print $1, $2, $3, $4, $5, $6}' \
+    ../data/SRSF/SRSF.introns_by_transcript.bed > ../data/SRSF/SRSF.introns_by_transcript.pc.bed
+
+# # make links for protein coding introns
+# awk 'BEGIN {OFS="\t"};
+#            {print $1, $2 + 1, $2 + 1, $1, $3, $3, 999, $6, $4, $5 }' \
+#      ../data/SRSF/SRSF.introns_by_transcript.pc.bed > \
+#      ../data/SRSF/SRSF.introns_by_transcript.pc.links
+
+# extract nonsense mediated decay introns
+awk 'BEGIN {OFS="\t"};
+     $4 ~ /nonsense/ {print $1, $2, $3, $4, $5, $6}' \
+    ../data/SRSF/SRSF.introns_by_transcript.bed > ../data/SRSF/SRSF.introns_by_transcript.nmd.bed
+
+# make links for nonsense mediated decay introns
+# awk 'BEGIN {OFS="\t"};
+#            {print $1, $2 + 1, $2 + 1, $1, $3, $3, 999, $6, $4, $5 }' \
+#     ../data/SRSF/SRSF.introns_by_transcript.nmd.bed > \
+#     ../data/SRSF/SRSF.introns_by_transcript.nmd.links
+
+```
+
+
+```{r}
+
+# Note gencode npm or pc introns in the bed files are determined by transcript type
+# so the same intron can appear both in pc and nmd
+# if introns are in both, they are considered PC
+
+gc_pc = fread("../data/SRSF/SRSF.introns_by_transcript.pc.bed")
+gc_nmd = fread("../data/SRSF/SRSF.introns_by_transcript.nmd.bed")
+
+# remove introns that are in both nmd and pc
+gc_nmd = anti_join(gc_nmd, gc_pc, by = c("V1", "V2", "V3", "V6")) %>% 
+  as.data.table
+
+gc_nmd[, .(V1, V2, V3, V4 = str_split(V4, "\\|", simplify = T)[, 2], V6)] %>% 
+  unique() %>%
+  .[, .(c1 = V1, s1 = V2 + 1, e1 = V2 + 1, 
+        c2 = V1, s2 = V3, e2 = V3, score = 1, strand = V6, V4)] %>%
+  fwrite("../data/SRSF/SRSF.introns_by_transcript.nmd.links", sep="\t", quote=F, col.names=F)
+
+gc_pc[, .(V1, V2, V3, V4 = str_split(V4, "\\|", simplify = T)[, 2], V6)] %>% 
+  unique() %>%
+  .[, .(c1 = V1, s1 = V2 + 1, e1 = V2 + 1, 
+        c2 = V1, s2 = V3, e2 = V3, score = 1, strand = V6, V4)] %>%
+  fwrite("../data/SRSF/SRSF.introns_by_transcript.pc.links", sep="\t", quote=F, col.names=F)
+```
+
+```{r}
+# leafcutter numerators
+lf_num = fread(
+    "../code/results/pheno/noisy/Geuvadis/EUR/leafcutter_perind_numers.counts.noise_by_intron.gz",
+    sep=" ",
+)
+
+dcols = colnames(lf_num)[-c(1)]
+lf_num = lf_num[, .(chrom, m = rowMeans(.SD, na.rm = T)), .SDcols = dcols]
+dim(lf_num)
+```
+
+
+```{r}
+lf_coords = lf_num[, .(chrom)] %>% 
+    separate("chrom", c("seqname", "start", "end", "clu", "itype"), sep=":") %>%
+    mutate(strand = str_sub(clu, -1, -1), clu = str_sub(clu, 1, -3)) %>%
+    as.data.table()
+lf_coords[, `:=`(start = as.numeric(start), end = as.numeric(end))]
+```
+
+
+
+```{r}
+SRSF_genes = fread("../data/SRSF/SRSF.genes.bed")
+lf_SRSF = bt.intersect(
+    a = lf_coords[, .(seqname, start, end, 
+                  name=glue("{c}:{s}:{e}:{cl}:{st}:{i}", 
+                             c=seqname, s=start, e=end, cl=clu, st=strand, i=itype),
+                  score = 0, strand)],
+    b = SRSF_genes[, .(V1, V2, V3, V4, score = 0, V6)],
+    wa = TRUE, wb = TRUE, s = TRUE, f = 0.9
+) %>% as.data.table()
+
+lf_SRSF = lf_SRSF[str_detect(V4, "PR|UP"),
+    .(chrom = V1, start = V2, end = V3, gene = str_extract(V10, "SRSF\\d+"), score = V5, strand = V6,
+      clu = str_extract(V4, "clu_\\d+"), itype = str_extract(V4, "\\w+$"))
+    ]
+
+# split by gene 
+# lf_SRSF = split(lf_SRSF, by = "gene")
+```
+
+
+<!-- 
+For Geuvadis dataset, only SRSF11, SRSF10, SRSF7, SRSF3, SRSF1, SRSF6 have both UP and PR introns. Only plot these genes 
+-->
+
+
+```{r}
+print("Only these SRSF genes have both UP and PR introns")
+lf_SRSF[, .N, by = .(gene, itype)
+  ][, .(NCate = uniqueN(N)), by = .(gene)
+  ][NCate > 1, gene]
+```
+
+```{r}
+rbindlist(lf_SRSF) %>%
+    .[, .N, by = .(gene, itype)] %>%
+    .[, .(NCate = uniqueN(N)), by = .(gene)] %>%
+    .[NCate > 1]
+rbindlist(lf_SRSF) %>%
+    .[, .N, by = .(gene, itype)]
+```
+
+
+
+```{r}
+plotGenes = paste0("SRSF", c(11, 10, 7, 3, 1, 6))
+print(glue("Plotting these genes: {paste0(plotGenes, collapse=', ')}"))
+```
+
+
+```{r}
+lf_SRSF = lf_SRSF[gene %in% plotGenes]
+
+# a single link file for PR introns
+lf_SRSF[itype == "PR",
+    .(c1 = chrom, s1 = start + 1, e1 = start + 1,
+      c2 = chrom, s2 = end, e2 = end, 
+      score = 0.5, strand = strand, gene, clu)
+    ] %>%
+    fwrite("../data/SRSF/SRSF_PR.links", sep="\t", quote=F, col.names=F)
+
+# a single link file for UP introns
+lf_SRSF[itype == "UP",
+    .(c1 = chrom, s1 = start + 1, e1 = start + 1,
+      c2 = chrom, s2 = end, e2 = end, 
+      score = 0.5, strand = strand, gene, clu)
+    ] %>%
+    fwrite("../data/SRSF/SRSF_UP.links", sep="\t", quote=F, col.names=F)
+
+# make link files
+# iwalk(lf_SRSF,
+#     \(df, gene) {
+#         PR = df[itype == "PR"
+#             ][, .(c1 = chrom, s1 = start + 1, e1 = start + 1,
+#                   c2 = chrom, s2 = end, e2 = end, 
+#                   core = score, strand = strand, gene, clu)]
+#         UP = df[itype == "UP"
+#             ][, .(c1 = chrom, s1 = start + 1, e1 = start + 1,
+#                   c2 = chrom, s2 = end, e2 = end, 
+#                   core = score, strand = strand, gene, clu)]
+#         fwrite(PR, glue("../data/SRSF/{gene}_PR.links"), sep="\t", quote=F, col.names=F)
+#         fwrite(UP, glue("../data/SRSF/{gene}_UP.links"), sep="\t", quote=F, col.names=F)
+#         print(glue("Wrote {gene} links"))
+#     }
+# )
 ```
 
 
 
 
 ```{r}
-#| eval: false
-#| cache: false
+# Function to fill the template and save as a new .ini file
+create_ini_file <- function(
+  template_path, output_path, lf2_pr_link, lf2_up_link, gc_pr_link, gc_up_link) {
+  
+  template = fs::path(template_path)
+  template  %>% 
+    jinjar::render(
+      lf2_pr_link = lf2_pr_link,
+      lf2_up_link = lf2_up_link,
+      gc_pr_link = gc_pr_link,
+      gc_up_link = gc_up_link
+    ) %>%
+    write_lines(output_path)
+  
+  message("INI file created at: ", output_path)
+}
+```
 
-lf2 = fread("../code/results/pheno/noisy/Geuvadis/EUR/leafcutter_perind_numers.counts.noise_by_intron.gz")
-dcols = colnames(lf2)[2:ncol(lf2)]
-lf2 = lf2 %>% 
-    separate("chrom", c("chr", "start", "end", "clu", "itype"), ":") %>%
-    mutate(start = as.integer(start),
-           end = as.integer(end),
-           strand = str_sub(clu, -1, -1)) %>%
-    mutate(clu = str_remove(clu, "_[\\+\\-]$")) %>% 
-    as.data.table
-lf2 = lf2[, c("chr", "start", "end", "strand", "clu", "itype", dcols), with = FALSE]
-lf2$id = glue("{lf2$chr}:{lf2$start}-{lf2$end}:{lf2$strand}:{lf2$clu}")
-
-gtf = fread("../../annotations/hg38/gencode.v43.primary_assembly.annotation.csv.gz") %>%
-    .[feature == "gene" & gene_type == "protein_coding", 1:11]
-SRSF_genes = gtf[str_detect(gene_name, "SRSF\\d+"), .(seqname, start, end, strand, gene_name)]
-rm(gtf)
-
-
-hits = bt.intersect(
-    a = lf2[, .(chr, start, end, clu, itype, strand, id)],
-    b = SRSF_genes[, .(seqname, start, end, gene_name, score = 999, strand)],
-    wa = TRUE, wb = TRUE, s = TRUE, f = 0.99
+```{r}
+# Example usage of the function
+create_ini_file(
+  template_path = "../data/SRSF/template-sashimi.ini",        # Path to your template file
+  output_path = "../data/SRSF/plot_config.ini",     # Path where the output should be saved
+  lf2_pr_link = "SRSF_PR.links",        # Actual values for placeholders
+  lf2_up_link = "SRSF_UP.links",
+  gc_pr_link = "SRSF.introns_by_transcript.pc.links",
+  gc_up_link = "SRSF.introns_by_transcript.nmd.links"
 )
-hits = as.data.table(hits) %>% 
-    .[V2 >= V9 & V3 <= V10,
-      .(chr = V1, start = V2, end = V3, clu = V4, itype = V5, strand = V6, id = V7, gene_name = V11)
-    ] %>% 
-    .[ itype %in% c("UP", "PR")]
-
 ```
 
 
-
-## Available GTEx bigwig files
 
 ```{bash}
-#| include: true
-#| eval: true
 
-ls "../code/resources/GTEx/BigWig/"
+
+# plot SRSF11
+
+plotGene=SRSF11
+plotRange="chr1:70205000-70255000"
+pyGenomeTracks --tracks plot_config.ini \
+  --title "$plotGene $plotRange" \
+  --region $plotRange \
+  --width 40 \
+  --fontSize 12 \
+  --outFileName ${plotGene}_tracks.svg
+
 ```
 
 
 
+```{bash}
+# plot SRSF10
+
+plotGene=SRSF10
+plotRange="chr1:23960000-23985000"
+pyGenomeTracks --tracks plot_config.ini \
+  --title "$plotGene $plotRange" \
+  --region $plotRange \
+  --width 40 \
+  --fontSize 12 \
+  --outFileName ${plotGene}_tracks.svg
+
+```
 
 
+```{bash}
+# plot SRSF7
 
+plotGene=SRSF7
+plotRange="chr2:38743000-38753000"
+pyGenomeTracks --tracks plot_config.ini \
+  --title "$plotGene $plotRange" \
+  --region $plotRange \
+  --width 40 \
+  --fontSize 12 \
+  --outFileName ${plotGene}_tracks.svg
 
+```
 
+```{bash}
+# plot SRSF3
 
+plotGene=SRSF3
+plotRange="chr6:36592000-36608000"
+pyGenomeTracks --tracks plot_config.ini \
+  --title "$plotGene $plotRange" \
+  --region $plotRange \
+  --width 40 \
+  --fontSize 12 \
+  --outFileName ${plotGene}_tracks.svg
 
+```
 
+```{bash}
+# plot SRSF1
 
+plotGene=SRSF1
+plotRange="chr17:57999000-58010000"
+pyGenomeTracks --tracks plot_config.ini \
+  --title "$plotGene $plotRange" \
+  --region $plotRange \
+  --width 40 \
+  --fontSize 12 \
+  --outFileName ${plotGene}_tracks.svg
 
+```
 
+```{bash}
+# plot SRSF6
 
+plotGene=SRSF6
+plotRange="chr20:43455000-43469000"
+pyGenomeTracks --tracks plot_config.ini \
+  --title "$plotGene $plotRange" \
+  --region $plotRange \
+  --width 40 \
+  --fontSize 12 \
+  --outFileName ${plotGene}_tracks.svg
 
-
-
-
-
-
-
-
-
-
-
+```
 
 
 

@@ -13,7 +13,7 @@ categories:
   - manuscript
 ---
 
-Plots for Figure 1
+# Plots for Figure 1
 
 ::: {.callout-note}
 ## Notes
@@ -198,7 +198,7 @@ print(cortest1)
 
 
 ```{r}
-p1 = up_plot_dt %>% 
+p1 = up_plot_dt %>%
   ggplot() +
   stat_ecdf(aes(x = ratio, color = intron_len2)) +
   scale_color_brewer(type = 'qual', palette = 'Blues') +
@@ -209,7 +209,8 @@ p1 = up_plot_dt %>%
        y = "Unproductive splicing",
        color = "Intron length",
        title = 'Unproductive splicing vs. intron length', 
-       caption = glue('Spearman rho={round(cortest1$estimate, 2)} {ifelse(cortest1$p.value < .001, "***", "")}, N={uniqueN(up_plot_dt$clu)}'))
+       caption = glue('Spearman rho={round(cortest1$estimate, 2)} 
+                       {ifelse(cortest1$p.value < .001, "***", "")}, N={uniqueN(up_plot_dt$clu)}'))
 
 # save plot to svg file
 ggsave("plot-fig1-cluster-unprod-vs-pr-intron-length.svg", p1, width = 7, height = 5)
@@ -331,7 +332,8 @@ p2 = up_plot_dt.gene %>%
        y = "Cumulative distribution",
        color = "RPKM quantiles",
        title = 'Unproductive splicing vs. expression level', 
-       caption = glue('Spearman rho={round(cortest2$estimate, 2)} {ifelse(cortest2$p.value < .001, "***", "")}, N={uniqueN(up_plot_dt.gene$gene)}'))
+       caption = glue('Spearman rho={round(cortest2$estimate, 2)}
+                       {ifelse(cortest2$p.value < .001, "***", "")}, N={uniqueN(up_plot_dt.gene$gene)}'))
 
 # save plot to svg file
 ggsave("plot-fig1-gene-unprod-vs-rpkm.svg", p2, width = 7, height = 5)
