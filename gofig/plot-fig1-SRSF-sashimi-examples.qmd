@@ -51,16 +51,6 @@ Plotted genes: SRSF11, SRSF10, SRSF7, SRSF3, SRSF1, SRSF6
 knitr::include_graphics("SRSF1_tracks.svg")
 ```
 
-```{r}
-#| label: fig-srsf3
-#| include: true
-#| eval: true
-#| fig-cap: SRSF3
-#| fig-cap-location: margin
-#| out-width: 95%
-
-knitr::include_graphics("SRSF3_tracks.svg")
-```
 
 ```{r}
 #| label: fig-srsf6
@@ -83,6 +73,18 @@ knitr::include_graphics("SRSF6_tracks.svg")
 
 knitr::include_graphics("SRSF7_tracks.svg")
 ```
+
+```{r}
+#| label: fig-srsf9
+#| include: true
+#| eval: true
+#| fig-cap: SRSF9
+#| fig-cap-location: margin
+#| out-width: 95%
+
+knitr::include_graphics("SRSF9_tracks.svg")
+```
+
 
 ```{r}
 #| label: fig-srsf10
@@ -225,7 +227,7 @@ gc_pc[, .(V1, V2, V3, V4 = str_split(V4, "\\|", simplify = T)[, 2], V6)] %>%
 ```{r}
 # leafcutter numerators
 lf_num = fread(
-    "../code/results/pheno/noisy/Geuvadis/EUR/leafcutter_perind_numers.counts.noise_by_intron.gz",
+    "../code/results/pheno/noisy/Geuvadis/EUR/wConst_perind_numers.constcounts.noise_by_intron.gz",
     sep=" ",
 )
 
@@ -278,19 +280,11 @@ lf_SRSF[, .N, by = .(gene, itype)
   ][NCate > 1, gene]
 ```
 
-```{r}
-rbindlist(lf_SRSF) %>%
-    .[, .N, by = .(gene, itype)] %>%
-    .[, .(NCate = uniqueN(N)), by = .(gene)] %>%
-    .[NCate > 1]
-rbindlist(lf_SRSF) %>%
-    .[, .N, by = .(gene, itype)]
-```
-
 
 
 ```{r}
-plotGenes = paste0("SRSF", c(11, 10, 7, 3, 1, 6))
+# plotGenes = paste0("SRSF", c(11, 10, 7, 3, 1, 6))
+plotGenes = paste0("SRSF", c(11, 10, 4, 3, 7, 9, 1, 6))
 print(glue("Plotting these genes: {paste0(plotGenes, collapse=', ')}"))
 ```
 
@@ -400,6 +394,20 @@ pyGenomeTracks --tracks plot_config.ini \
 
 ```
 
+```{bash}
+# plot SRSF4 ?
+
+# plotGene=SRSF4
+# plotRange="chr1:19140000-19185000"
+# pyGenomeTracks --tracks plot_config.ini \
+#   --title "$plotGene $plotRange" \
+#   --region $plotRange \
+#   --width 40 \
+#   --fontSize 12 \
+#   --outFileName ${plotGene}_tracks.svg
+
+```
+
 
 ```{bash}
 # plot SRSF7
@@ -416,10 +424,10 @@ pyGenomeTracks --tracks plot_config.ini \
 ```
 
 ```{bash}
-# plot SRSF3
+# plot SRSF9
 
-plotGene=SRSF3
-plotRange="chr6:36592000-36608000"
+plotGene=SRSF9
+plotRange="chr12:120455000-120470000"
 pyGenomeTracks --tracks plot_config.ini \
   --title "$plotGene $plotRange" \
   --region $plotRange \
@@ -428,6 +436,21 @@ pyGenomeTracks --tracks plot_config.ini \
   --outFileName ${plotGene}_tracks.svg
 
 ```
+
+```{bash}
+# plot SRSF3
+
+plotGene=SRSF3
+plotRange="chr6:3659200-3660800"
+pyGenomeTracks --tracks plot_config.ini \
+  --title "$plotGene $plotRange" \
+  --region $plotRange \
+  --width 40 \
+  --fontSize 12 \
+  --outFileName ${plotGene}_tracks.svg
+
+```
+
 
 ```{bash}
 # plot SRSF1
