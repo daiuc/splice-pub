@@ -8,6 +8,7 @@ execute:
   echo: false
   warning: false
   message: false
+  cache: false
 categories:
   - figures
   - manuscript
@@ -143,6 +144,10 @@ echo "second row"
 # first extract SRSF gtf form gencode
 GTF="../../annotations/hg38/gencode.v43.primary_assembly.annotation.gtf.gz"
 gtftk select_by_regexp -i $GTF -k gene_name -r "SRSF\d+$" -o ../data/SRSF/SRSF.gtf
+
+# make a protein coding only gtf
+gtftk select_by_regexp -i ../data/SRSF/SRSF.gtf -k transcript_type -r "protein_coding" \
+  -o ../data/SRSF/SRSF.pc.gtf
 
 # extract genes to BED
 gtftk select_by_key -i ../data/SRSF/SRSF.gtf -g -b -m gene_name,gene_id \
