@@ -30,89 +30,9 @@ Data:
 - SRSF genes are with gene names `SRSF[1-12]`
 
 
-Using Geuvadis EUR results, I found 6 SRSF genes ahving both UP and PR introns.
-I will plot sashimi plots to illustrate the annotations from leafcutter 2 and gencode.
-
-Plotted genes: SRSF11, SRSF10, SRSF7, SRSF3, SRSF1, SRSF6
-
-
 
 # Sashimi annnotation plots
 
-
-```{r}
-#| label: fig-srsf1
-#| include: true
-#| eval: true
-#| fig-cap: SRSF1
-#| fig-cap-location: margin
-#| out-width: 95%
-
-knitr::include_graphics("SRSF1_tracks.svg")
-```
-
-
-```{r}
-#| label: fig-srsf6
-#| include: true
-#| eval: true
-#| fig-cap: SRSF6
-#| fig-cap-location: margin
-#| out-width: 95%
-
-knitr::include_graphics("SRSF6_tracks.svg")
-```
-
-```{r}
-#| label: fig-srsf7
-#| include: true
-#| eval: true
-#| fig-cap: SRSF7
-#| fig-cap-location: margin
-#| out-width: 95%
-
-knitr::include_graphics("SRSF7_tracks.svg")
-```
-
-```{r}
-#| label: fig-srsf9
-#| include: true
-#| eval: true
-#| fig-cap: SRSF9
-#| fig-cap-location: margin
-#| out-width: 95%
-
-knitr::include_graphics("SRSF9_tracks.svg")
-```
-
-
-```{r}
-#| label: fig-srsf10
-#| include: true
-#| eval: true
-#| fig-cap: SRSF10
-#| fig-cap-location: margin
-#| out-width: 95%
-
-knitr::include_graphics("SRSF10_tracks.svg")
-```
-
-```{r}
-#| label: fig-srsf11
-#| include: true
-#| eval: true
-#| fig-cap: SRSF11
-#| fig-cap-location: margin
-#| out-width: 95%
-
-knitr::include_graphics("SRSF11_tracks.svg")
-```
-
-
-<!--
-USE BELOW CODE TO PREPARE AND GENERATE PLOTS
-
--->
 
 ```{python}
 # | include: true
@@ -120,19 +40,42 @@ USE BELOW CODE TO PREPARE AND GENERATE PLOTS
 import os
 import pandas as pd
 import pybedtools as pb
-
-
-# NOTE: this chunk and all subsequent chunks are not knitted in html output.
 ```
 
-
 ```{r}
+#| eval: true
 suppressMessages(library(tidyverse))
 suppressMessages(library(glue))
 suppressMessages(library(data.table))
 suppressMessages(library(bedtoolsr))
 suppressMessages(library(jinjar))
 ```
+
+
+```{r}
+#| label: fig-genometracks
+#| include: true
+#| eval: true
+#| out-width: 90%
+#| column: screen
+
+print("SRSF")
+svg_files = dir("./plot-fig1-SRSF-imgs", "*svg", full.names = T) %>% 
+    naturalsort::naturalsort()
+names(svg_files) = str_extract(svg_files, "SRSF\\d+")
+
+knitr::include_graphics(svg_files)
+```
+
+
+
+<!--
+#NOTE: USE BELOW CODE TO PREPARE AND GENERATE PLOTS
+
+-->
+
+
+
 
 ```{bash}
 echo "tis works"
@@ -207,6 +150,13 @@ awk 'BEGIN {OFS="\t"};
 gc_pc = fread("../data/SRSF/SRSF.introns_by_transcript.pc.bed")
 gc_nmd = fread("../data/SRSF/SRSF.introns_by_transcript.nmd.bed")
 
+gc_pc[, V1 := factor(V1, levels = glue("chr{1:22}"))]
+gc_nmd[, V1 := factor(V1, levels = glue("chr{1:22}"))]
+
+gc_pc = gc_pc[order(V1, V2, V3)]
+gc_nmd = gc_nmd[order(V1, V2, V3)]
+
+
 # remove introns that are in both nmd and pc
 gc_nmd = anti_join(gc_nmd, gc_pc, by = c("V1", "V2", "V3", "V6")) %>% 
   as.data.table
@@ -227,7 +177,7 @@ gc_pc[, .(V1, V2, V3, V4 = str_split(V4, "\\|", simplify = T)[, 2], V6)] %>%
 ```{r}
 # leafcutter numerators
 lf_num = fread(
-    "../code/results/pheno/noisy/Geuvadis/EUR/wConst_perind_numers.constcounts.noise_by_intron.gz",
+    "../code/results/pheno/noisy/Geuvadis/EUR/wConst_perind.numers.annotated.gz",
     sep=" ",
 )
 
@@ -269,34 +219,27 @@ lf_SRSF = lf_SRSF[str_detect(V4, "PR|UP"),
 
 
 <!-- 
-For Geuvadis dataset, only SRSF11, SRSF10, SRSF7, SRSF3, SRSF1, SRSF6 have both UP and PR introns. Only plot these genes 
+# NOTE: plotting SRSF 1,3,4,5,6,7,10,11,12
 -->
-
 
 ```{r}
 print("Only these SRSF genes have both UP and PR introns")
-lf_SRSF[, .N, by = .(gene, itype)
+plotGenes = lf_SRSF[, .N, by = .(gene, itype)
   ][, .(NCate = uniqueN(N)), by = .(gene)
   ][NCate > 1, gene]
-```
-
-
-
-```{r}
-# plotGenes = paste0("SRSF", c(11, 10, 7, 3, 1, 6))
-plotGenes = paste0("SRSF", c(11, 10, 4, 3, 7, 9, 1, 6))
 print(glue("Plotting these genes: {paste0(plotGenes, collapse=', ')}"))
 ```
 
-
 ```{r}
 lf_SRSF = lf_SRSF[gene %in% plotGenes]
+lf_SRSF[, chrom := factor(chrom, levels = glue("chr{1:22}"))]
+lf_SRSF = lf_SRSF[order(chrom, start, end)]
 
 # a single link file for PR introns
 lf_SRSF[itype == "PR",
     .(c1 = chrom, s1 = start + 1, e1 = start + 1,
       c2 = chrom, s2 = end, e2 = end, 
-      score = 0.5, strand = strand, gene, clu)
+      score = 1, strand = strand, gene)
     ] %>%
     fwrite("../data/SRSF/SRSF_PR.links", sep="\t", quote=F, col.names=F)
 
@@ -304,26 +247,9 @@ lf_SRSF[itype == "PR",
 lf_SRSF[itype == "UP",
     .(c1 = chrom, s1 = start + 1, e1 = start + 1,
       c2 = chrom, s2 = end, e2 = end, 
-      score = 0.5, strand = strand, gene, clu)
+      score = 1, strand = strand, gene)
     ] %>%
     fwrite("../data/SRSF/SRSF_UP.links", sep="\t", quote=F, col.names=F)
-
-# make link files
-# iwalk(lf_SRSF,
-#     \(df, gene) {
-#         PR = df[itype == "PR"
-#             ][, .(c1 = chrom, s1 = start + 1, e1 = start + 1,
-#                   c2 = chrom, s2 = end, e2 = end, 
-#                   core = score, strand = strand, gene, clu)]
-#         UP = df[itype == "UP"
-#             ][, .(c1 = chrom, s1 = start + 1, e1 = start + 1,
-#                   c2 = chrom, s2 = end, e2 = end, 
-#                   core = score, strand = strand, gene, clu)]
-#         fwrite(PR, glue("../data/SRSF/{gene}_PR.links"), sep="\t", quote=F, col.names=F)
-#         fwrite(UP, glue("../data/SRSF/{gene}_UP.links"), sep="\t", quote=F, col.names=F)
-#         print(glue("Wrote {gene} links"))
-#     }
-# )
 ```
 
 
@@ -361,9 +287,89 @@ create_ini_file <- function(
 ```
 
 
+<!-- 
+#NOTE: plotting SRSF 1,3,4,5,6,7,10,11,12
+-->
 
 ```{bash}
 
+# plot SRSF1
+
+plotGene=SRSF1
+plotRange="chr17:57999000-58010000"
+pyGenomeTracks --tracks plot_config.ini \
+  --title "$plotGene $plotRange" \
+  --region $plotRange \
+  --width 40 \
+  --fontSize 12 \
+  --outFileName ${plotGene}_tracks.svg
+
+# plot SRSF3
+
+# plotGene=SRSF3
+# plotRange="chr6:3659200-3660800"
+# pyGenomeTracks --tracks plot_config.ini \
+#   --title "$plotGene $plotRange" \
+#   --region $plotRange \
+#   --width 40 \
+#   --fontSize 12 \
+#   --outFileName ${plotGene}_tracks.svg
+
+# plot SRSF4
+
+plotGene=SRSF4
+plotRange="chr1:29142000-29185000"
+pyGenomeTracks --tracks plot_config.ini \
+  --title "$plotGene $plotRange" \
+  --region $plotRange \
+  --width 40 \
+  --fontSize 12 \
+  --outFileName ${plotGene}_tracks.svg
+
+# plot SRSF5
+
+plotGene=SRSF5
+plotRange="chr14:69765000-69775000"
+pyGenomeTracks --tracks plot_config.ini \
+  --title "$plotGene $plotRange" \
+  --region $plotRange \
+  --width 40 \
+  --fontSize 12 \
+  --outFileName ${plotGene}_tracks.svg
+
+
+# plot SRSF6
+
+plotGene=SRSF6
+plotRange="chr20:43455000-43469000"
+pyGenomeTracks --tracks plot_config.ini \
+  --title "$plotGene $plotRange" \
+  --region $plotRange \
+  --width 40 \
+  --fontSize 12 \
+  --outFileName ${plotGene}_tracks.svg
+
+# plot SRSF7
+
+plotGene=SRSF7
+plotRange="chr2:38743000-38755000"
+pyGenomeTracks --tracks plot_config.ini \
+  --title "$plotGene $plotRange" \
+  --region $plotRange \
+  --width 40 \
+  --fontSize 12 \
+  --outFileName ${plotGene}_tracks.svg
+
+# plot SRSF10
+
+plotGene=SRSF10
+plotRange="chr1:23960000-23985000"
+pyGenomeTracks --tracks plot_config.ini \
+  --title "$plotGene $plotRange" \
+  --region $plotRange \
+  --width 40 \
+  --fontSize 12 \
+  --outFileName ${plotGene}_tracks.svg
 
 # plot SRSF11
 
@@ -376,109 +382,49 @@ pyGenomeTracks --tracks plot_config.ini \
   --fontSize 12 \
   --outFileName ${plotGene}_tracks.svg
 
-```
 
 
 
-```{bash}
-# plot SRSF10
+<!--
+TODO: trouble shoot missing junctions
+-->
 
-plotGene=SRSF10
-plotRange="chr1:23960000-23985000"
-pyGenomeTracks --tracks plot_config.ini \
-  --title "$plotGene $plotRange" \
-  --region $plotRange \
-  --width 40 \
-  --fontSize 12 \
-  --outFileName ${plotGene}_tracks.svg
 
-```
 
-```{bash}
-# plot SRSF4 ?
+```{r}
+lf2_pr_links = fread('../data/SRSF/SRSF_PR.links')
+lf2_up_links = fread('../data/SRSF/SRSF_UP.links')
 
-# plotGene=SRSF4
-# plotRange="chr1:19140000-19185000"
-# pyGenomeTracks --tracks plot_config.ini \
-#   --title "$plotGene $plotRange" \
-#   --region $plotRange \
-#   --width 40 \
-#   --fontSize 12 \
-#   --outFileName ${plotGene}_tracks.svg
+gc_pr_links = fread('../data/SRSF/SRSF.introns_by_transcript.pc.links')
+gc_up_links = fread('../data/SRSF/SRSF.introns_by_transcript.nmd.links')
+
+
+lf2_juncs = fread('../code/results/pheno/noisy/Geuvadis/EUR/wConst_perind_numers.constcounts.gz', 
+                  skip =1, col.names = c("chrom"), select = c(1)) %>% 
+  separate(chrom, c("chr", "start", "end", "clu"), sep=":") %>% 
+  mutate(strand = str_sub(clu, -1, -1), clu = str_extract(clu, "clu_\\d+")) %>%
+  mutate(start = as.numeric(start) + 1, end = as.numeric(end)) %>%
+  as.data.table()
+
 
 ```
 
 
-```{bash}
-# plot SRSF7
+```{r}
+g = "SRSF11"
+gc_pr_links[V9 == g, 1:9]
+lf2_pr_links[V9 == g, 1:9]
 
-plotGene=SRSF7
-plotRange="chr2:38743000-38753000"
-pyGenomeTracks --tracks plot_config.ini \
-  --title "$plotGene $plotRange" \
-  --region $plotRange \
-  --width 40 \
-  --fontSize 12 \
-  --outFileName ${plotGene}_tracks.svg
-
-```
-
-```{bash}
-# plot SRSF9
-
-plotGene=SRSF9
-plotRange="chr12:120455000-120470000"
-pyGenomeTracks --tracks plot_config.ini \
-  --title "$plotGene $plotRange" \
-  --region $plotRange \
-  --width 40 \
-  --fontSize 12 \
-  --outFileName ${plotGene}_tracks.svg
-
-```
-
-```{bash}
-# plot SRSF3
-
-plotGene=SRSF3
-plotRange="chr6:3659200-3660800"
-pyGenomeTracks --tracks plot_config.ini \
-  --title "$plotGene $plotRange" \
-  --region $plotRange \
-  --width 40 \
-  --fontSize 12 \
-  --outFileName ${plotGene}_tracks.svg
+full_join(
+gc_pr_links[V9 == g],
+  lf2_pr_links[V9 == g, 1:9],
+  by = glue("V{c(1:6, 8, 9)}"),
+suffix = c(".gc", ".lf2")
+)
 
 ```
 
 
-```{bash}
-# plot SRSF1
-
-plotGene=SRSF1
-plotRange="chr17:57999000-58010000"
-pyGenomeTracks --tracks plot_config.ini \
-  --title "$plotGene $plotRange" \
-  --region $plotRange \
-  --width 40 \
-  --fontSize 12 \
-  --outFileName ${plotGene}_tracks.svg
-
-```
-
-```{bash}
-# plot SRSF6
-
-plotGene=SRSF6
-plotRange="chr20:43455000-43469000"
-pyGenomeTracks --tracks plot_config.ini \
-  --title "$plotGene $plotRange" \
-  --region $plotRange \
-  --width 40 \
-  --fontSize 12 \
-  --outFileName ${plotGene}_tracks.svg
-
-```
 
 
 
