@@ -57,7 +57,7 @@ suppressMessages(library(jinjar))
 #| include: true
 #| eval: true
 #| out-width: 90%
-#| column: screen
+#| column: page
 
 print("SRSF")
 svg_files = dir("./plot-fig1-SRSF-imgs", "*svg", full.names = T) %>% 
@@ -91,7 +91,7 @@ GTF="../../annotations/hg38/gencode.v43.primary_assembly.annotation.gtf.gz"
 gtftk select_by_regexp -i $GTF -k gene_name -r "SRSF\d+$" -o ../data/SRSF/SRSF.gtf
 
 # make a protein coding only gtf
-gtftk select_by_regexp -i ../data/SRSF/SRSF.gtf -k transcript_type -r "protein_coding" \
+gtftk select_by_regexp -i ../data/SRSF/SRSF.gtf -k transcript_type -r "protein_coding$" \
   -o ../data/SRSF/SRSF.pc.gtf
 
 # extract genes to BED
@@ -118,7 +118,7 @@ gtftk splicing_site -i ../data/SRSF/SRSF.gtf \
 
 # extract protein coding introns
 awk 'BEGIN {OFS="\t"};
-     $4 ~ /protein_coding/ {print $1, $2, $3, $4, $5, $6}' \
+     $4 ~ /protein_coding$/ {print $1, $2, $3, $4, $5, $6}' \
     ../data/SRSF/SRSF.introns_by_transcript.bed > ../data/SRSF/SRSF.introns_by_transcript.pc.bed
 
 # # make links for protein coding introns
