@@ -1,6 +1,6 @@
 ---
 title: Figure 2 - Differential splicing vs. differential expression (GTEx)
-date: '2024-08-20'
+date: '2024-09-20'
 code-fold: true
 execute:
   include: false
@@ -35,7 +35,7 @@ httpgd::hgd(host = "10.50.250.200", port = 9696, token = FALSE)
 
 ```{r}
 #| label: setup
-#| eval: true
+#| eval: false
 
 suppressMessages(library(tidyverse))
 suppressMessages(library(glue))
@@ -133,10 +133,9 @@ read_contrast <- function(rds, contrast, FDR = 1e-5, selection = 'all', plot=FAL
 
 ```{r}
 #| label: load all saved contrasts, run correlation of each contrast
-#| eval: true
-#| cache: true
 
-rds_list = dir('../../SpliFi/data/ds_v_dge', pattern = '.+_v_.+.rds', full.names = TRUE)
+# rds_list = dir('../../SpliFi/data/ds_v_dge', pattern = '.+_v_.+.rds', full.names = TRUE)
+rds_list = dir('../code/plotdata/ds_v_dge', pattern = '.+_v_.+.rds', full.names = TRUE)
 contrast_list = str_split(rds_list, "/") %>% 
   map(., last) %>%
   unlist %>% 
@@ -165,6 +164,7 @@ rm(res3)
 ```{r}
 # plot vocano-like plot of correlation results for all contrast
 p1 = df3 %>% 
+  .[itype == "UP"] %>% # keep only UP
   ggplot() +
   geom_pointdensity(
     aes(cor, -log10(p), color = itype),
@@ -172,12 +172,13 @@ p1 = df3 %>%
     alpha = .9) +
   geom_hline(yintercept = -log10(0.001), linetype = 2) +
   annotate("text", x = -0.45, y = -log10(0.001), label = "p = 0.001", vjust = 1) +
-  scale_color_brewer(
-    type = "qual", 
-    palette = 1,
-    direction = 1,
-    label = c(PR="Productive", UP="Unproductive"), 
-    name = NULL) +
+  scale_color_manual(values = c(PR = 'blue', UP = '#990000')) +
+  # scale_color_brewer(
+  #   type = "qual", 
+  #   palette = 1,
+  #   direction = 1,
+  #   label = c(PR="Productive", UP="Unproductive"), 
+  #   name = NULL) +
   lims(x = c(-.5, .2), y = c(0, 30)) +
   labs(
     color = NULL, 
@@ -201,33 +202,73 @@ knitr::include_graphics("plot-fig2-correlation-volcano.svg")
 ```
 
 
+
+# Pick 5 groups to plot correlation
+
 ```{r}
-i = which(contrast_list == 'Brain-Cortex_v_Kidney-Cortex')
-res = read_contrast(rds_list[i], contrast_list[i], plot = TRUE)
-ggsave("plot-fig2-brain-cortex-v-kidney-cortex.svg", res$gg, width = 7, height = 5)
+tissue_code = fread("../analysis/gtex-tissue-code.csv", header = F, col.names = c("tissue", "tissue_code"))
+
+tissue_code_lkup = deframe(tissue_code)
+
+tr_contrast = function(t2_v_t1, lkup) {
+  t = str_split(t2_v_t1, "_v_") %>% unlist
+  return(glue("{lkup[t[1]]}_v_{lkup[t[2]]}"))
+}
+
+```
+
+```{r}
+dummy.df = data.table(x = c(-1, 0, 1), y = c(-1, 0, 1))
+
+chosen_contrasts = c(
+  "Brain-Cortex_v_Kidney-Cortex",
+  "Brain-Anteriorcingulatecortex_BA24__v_Cells-EBV-transformedlymphocytes",
+  "Brain-Anteriorcingulatecortex_BA24__v_Testis",
+  "Brain-Cerebellum_v_Lung",
+  "Heart-LeftVentricle_v_Lung",
+  "Heart-LeftVentricle_v_Muscle-Skeletal"
+  )
+
+p3 = df3[contrast %in% chosen_contrasts] %>% 
+  .[, .(contrast = map_chr(contrast, tr_contrast, lkup = tissue_code_lkup), cor, p, itype)] %>%
+  ggplot() + 
+    geom_line(data = dummy.df, aes(x = x, y = y), color = 'white') +
+    geom_abline(aes(slope = cor, intercept = 0, color = contrast)) +
+    geom_abline(aes(slope = 1, intercept = 0), color = 'grey', linetype = 'dashed') +
+    scale_x_continuous(breaks = seq(-1, 1, .5), labels = seq(-100, 100, 50)) +
+    scale_y_continuous(breaks = seq(-1, 1, .5)) +
+  labs(title = "Correlation of diff splicing and dge", x = "DGE: z-score", y = "DS: deltaPSI") +
+    theme(legend.position = "bottom", legend.text = element_text(size = 8))  +
+    facet_wrap(~itype)
+
+
 ```
 
 
 ```{r}
-#| label: fig-brain-cortex-v-kidney-cortex
+ggsave("plot-fig2-correlation-5groups-line-plot.svg", p3, width = 6, height = 6)
+```
+
+```{r}
+#| label: fig-corr-ds-dge-5groups-line-plot
 #| eval: true
 #| include: true
-#| fig-cap: "Correlation of DS and DGE: Brain-Cortex vs. Kidney-Cortex"
+#| fig-cap: Correlation of differential splicing and differential gene expression for 5 selected contrasts
 #| out-width: 80%
 
-knitr::include_graphics("plot-fig2-brain-cortex-v-kidney-cortex.svg")
+knitr::include_graphics("plot-fig2-correlation-5groups-line-plot.svg")
 ```
 
-
-
-
-
-
-
-
-
-
-
+```{r}
+inner_join(
+  x = df3[itype == 'UP' & p < 0.001 & cor < 0, .(contrast, cor, p)],
+  y = df3[itype == 'PR' & cor > 0, .(contrast, cor, p)],
+  by = 'contrast',
+  suffix = c('_UP', '_PR')
+  ) %>% 
+  arrange(-abs(cor_UP)) %>% 
+  filter(!str_detect(contrast, 'Brain')) %>% head(20)
+```
 
 
 

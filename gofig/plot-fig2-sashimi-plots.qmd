@@ -1,0 +1,130 @@
+---
+title: Figure 1 - Annotation of Splicing (GenomeTracks)
+date: '2024-09-05'
+code-fold: true
+execute:
+  include: false
+  eval: false
+  echo: false
+  warning: false
+  message: false
+  cache: false
+categories:
+  - figures
+  - manuscript
+---
+
+
+
+# Overview
+
+Plot Figure 2E
+
+Plot 4-5 genes to choose from. Each gene should include: 
+
+- coverage tracks for each tissue (plan for 4 tissues)
+- arcs on top/bottom of coverage tracks for each tissue, different colors for PR vs. UP junctions
+- annotation by transcript like in Figure 1
+
+
+Data:
+
+- select which genes to plot (strong opposite effect of ds vs. dge)
+- bigwig files for each tissue  (for  coverage)
+- link files (for arcs)
+- link files - annotation (as triangles)
+- transcript gtf
+
+
+
+# Sashimi annnotation plots
+
+
+```{python}
+# | include: true
+# | eval: true
+import os
+import pandas as pd
+import pybedtools as pb
+```
+
+```{r}
+#| eval: true
+suppressMessages(library(tidyverse))
+suppressMessages(library(glue))
+suppressMessages(library(data.table))
+suppressMessages(library(bedtoolsr))
+suppressMessages(library(jinjar))
+```
+
+
+```{r}
+lf2 = fread("../code/results/pheno/noisy/Geuvadis/EUR/wConst_perind_numers.constcounts.noise_by_intron.gz")
+lf2_o = fread("../code/results/pheno/noisy/Geuvadis/EUR-run-Jun-2024/wConst_perind_numers.constcounts.noise_by_intron.gz")
+
+dcols = colnames(lf2)[2:ncol(lf2)]
+dcols_o = colnames(lf2_o)[2:ncol(lf2_o)]
+```
+
+
+```{r}
+dim(lf2)
+dim(lf2_o)
+```
+
+```{r}
+lf2[1:5, 1:3]
+lf2_o[1:5, 1:3]
+```
+
+
+
+```{r}
+lf2 = lf2[, .(chrom, m = rowMeans(.SD, na.rm = T)), .SDcols= dcols]
+lf2_o = lf2_o[, .(chrom, m = rowMeans(.SD, na.rm = T)), .SDcols= dcols_o]
+```
+
+```{r}
+lf2 = separate(lf2, chrom, c("chrom", "start", "end", "clu", "itype"), sep = ":") %>% 
+  mutate(strand = str_sub(clu, -1, -1), clu = str_extract(clu, "clu\\_\\d+")) %>%
+  as.data.table
+
+lf2_o = separate(lf2_o, chrom, c("chrom", "start", "end", "clu", "itype"), sep = ":") %>%
+  mutate(strand = str_sub(clu, -1, -1), clu = str_extract(clu, "clu\\_\\d+")) %>%
+  as.data.table
+```
+
+```{r}
+full_join(
+  lf2,
+  lf2_o,
+  by = c("chrom", "start", "end", "strand"),
+  suffix = c(".new", ".old")
+) %>% 
+  mutate(m.diff = abs(m.new - m.old)) %>%
+  pull(m.diff) %>% 
+  summary
+  # .[, .N, by = .(inNew = !is.na(m.new), inOld = !is.na(m.old))]
+```
+
+
+```{r}
+full_join(
+  lf2,
+  lf2_o,
+  by = c("chrom", "start", "end", "strand"),
+  suffix = c(".new", ".old")
+)   %>% 
+  .[, .N, by = .(inNew = !is.na(m.new), inOld = !is.na(m.old), sameLable = itype.new == itype.old, itype.new, itype.old)]
+```
+
+
+
+
+
+
+
+
+
+
+

@@ -1,8 +1,8 @@
 {
-  "hash": "2a7b0b47262f38174133cc3e2514af5d",
+  "hash": "b6be3446c1b61782a7c802d5e56dc1c7",
   "result": {
     "engine": "knitr",
-    "markdown": "---\ntitle: Figure 2 - Differential splicing vs. differential expression (GTEx)\ndate: '2024-08-20'\ncode-fold: true\nexecute:\n  include: false\n  eval: false\n  echo: false\n  warning: false\n  message: false\ncategories:\n  - figures\n  - manuscript\n---\n\n\nDifferential splicing vs. differential expression in GTEx dataset\n\n::: {.callout-note}\n## Notes\n\n* Use GTEx dataset\n\n:::\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n::: {.cell}\n::: {.cell-output-display}\n![Correlation of differential splicing and differential gene expression](plot-fig2-correlation-volcano.svg){#fig-corr-ds-dge-volcano width=80%}\n:::\n:::\n\n\n\n::: {.cell}\n::: {.cell-output-display}\n![Correlation of DS and DGE: Brain-Cortex vs. Kidney-Cortex](plot-fig2-brain-cortex-v-kidney-cortex.svg){#fig-brain-cortex-v-kidney-cortex width=80%}\n:::\n:::\n",
+    "markdown": "---\ntitle: Figure 2 - Differential splicing vs. differential expression (GTEx)\ndate: '2024-09-20'\ncode-fold: true\nexecute:\n  include: false\n  eval: false\n  echo: false\n  warning: false\n  message: false\ncategories:\n  - figures\n  - manuscript\n---\n\n\n\nDifferential splicing vs. differential expression in GTEx dataset\n\n::: {.callout-note}\n## Notes\n\n* Use GTEx dataset\n\n:::\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n::: {.cell}\n::: {.cell-output-display}\n![Correlation of differential splicing and differential gene expression](plot-fig2-correlation-volcano.svg){#fig-corr-ds-dge-volcano width=80%}\n:::\n:::\n\n\n\n\n\n# Pick 5 groups to plot correlation\n\n\n\n\n\n\n\n\n\n::: {.cell}\n::: {.cell-output-display}\n![Correlation of differential splicing and differential gene expression for 5 selected contrasts](plot-fig2-correlation-5groups-line-plot.svg){#fig-corr-ds-dge-5groups-line-plot width=80%}\n:::\n:::\n\n\n",
     "supporting": [],
     "filters": [
       "rmarkdown/pagebreak.lua"

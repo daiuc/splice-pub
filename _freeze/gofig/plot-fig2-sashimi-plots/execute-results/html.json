@@ -1,0 +1,15 @@
+{
+  "hash": "8491a297bfe56661a945e35b48cc4de6",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: Figure 1 - Annotation of Splicing (GenomeTracks)\ndate: '2024-09-05'\ncode-fold: true\nexecute:\n  include: false\n  eval: false\n  echo: false\n  warning: false\n  message: false\n  cache: false\ncategories:\n  - figures\n  - manuscript\n---\n\n\n\n\n\n\n# Overview\n\nPlot Figure 2E\n\nPlot 4-5 genes to choose from. Each gene should include: \n\n- coverage tracks for each tissue (plan for 4 tissues)\n- arcs on top/bottom of coverage tracks for each tissue, different colors for PR vs. UP junctions\n- annotation by transcript like in Figure 1\n\n\nData:\n\n- select which genes to plot (strong opposite effect of ds vs. dge)\n- bigwig files for each tissue  (for  coverage)\n- link files (for arcs)\n- link files - annotation (as triangles)\n- transcript gtf\n\n\n\n# Sashimi annnotation plots\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

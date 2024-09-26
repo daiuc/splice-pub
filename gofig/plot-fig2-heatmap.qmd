@@ -1,6 +1,6 @@
 ---
 title: Figure 2 - Heatmap of unprodoctive splicing by tissues
-date: '2024-08-21'
+date: '2024-09-21'
 code-fold: true
 execute:
   include: false
@@ -25,12 +25,19 @@ Heatmap of PSI of unproductive splicing for introns that are commonly differenti
 
 
 
-
 ```{r}
 #| eval: false
 #| echo: false
 httpgd::hgd(host = "10.50.250.200", port = 9696, token = FALSE)
 ```
+
+```{r}
+#| eval: false
+#| echo: false
+httpgd::hgd_close()
+```
+
+
 
 
 ```{r}
@@ -41,163 +48,88 @@ suppressMessages(library(tidyverse))
 suppressMessages(library(glue))
 suppressMessages(library(data.table))
 suppressMessages(library(ComplexHeatmap))
+suppressMessages(library(gprofiler2))
 
 suppressMessages(library(cowplot))
 theme_set(theme_cowplot(font_size = 14, font_family = "Helvetica"))
 
-suppressMessages(library(furrr))
-plan(multisession, workers = min(4, availableCores()))
+
+```
 
 
-# functions
-GetHeatmapMatrix <- function(dt, clusters, contrast) {
-  # dt$intron2 <- str_replace_all(dt$intron, ":clu_\\d+_", "")
-  tissues <- str_split(contrast, "_v_") %>% unlist()
-  keep1 <- c("intron", "cluster", tissues[1], "itype", "ctype")
-  keep2 <- c("intron", "cluster", tissues[2], "itype", "ctype")
-  out <- list(
-    dt[cluster %in% clusters, keep1, with = FALSE],
-    dt[cluster %in% clusters, keep2, with = FALSE]
+```{r}
+#| label: funcs
+#| eval: true
+EnrichTest = function(
+  query_genes,
+  background_genes = NULL,
+  sources = c("GO:BP", "GO:MF", "GO:CC")) {
+
+  gost1 = gost(
+    query = query_genes,
+    organism = "hsapiens",
+    ordered_query = FALSE,
+    multi_query = FALSE,
+    significant = TRUE,
+    exclude_iea = FALSE,
+    measure_underrepresentation = FALSE,
+    evcodes = FALSE,
+    sources = sources,
+    custom_bg = background_genes,
+    user_threshold = 0.05,
+    highlight = TRUE
   )
-  names(out) <- tissues
-
-  return(out)
+  return(gost1)
 }
+```
 
+# Heatmap
 
-GetTopUpIntrons <- function(data, FDR_ds, FDR_dge, dPSI) {
-  dge <- data$dge
-  ds <- data$ds
+```{r}
+#| label: load-plotdata
+#| eval: true
+#| cache: true
+plotdata = readRDS("../code/plotdata/gtex-psi-heatmap/heatmap_data.rds")
 
-  # if a cluster has multiple UP introns, only select the best 1
-  ds <- ds[itype == 'UP' & ctype == 'PR,UP'][, rk := rank(-abs(deltapsi), ties.method = "first"), by = cluster][rk ==1][, rk := NULL][]
-  ds <- ds[`p.adjust` < FDR_ds & abs(deltapsi) > dPSI,]
-
-  dge <- dge[padj < FDR_dge,]
-  
-  ds_excl_cols <- c('itype', 'ctype', 'df', 'p', 'p.adjust','logef', 'loglr', 'status')
-  dge_excl_cols <- c('baseMean', 'lfcSE', 'stat', 'pvalue', 'padj')
-  chosen <- inner_join(
-      x = ds[, -ds_excl_cols, with = FALSE],
-      y = dge[, -dge_excl_cols, with = FALSE],
-      by = "gene_id",
-      suffix = c("_ds", "_dge")
-    ) %>%
-    .[deltapsi * log2FoldChange < 0, ]
-
-  return(chosen)
-}
-
-sumPSI <- function(dt, cn) {
-  dt <- rename(dt, psi = {{ cn }})  %>% as.data.table
-  dt <- dt[itype == "UP"][, .(psi = sum(psi)), by = cluster] # sum unprod PSI by cluster
-  names(dt) <- c("cluster", cn)
-  return(as.data.table(dt))
-}
+plotmx = cbind(plotdata[['shared_UP_psi']][[1]][, c(1)], # first column (cluster ids) 
+               map_dfc(plotdata[['shared_UP_psi']], ~.x[, c(2)]) # (second columns are UP PSI per tissue)
+              )
 
 ```
 
-## Select a union set of unproductive intron clusters
 
-Choose introns based on the following criteria:
-1. ds FDR 0.001
-2. deltaPSI 0.2 
-3. dge FDR 0.05
-4. select the best unprod. intron from each cluster, then collect cluster ID
+
 
 ```{r}
-#| label: load_data
 #| eval: true
 #| cache: true
-
-#--- load prepped data
-# prepared according to "../../SpliFi/prepdata.smk"
-# each data item is a list of 3 df: results of ds, dge, and metadata of dge
-data = read_rds("../../SpliFi/data/ds_v_dge/all_contrast_data.rds")
-
-# chosen clusters is union of clusters from each ds contrast, selected based on 
-# top unproductive introns
-chosen_clusters = read_rds("../../SpliFi/data/ds_v_dge/chosen_clusters_dpsi_0_2.rds")
-
-# tissue code
-tissue_code = fread("../analysis/gtex-tissue-code.csv",
-  sep=",",
-  col.names = c("tissue", "code"),
-  header = FALSE)
-
-# clusters to plot are a common set of clusters across tissues
-plot_clusters = map(data, ~.x$ds[, cluster]) %>% 
-  map(., ~intersect(.x, chosen_clusters)) %>% 
-  reduce(intersect)
-
-#--- data used for heatmap plotting
-# using chosen plot_clusters to get heatmap matrix from ds results (PSI)
-plot_data = imap(data, ~GetHeatmapMatrix(.x$ds, plot_clusters, .y)) %>% 
-  unlist(recursive = FALSE)
-
-# get the names of stored plot datatable without duplicating dataste
-plot_data.names <- names(plot_data) %>%
-  str_split("\\.", simplify = T) %>%
-  as.data.table() %>%
-  .[, .(V1, V2, rk = rank(V1)), by = V2] %>% # after split, V1=contrast, V2=tissue
-  .[rk == 1] %>% # since a tissue can be used in multiple contrasts, only keep 1
-  .[, .(V1, nm = paste(V1, ".", V2, sep = ""))] %>%
-  .[, nm]
-
-# reduce dataset to only the selected tissues
-plot_data <- plot_data[plot_data.names]
-names(plot_data) <- str_split(names(plot_data), "\\.") %>% map_chr(~.[2])
-
-# summ PSI to get a single value for each cluster
-plot_data = imap(plot_data, ~sumPSI(.x, .y))
-
-# remove large objects
-rm(data)
-
-```
-
-```{r}
-#| label: prepare heatmap matrix
-#| eval: true
-#| cache: true
-
-#--- further reduce plot data to makit heatmap ready
-mx_clusters = intersect(
-  map(plot_data, pluck, "cluster") %>% reduce(intersect),
-  plot_clusters
-)
-mx_clusters = naturalsort::naturalsort(mx_clusters)
-
-# jointo ensure same cluster, same order across tissues
-plot_data = map(plot_data, \(df) {
-  left_join(
-    x = data.table(cluster = mx_clusters),
-    y = df,
-    by = "cluster",
-    multiple = "any"
-  )
-})
-
-if (all(map_lgl(plot_data, ~all(!is.na(pluck(.x, 2)))))) {
-  print("Ready to plot heatmap")
-} else {
-  stop("Cluster order is not consistent across tissues")
-}
-
-# construct heatmap matrix
-mx = cbind(plot_data[[1]][,1], map_dfc(plot_data, ~.x[,2]))
-
-# replace tissue with tissue code
-lookup = deframe(tissue_code) %>% c("cluster"="cluster", .)
-colnames(mx) = lookup[colnames(mx)]
+non_brain_tissues = names(plotdata[['shared_UP_psi']])  %>% 
+  .[!str_detect(., "Brain")]
+heatmap_tissues = c(non_brain_tissues, "Brain-Cerebellum", "Brain-Anteriorcingulatecortex_BA24_", "Brain-Putamen_basalganglia_", "Brain-Spinalcord_cervicalc-1_")
+plotmx = plotmx[, c("cluster", heatmap_tissues), with = FALSE]
 
 ```
 
 
 ```{r}
-#| label: plot heatmap
 #| eval: true
 #| cache: true
+
+# remove clusters with NA values
+NA_Clusters = plotmx[
+  , .(cluster, 
+      hasNA = rowSums(map(.SD, ~is.na(.x)) %>% as.data.frame)
+  ), .SDcols = 2:ncol(plotmx)
+  ][hasNA > 0, cluster]
+
+plotmx = plotmx[!cluster %in% NA_Clusters]
+```
+
+```{r}
+#| eval: true
+#| cache: true
+
+tissue_code = fread("../analysis/gtex-tissue-code.csv", header = F, col.names = c("tissue", "tissue_code"))
 
 legendBreaks <- seq(-4, 4, 2)
 # colors <- rev(RColorBrewer::brewer.pal(length(legendBreaks), "RdBu"))
@@ -208,38 +140,47 @@ colfunc <- circlize::colorRamp2(
   )
 
 cluster_method = "ward.D2"
+
+col_labs = left_join(
+  x = data.frame(tissue = colnames(plotmx)[-1]),
+  y = tissue_code,
+  by = "tissue"
+) %>%
+  pull(tissue_code)
+```
+
+
+```{r}
+#| eval: true
+#| cache: true
 set.seed(123)
-ht <- mx %>%
+ht <- plotmx %>%
   column_to_rownames("cluster") %>%
   as.matrix %>% t %>% scale %>% t %>%
   Heatmap(
+    column_title = glue("Unproductive splicing across GTEx tissues, N = {nrow(plotmx)}"),
     col = colfunc,
     row_km = 12, row_gap = unit(0.2, "mm"), 
-    column_km = 3, column_gap = unit(0.2, "mm"),
+    column_km = 3, 
+    column_gap = unit(0, "mm"),
     show_parent_dend_line = FALSE,
     show_row_names = FALSE, clustering_method_rows = cluster_method, show_row_dend = F,
     clustering_method_columns = cluster_method, column_dend_height = unit(1.5, "in"), show_column_dend = TRUE,
     heatmap_legend_param = list(title = "PSI (z-score)"),
-    use_raster = TRUE
+    use_raster = TRUE, raster_quality = 2,
+    column_labels = col_labs
     )
-
-```
-
-```{r}
-#| eval: true
-#| include: true
-
-print(glue("Number of clusters to plot: {length(mx_clusters)}"))
-# map(plot_data, ~.x[, cluster]) %>% reduce(intersect) %>% length
 ```
 
 
 ```{r}
 # save ht to a svg file
-svg("plot-fig2-heatmap.svg", width = 8, height = 8)
-ht
+svg("plot-fig2-heatmap.svg", width = 6, height = 6)
+draw(ht)
 dev.off()
 ```
+
+
 
 ```{r}
 #| label: fig-heatmap
@@ -255,15 +196,113 @@ knitr::include_graphics("plot-fig2-heatmap.svg")
 
 
 
+# GO enrichment
+
+GO enrichment on the 12 clusters shown in the heatmap above. 
+The 12 clusters of intron-clusters represent 1197 genes. I used `gprofiler2` to run GO enrichment
+on each of these 12 sets of genes against GO terms in `GO:BP`, `GO:MF`, and `GO:CC`.
+
+Using the 1197 genes as background didn't yield any significant enrichment. But there is enrichment
+when using all human genes as background. as. shown in @tbl-go-enrichment-with-all-human-genes-as-background .
+P-values are multiple testing corrected using gprofiler2's internal method.
+
+
+```{r}
+#| label: extract-intronclusters-per-row-cluster
+#| eval: true
+#| cache: true
+ht = draw(ht)
+ht_clusters= row_order(ht) %>% 
+  map(~plotmx$cluster[.x]) %>% 
+  map(~data.table(cluster = .x))
+
+# load one lf2 result to get gene names
+ds = readRDS("../code/plotdata/ds_v_dge/Liver_v_Lung_data.rds")$ds
+
+# get gene_names
+ht_clusters = map(
+  ht_clusters,
+  ~left_join(.x, ds[, .(cluster, gene_name, gene_id)] %>% unique, by = "cluster")
+) %>% 
+  map(~.x[!is.na(gene_name)])
+
+query_genes = map(ht_clusters, pluck, "gene_id") %>% 
+  map(~str_extract(.x, "ENSG\\d+") %>% unique)
+background_genes = reduce(query_genes, union)
+
+```
+
+
+```{r}
+#| label: tbl-number-of-genes-per-group
+#| tbl-cap: "Number of genes per group"
+#| eval: true
+#| include: true
+
+query_genes %>% map_int(length) %>% enframe("group", "N_genes")
+```
 
 
 
+## Enrichment test using heatmap genes as background
+
+```{r}
+#| label: run-go-enrichment-with-heatmap-genes-as-background
+#| eval: true
+#| include: true
+#| cache: true
+
+gost1 = map(query_genes, EnrichTest, background_genes = background_genes, .progress = TRUE)
+
+if (all(map_lgl(gost1, is.null))) {
+  print("No enrichment found in any groups using ~1000 heatmap genes as background.")
+} else {
+  print("These clusters have enrichment in GO terms")
+  gost1[!map_lgl(gost1, is.null)] %>% names
+}
+```
+
+## Enrichment test using whole genome as background
+
+```{r}
+#| label: tbl-go-enrichment-with-all-human-genes-as-background
+#| tbl-cap: "GO enrichment results"
+#| column: page
+#| eval: true
+#| include: true
+#| cache: true
+
+gost2 = map(query_genes, EnrichTest, background_genes = NULL, .progress = TRUE)
+
+print("These clusters have enrichment in GO terms")
+gost2[!map_lgl(gost2, is.null)] %>% names
 
 
+gost2[!map_lgl(gost2, is.null)] %>%
+  imap_dfr(~.x$result %>% as.data.table %>% mutate(query = paste0("group_", .y))) %>% 
+  select(query, p_value, source, term_name, p_value,
+         query_size, term_size, intersection_size,
+         effective_domain_size, highlighted) %>% 
+  arrange(query, p_value) %>% 
+  DT::datatable()
+```
 
 
+```{r}
+#| label: fig-go-enrichment
+#| fig-cap: "GO enrichment results"
+#| fig-height: 10
+#| out-width: 100%
+#| eval: true
+#| include: true
+#| cache: true
+#| column: page
 
+gost2 = gost2[!map_lgl(gost2, is.null)]
+gost2 = imap(gost2, \(x, y) {x$result$query = glue("group_{y}"); x})
 
+plots = map(gost2, ~gostplot(.x, interactive = F))
 
-
+gridExtra::grid.arrange(grobs = plots, ncol = 3)
+```
 

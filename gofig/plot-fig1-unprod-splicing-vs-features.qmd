@@ -1,6 +1,6 @@
 ---
 title: Figure 1 - Unproductive splicing and gene features
-date: '2024-08-20'
+date: '2024-9-20'
 code-fold: true
 execute:
   include: false
@@ -201,7 +201,7 @@ print(cortest1)
 p1 = up_plot_dt %>%
   ggplot() +
   stat_ecdf(aes(x = ratio, color = intron_len2)) +
-  scale_color_brewer(type = 'qual', palette = 'Blues') +
+  scale_color_brewer(type = 'qual', palette = 'Reds') +
   scale_x_log10(breaks = c(0, .01, .1, 1),
                 labels = c("0%", "1%", "10%", "100%"),
                 n.breaks = 5) +
@@ -213,6 +213,7 @@ p1 = up_plot_dt %>%
                        {ifelse(cortest1$p.value < .001, "***", "")}, N={uniqueN(up_plot_dt$clu)}'))
 
 # save plot to svg file
+
 ggsave("plot-fig1-cluster-unprod-vs-pr-intron-length.svg", p1, width = 7, height = 5)
 ```
 
@@ -324,7 +325,7 @@ print(cortest2)
 p2 = up_plot_dt.gene %>% 
   ggplot() +
   stat_ecdf(aes(x = ratio, color = rpkm2)) +
-  scale_color_brewer(type = 'qual', palette = 'Blues') +
+  scale_color_brewer(type = 'qual', palette = 'Reds') +
   scale_x_log10(breaks = c(0, .01, .1, 1),
                 labels = c("0%", "1%", "10%", "100%"),
                 n.breaks = 5) +
