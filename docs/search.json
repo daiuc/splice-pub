@@ -522,6 +522,13 @@
     "href": "gofig/plot-fig2-heatmap.html#enrichment-test-using-whole-genome-as-background",
     "title": "Figure 2 - Heatmap of unprodoctive splicing by tissues",
     "section": "Enrichment test using whole genome as background",
-    "text": "Enrichment test using whole genome as background\n\n\n[1] \"These clusters have enrichment in GO terms\"\n\n\n [1] \"6\"  \"5\"  \"4\"  \"3\"  \"1\"  \"2\"  \"9\"  \"10\" \"12\" \"11\"\n\n\n\n\nTable 2: GO enrichment results\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigure 2: GO enrichment results"
+    "text": "Enrichment test using whole genome as background\np-value in the table below is multiple testing corrected using gprofiler2’s internal method.\n\n\n[1] \"These clusters have enrichment in GO terms\"\n\n\n[1] \"1\" \"2\" \"3\" \"4\" \"5\"\n\n\n\n\nTable 1: GO enrichment results\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigure 2: GO enrichment results"
+  },
+  {
+    "objectID": "gofig/plot-fig2-heatmap.html#enrichment-test-of-using-whole-genome-as-backgrounda-with-all-clusters-combined",
+    "href": "gofig/plot-fig2-heatmap.html#enrichment-test-of-using-whole-genome-as-backgrounda-with-all-clusters-combined",
+    "title": "Figure 2 - Heatmap of unprodoctive splicing by tissues",
+    "section": "Enrichment test of using whole genome as backgrounda with all clusters combined",
+    "text": "Enrichment test of using whole genome as backgrounda with all clusters combined\np-value in the table below is multiple testing corrected using gprofiler2’s internal method.\n\n\n\n\nTable 2: GO enrichment results - combined\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigure 3: GO enrichment results - combined"
   }
 ]

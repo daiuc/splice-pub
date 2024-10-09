@@ -63,7 +63,7 @@ theme_set(theme_cowplot(font_size = 14, font_family = "Helvetica"))
 EnrichTest = function(
   query_genes,
   background_genes = NULL,
-  sources = c("GO:BP", "GO:MF", "GO:CC")) {
+  sources = c("GO:BP", "GO:MF", "GO:CC", "KEGG")) {
 
   gost1 = gost(
     query = query_genes,
@@ -83,11 +83,11 @@ EnrichTest = function(
 }
 ```
 
-# Heatmap
+<!-- NOTE: section 1: previous code for 12 cluster heatmap -->
 
 ```{r}
 #| label: load-plotdata
-#| eval: true
+#| eval: false
 #| cache: true
 plotdata = readRDS("../code/plotdata/gtex-psi-heatmap/heatmap_data.rds")
 
@@ -101,7 +101,7 @@ plotmx = cbind(plotdata[['shared_UP_psi']][[1]][, c(1)], # first column (cluster
 
 
 ```{r}
-#| eval: true
+#| eval: false
 #| cache: true
 non_brain_tissues = names(plotdata[['shared_UP_psi']])  %>% 
   .[!str_detect(., "Brain")]
@@ -112,7 +112,7 @@ plotmx = plotmx[, c("cluster", heatmap_tissues), with = FALSE]
 
 
 ```{r}
-#| eval: true
+#| eval: false
 #| cache: true
 
 # remove clusters with NA values
@@ -126,7 +126,7 @@ plotmx = plotmx[!cluster %in% NA_Clusters]
 ```
 
 ```{r}
-#| eval: true
+#| eval: false
 #| cache: true
 
 tissue_code = fread("../analysis/gtex-tissue-code.csv", header = F, col.names = c("tissue", "tissue_code"))
@@ -151,7 +151,7 @@ col_labs = left_join(
 
 
 ```{r}
-#| eval: true
+#| eval: false
 #| cache: true
 set.seed(123)
 ht <- plotmx %>%
@@ -175,47 +175,76 @@ ht <- plotmx %>%
 
 ```{r}
 # save ht to a svg file
-svg("plot-fig2-heatmap.svg", width = 6, height = 6)
-draw(ht)
-dev.off()
+# svg("plot-fig2-heatmap.svg", width = 6, height = 6)
+# draw(ht)
+# dev.off()
 ```
 
 
 
 ```{r}
 #| label: fig-heatmap
-#| eval: true
-#| include: true
+#| eval: false
+#| include: false
 #| column: page
 #| out-width: 100%
 #| fig-cap: "Heatmap of unproductive splicing by tissues"
 
-knitr::include_graphics("plot-fig2-heatmap.svg")
-```
+set.seed(123)
+draw(ht)
 
-
-
-
-# GO enrichment
-
-GO enrichment on the 12 clusters shown in the heatmap above. 
-The 12 clusters of intron-clusters represent 1197 genes. I used `gprofiler2` to run GO enrichment
-on each of these 12 sets of genes against GO terms in `GO:BP`, `GO:MF`, and `GO:CC`.
-
-Using the 1197 genes as background didn't yield any significant enrichment. But there is enrichment
-when using all human genes as background. as. shown in @tbl-go-enrichment-with-all-human-genes-as-background .
-P-values are multiple testing corrected using gprofiler2's internal method.
-
-
-```{r}
-#| label: extract-intronclusters-per-row-cluster
-#| eval: true
-#| cache: true
-ht = draw(ht)
 ht_clusters= row_order(ht) %>% 
   map(~plotmx$cluster[.x]) %>% 
   map(~data.table(cluster = .x))
 
+
+```
+
+<!-- NOTE: section 1 (end): previous code for 12 cluster heatmap -->
+
+
+<!-- NOTE: Begin section (A)
+code to genereate 5 cluster heatmap and gene list -->
+
+```{r}
+#| label: plot-heatmap-5clusters
+#| eval: false
+#| cache: true
+set.seed(123)
+ht2 <- plotmx %>%
+  column_to_rownames("cluster") %>%
+  as.matrix %>% t %>% scale %>% t %>%
+  Heatmap(
+    column_title = glue("Unproductive splicing across GTEx tissues, N = {nrow(plotmx)}"),
+    col = colfunc,
+    row_km = 5, row_gap = unit(0.5, "mm"), 
+    column_km = 3, 
+    column_gap = unit(0, "mm"),
+    show_parent_dend_line = FALSE,
+    show_row_names = FALSE, clustering_method_rows = cluster_method, show_row_dend = F,
+    clustering_method_columns = cluster_method, column_dend_height = unit(1.5, "in"), show_column_dend = TRUE,
+    heatmap_legend_param = list(title = "PSI (z-score)"),
+    use_raster = TRUE, raster_quality = 2,
+    column_labels = col_labs
+    )
+```
+
+
+```{r}
+set.seed(123)
+# save ht to a svg file
+# svg("plot-fig2-heatmap-5groups.svg", width = 6, height = 6)
+ht2 = draw(ht2)
+draw(ht2)
+# dev.off()
+
+ht_clusters= row_order(ht2) %>% 
+  map(~plotmx$cluster[.x]) %>% 
+  map(~data.table(cluster = .x))
+
+```
+
+```{r}
 # load one lf2 result to get gene names
 ds = readRDS("../code/plotdata/ds_v_dge/Liver_v_Lung_data.rds")$ds
 
@@ -230,19 +259,56 @@ query_genes = map(ht_clusters, pluck, "gene_id") %>%
   map(~str_extract(.x, "ENSG\\d+") %>% unique)
 background_genes = reduce(query_genes, union)
 
+
+query_genes %>% map_int(length) %>% enframe("group", "N_genes")
+
+query_genes %>% names
+
+iwalk(query_genes,
+  ~write_lines(.x, glue("plot-fig2-heatmap-5groups-grp{.y}_genes.txt")))
+
 ```
+
+<!-- NOTE: end section (A)-->
+
+
+
+# Heatmap with 5 clusters
 
 
 ```{r}
-#| label: tbl-number-of-genes-per-group
-#| tbl-cap: "Number of genes per group"
+#| label: fig-heatmap-5clusters
 #| eval: true
 #| include: true
+#| column: page
+#| out-width: 100%
 
-query_genes %>% map_int(length) %>% enframe("group", "N_genes")
+knitr::include_graphics("./plot-fig2-heatmap-5groups.svg")
 ```
 
 
+
+# GO enrichment
+
+GO enrichment on the 5 clusters shown in the heatmap above. 
+The 5 clusters of intron-clusters represent 1197 genes. I used `gprofiler2` to run GO enrichment
+on each of these 12 sets of genes against GO terms in `GO:BP`, `GO:MF`, `GO:CC`, and `KEGG`.
+
+Using the 1197 genes as background didn't yield any significant enrichment. But there is enrichment
+when using all human genes as background. as. shown in @tbl-go-enrichment-with-all-human-genes-as-background .
+P-values are multiple testing corrected using gprofiler2's internal method.
+
+
+```{r}
+#| label: load query and background gene lists
+#| eval: true
+
+query_genes = glue("plot-fig2-heatmap-5groups-grp{1:5}_genes.txt")
+names(query_genes) = as.character(1:5)
+query_genes = map(query_genes, read_lines)
+
+background_genes = reduce(query_genes, union)
+```
 
 ## Enrichment test using heatmap genes as background
 
@@ -252,7 +318,11 @@ query_genes %>% map_int(length) %>% enframe("group", "N_genes")
 #| include: true
 #| cache: true
 
-gost1 = map(query_genes, EnrichTest, background_genes = background_genes, .progress = TRUE)
+gost1 = map(query_genes,
+            EnrichTest, 
+            background_genes = background_genes,
+            sources = c("GO:BP", "GO:CC", "GO:MF", "KEGG"),
+            .progress = TRUE)
 
 if (all(map_lgl(gost1, is.null))) {
   print("No enrichment found in any groups using ~1000 heatmap genes as background.")
@@ -264,6 +334,8 @@ if (all(map_lgl(gost1, is.null))) {
 
 ## Enrichment test using whole genome as background
 
+*p-value* in the table below is multiple testing corrected using gprofiler2's internal method.
+
 ```{r}
 #| label: tbl-go-enrichment-with-all-human-genes-as-background
 #| tbl-cap: "GO enrichment results"
@@ -272,7 +344,12 @@ if (all(map_lgl(gost1, is.null))) {
 #| include: true
 #| cache: true
 
-gost2 = map(query_genes, EnrichTest, background_genes = NULL, .progress = TRUE)
+gost2 = map(
+            query_genes, 
+            EnrichTest,
+            background_genes = NULL,
+            sources = c("GO:BP", "GO:CC", "GO:MF", "KEGG"),
+            .progress = TRUE)
 
 print("These clusters have enrichment in GO terms")
 gost2[!map_lgl(gost2, is.null)] %>% names
@@ -305,4 +382,53 @@ plots = map(gost2, ~gostplot(.x, interactive = F))
 
 gridExtra::grid.arrange(grobs = plots, ncol = 3)
 ```
+
+## Enrichment test of using whole genome as backgrounda with all clusters combined
+
+
+*p-value* in the table below is multiple testing corrected using gprofiler2's internal method.
+
+```{r}
+#| label: tbl-go-enrichment-with-all-human-genes-as-background-combined
+#| tbl-cap: "GO enrichment results - combined"
+#| column: page
+#| eval: true
+#| include: true
+#| cache: true
+
+gost3 = map(
+            list(background_genes),
+            EnrichTest,
+            background_genes = NULL,
+            sources = c("GO:BP", "GO:CC", "GO:MF", "KEGG"),
+            .progress = TRUE)
+
+
+gost3[!map_lgl(gost3, is.null)] %>%
+  imap_dfr(~.x$result %>% as.data.table %>% mutate(query = paste0("group_", .y))) %>% 
+  select(query, p_value, source, term_name, p_value,
+         query_size, term_size, intersection_size,
+         effective_domain_size, highlighted) %>% 
+  arrange(query, p_value) %>% 
+  DT::datatable()
+```
+
+
+```{r}
+#| label: fig-go-enrichment-combined
+#| fig-cap: "GO enrichment results - combined"
+#| eval: true
+#| include: true
+#| cache: true
+
+gost3 = gost3[!map_lgl(gost3, is.null)]
+gost3 = imap(gost3, \(x, y) {x$result$query = glue("group_{y}"); x})
+
+plots3 = map(gost3, ~gostplot(.x, interactive = F))
+
+gridExtra::grid.arrange(grobs = plots3, ncol = 1)
+```
+
+
+
 
