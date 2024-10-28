@@ -80,7 +80,7 @@ read_contrast <- function(rds, contrast, FDR = 1e-5, selection = 'all', plot=FAL
   # run cor.test
   cor_res <- joined_dt %>% 
     split(by = 'itype') %>% 
-    map(~cor.test(x = .x$g_z, y = .x$deltapsi, method = 'pearson')) %>% 
+    map(~cor.test(x = .x$g_z, y = .x$deltapsi, mesthod = 'pearson')) %>% 
     imap_dfr(
       \(x, y) {
         data.table(
