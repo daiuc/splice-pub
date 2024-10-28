@@ -173,7 +173,10 @@ ht <- plotmx %>%
 ```
 
 
+
 ```{r}
+# ht
+
 # save ht to a svg file
 # svg("plot-fig2-heatmap.svg", width = 6, height = 6)
 # draw(ht)
@@ -235,7 +238,6 @@ set.seed(123)
 # save ht to a svg file
 # svg("plot-fig2-heatmap-5groups.svg", width = 6, height = 6)
 ht2 = draw(ht2)
-draw(ht2)
 # dev.off()
 
 ht_clusters= row_order(ht2) %>% 

@@ -222,7 +222,7 @@ p1 = plot_dt %>%
 # rasterize geom_point
 p1 = rasterize(p1, layers = "point", dpi = 200)
 
-#FIXME: comment out after running ggsave
+# FIXME: comment out after running ggsave
 # ggsave(
 #   "./plot-fig2-unprod-splicing-by-tissue-gtex-rasterized.svg",
 #   p1, width = 17, height = 5
